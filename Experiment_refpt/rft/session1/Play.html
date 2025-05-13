@@ -1,0 +1,564 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Valuation Task</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+<style>
+
+.otree-body{
+        max-width: 1480px;
+    }
+      /* container */
+    .two-columns-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+
+    /* columns */
+    .two-columns-grid > * {
+        padding:1rem;
+    }
+
+    .lottery-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+        width: 100%;
+        position: relative;
+        min-height: 510px; /* Increased minimum height */
+    }
+    
+    .period-column {
+        display: flex;
+        flex-direction: column;
+        width: 22%;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .period-header {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+    }
+    
+    .grid-container {
+        display: grid;
+        gap: 8px;
+        height: 100%;
+    }
+    
+    .outcome {
+        border: 1px solid #333;
+        border-radius: 6px;
+        text-align: center;
+        padding: 8px 5px;
+        position: relative;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 14px;
+        min-height: 35px; /* Ensure minimum height */
+    }
+    
+    /* Hide probability labels */
+    .probability-label {
+        display: none;
+    }
+    
+    .arrow {
+        position: absolute;
+        height: 4px;
+        background-color: #666;
+        z-index: 0;
+    }
+    
+    .arrow:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: -4px;
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 8px solid #666;
+    }
+    
+    .arrow-label {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0 4px;
+        font-size: 0.7em;
+        white-space: nowrap;
+        z-index: 2;
+    }
+
+    /* CSS for the framework */
+    body {
+      font-family: 'Gill Sans', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+      margin-top: 2rem;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 17px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+</style>
+
+
+
+ <!-- Main jumbotron for primary marketing message -->
+ <div class="jumbotron">
+  <div class="container">
+    <div class="row">
+
+        <h1 class="university-title">Lottery Valuation Task (1/15)</h1>
+        <h3>Please provide your valuation to this lottery.</h3>
+        <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="two-columns-grid"> 
+  <div><!-- Lottery Display -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>Your Lottery</h4>
+            <p>Below is a lottery. You are at the starting point (t=0). We colored all parts of the <span class="definition-term">states
+              <span class="tooltip">A state of a lottery is a probable outcome that may happen. In our case, it can be either a gain or a loss.</span>
+          </span> into purple.</p>
+            
+            <div class="lottery-container" id="lottery-diagram">
+                <!-- Period 0 Column -->
+                <div class="period-column">
+                    <div class="period-header">t = 0</div>
+                    <div class="grid-container" style="grid-template-rows: 1fr;">
+                        {% for outcome in period_0 %}
+                        <div class="outcome" style="background-color: #ddd;" id="p0-{{ forloop.counter }}">
+                            {{ outcome.label }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Period 1 Column -->
+                <div class="period-column">
+                    <div class="period-header">In One Week</div>
+                    <div class="grid-container" id="period-1-grid">
+                        {% for outcome in period_1 %}
+                        <div class="outcome" style="background-color: #9f9ffe;" id="p1-{{ forloop.counter }}" 
+                             data-prob="{{ outcome.probability }}">
+                            {{ outcome.label }}
+                            <!-- Hidden probability label -->
+                            <span class="probability-label">{{ outcome.probability }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Period 2 Column -->
+                <div class="period-column">
+                    <div class="period-header">In Two Weeks</div>
+                    <div class="grid-container" id="period-2-grid">
+                        {% for outcome in period_2 %}
+                        <div class="outcome" style="background-color: #9f9ffe;" id="p2-{{ forloop.counter }}" 
+                             data-from="{{ outcome.from }}" data-prob="{{ outcome.probability }}" data-abs-prob="{{ outcome.abs_prob }}">
+                            {{ outcome.label }}
+                            <!-- Hidden probability label -->
+                            <span class="probability-label">{{ outcome.probability }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Period 3 Column -->
+                <div class="period-column">
+                    <div class="period-header">In Three Weeks</div>
+                    <div class="grid-container" id="period-3-grid">
+                        {% for outcome in period_3 %}
+                        <div class="outcome"
+                             style="background-color: #b0b0ff;" 
+                             id="p3-{{ forloop.counter }}" 
+                             data-from="{{ outcome.from }}" 
+                             data-parent="{{ outcome.parent }}" 
+                             data-prob="{{ outcome.probability }}" 
+                             data-abs-prob="{{ outcome.abs_prob }}">
+                            {{ outcome.label }}
+                            <!-- Hidden probability label -->
+                            <span class="probability-label">{{ outcome.probability }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-info mt-3">
+                <p class="mb-0">
+                    <strong>Note:</strong> The final outcome is determined by the path through all three periods. 
+                    Probabilities shown represent the chance at each step.
+                </p>
+            </div>
+        </div>
+    </div>
+    </div>
+  <div>
+    
+<!-- Multiple Choice List -->
+<div class="card">
+  <div class="card-body">
+      <h4>Your Decision</h4>
+      <p>
+          Please consider the following. We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
+      </p>
+  </div>
+</div>
+
+<br>
+
+<table class="table">
+  <thead style="background-color: #2E7D32; color: white", style="text-align: center">
+      <tr>
+          
+          <th style="text-align: center">Accept the Payment</th>
+          <th style="text-align: center">Our Offers</th>
+          <th style="text-align: center">Play the Lottery</th>
+      </tr>
+  </thead>
+  <tbody style="background-color: #E8F5E9", style="text-align: center">
+      <tr>
+          
+          <td style="text-align: center">{{ form.chf_1.0 }}</td>
+          <td style="text-align: center">CHF 1</td>
+          <td style="text-align: center">{{ form.chf_1.1 }}</td>
+      </tr>
+      <tr>
+          
+          <td style="text-align: center">{{ form.chf_2.0 }}</td>
+          <td style="text-align: center">CHF 2</td>
+          <td style="text-align: center">{{ form.chf_2.1 }}</td>
+      </tr>
+      <tr>
+          
+          <td style="text-align: center">{{ form.chf_3.0 }}</td>
+          <td style="text-align: center">CHF 3</td>
+          <td style="text-align: center">{{ form.chf_3.1 }}</td>
+      </tr>
+      <tr>
+         
+          <td style="text-align: center">{{ form.chf_4.0 }}</td>
+          <td style="text-align: center">CHF 4</td>
+          <td style="text-align: center">{{ form.chf_4.1 }}</td>
+      </tr>
+      <tr>
+          
+          <td style="text-align: center">{{ form.chf_5.0 }}</td>
+          <td style="text-align: center">CHF 5</td>
+          <td style="text-align: center">{{ form.chf_5.1 }}</td>
+      </tr>
+      <tr>
+          
+          <td style="text-align: center">{{ form.chf_6.0 }}</td>
+          <td style="text-align: center">CHF 6</td>
+          <td style="text-align: center">{{ form.chf_6.1 }}</td>
+      </tr>
+  </tbody>
+</table>
+<p style="text-align:right;">
+  <button class="otree-btn-next btn btn-primary">Submit &raquo;</button>
+</p>
+  </div>
+</div>
+
+
+
+
+<!-- JavaScript for setting up grid rows and drawing arrows -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to set up the grid template rows based on absolute probabilities
+        function setupGridTemplateRows() {
+            // Period 1 Grid - Fixed grid rows based on probabilities
+            const period1Grid = document.getElementById('period-1-grid');
+            if (period1Grid) {
+                period1Grid.style.gridTemplateRows = "60fr 40fr"; // 0.6, 0.4
+            }
+            
+            // Period 2 Grid - Fixed grid rows based on absolute probabilities
+            const period2Grid = document.getElementById('period-2-grid');
+            if (period2Grid) {
+                period2Grid.style.gridTemplateRows = "42fr 18fr 16fr 24fr"; // 0.42, 0.18, 0.16, 0.24
+            }
+            
+            // Period 3 Grid - Fixed grid rows based on absolute probabilities
+            const period3Grid = document.getElementById('period-3-grid');
+            if (period3Grid) {
+                period3Grid.style.gridTemplateRows = "33.6fr 8.4fr 18fr 9.6fr 6.4fr 12fr 12fr"; // 0.336, 0.084, 0.18, 0.096, 0.064, 0.12, 0.12
+            }
+        }
+        
+        // Wait a bit for the layout to stabilize, then set up rows and draw arrows
+        setTimeout(function() {
+            try {
+                // Set up grid template rows
+                setupGridTemplateRows();
+                
+                // Wait a bit more for the grid layout to apply
+                setTimeout(function() {
+                    // Clear any existing arrows first
+                    const existingArrows = document.querySelectorAll('.arrow, .arrow-label');
+                    existingArrows.forEach(el => el.remove());
+                    
+                    // Draw all connections
+                    drawConnections();
+                }, 200);
+            } catch (e) {
+                console.error("Error setting up grid:", e);
+            }
+        }, 300);
+        
+        function drawConnections() {
+            // Define path segments directly
+            const pathSegments = [
+                // Format: source element id, target element id, probability
+                // Period 0 to Period 1
+                ["p0-1", "p1-1", "0.6"],
+                ["p0-1", "p1-2", "0.4"],
+                
+                // Period 1 to Period 2
+                ["p1-1", "p2-1", "0.7"], // +$10 to +$7
+                ["p1-1", "p2-2", "0.3"], // +$10 to -$1
+                ["p1-2", "p2-3", "0.4"], // -$10 to +$7
+                ["p1-2", "p2-4", "0.6"], // -$10 to -$12
+                
+                // Period 2 to Period 3
+                ["p2-1", "p3-1", "0.8"], // +$7 from +$10 to +$8
+                ["p2-1", "p3-2", "0.2"], // +$7 from +$10 to +$0
+                ["p2-2", "p3-3", "1.0"], // -$1 to +$2
+                ["p2-3", "p3-4", "0.6"], // +$7 from -$10 to +$5
+                ["p2-3", "p3-5", "0.4"], // +$7 from -$10 to -$5
+                ["p2-4", "p3-6", "0.5"], // -$12 to +$3
+                ["p2-4", "p3-7", "0.5"]  // -$12 to -$15
+            ];
+            
+            // Draw all connections from our defined paths
+            pathSegments.forEach(segment => {
+                drawArrow(segment[0], segment[1], segment[2]);
+            });
+        }
+        
+        function drawArrow(fromId, toId, probability) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById(toId);
+            
+            if (!from || !to) {
+                console.warn(`Could not find elements: ${fromId} → ${toId}`);
+                return;
+            }
+            
+            const fromRect = from.getBoundingClientRect();
+            const toRect = to.getBoundingClientRect();
+            const container = document.getElementById('lottery-diagram');
+            const containerRect = container.getBoundingClientRect();
+            
+            // Calculate positions relative to the container
+            const fromX = fromRect.right - containerRect.left;
+            const fromY = fromRect.top + fromRect.height/2 - containerRect.top;
+            const toX = toRect.left - containerRect.left;
+            const toY = toRect.top + toRect.height/2 - containerRect.top;
+            
+            // Create arrow element
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow';
+            
+            // Calculate length and position
+            const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+            const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+            
+            // Apply styles
+            arrow.style.width = `${length}px`;
+            arrow.style.left = `${fromX}px`;
+            arrow.style.top = `${fromY}px`;
+            arrow.style.transform = `rotate(${angle}deg)`;
+            arrow.style.transformOrigin = 'left center';
+            
+            // Add to container
+            container.appendChild(arrow);
+            
+            // Add probability label
+            const labelEl = document.createElement('div');
+            labelEl.className = 'arrow-label';
+            labelEl.textContent = probability;
+            
+            // Position label at middle of arrow
+            const midX = fromX + (toX - fromX) / 2;
+            const midY = fromY + (toY - fromY) / 2;
+            
+            // Adjust label position to avoid arrow
+            const labelOffsetY = -15;
+            
+            labelEl.style.left = `${midX - 10}px`;
+            labelEl.style.top = `${midY + labelOffsetY}px`;
+            
+            // Add label to container
+            container.appendChild(labelEl);
+        }
+    });
+</script>
+
+{{ endblock }}
