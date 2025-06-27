@@ -163,9 +163,9 @@ class LotteryOptimizer:
         ordering_violations = 0
         if not (z1 > z2): 
             ordering_violations += (z2 - z1 + 1)
-        if not (z2 > 0): 
+        if not (0 < z2): 
             ordering_violations += (-z2 + 1)
-        if not (0 > z3): 
+        if not (z3 > 0): 
             ordering_violations += (z3 + 1)
         if not (z3 > z4): 
             ordering_violations += (z4 - z3 + 1)
@@ -300,25 +300,14 @@ class LotteryOptimizer:
         total_violation += violations.get('empty_interval', 0)
         total_violation += violations.get('empty_interval_L1', 0)
         total_violation += violations.get('empty_interval_L2', 0)
+        total_violation = total_violation ** 2
         
         return total_violation
     
     def solve_with_differential_evolution(self, num_attempts=20):  # Reduced from 50
         """Use differential evolution for optimization with better progress tracking"""
         # Define bounds: [b11, b12, c21, c22, c31, c32, c33, c34, p1, p2, p3]
-        bounds = [
-            (2, 15),     # b11: Smaller positive range
-            (-15, -2),   # b12: Smaller negative range
-            (1, 10),     # c21: Conservative positive
-            (-10, -1),   # c22: Conservative negative
-            (3, 20),     # c31: Ensure c31 > c32
-            (-5, 12),    # c32: Conservative upper bound
-            (0, 8),      # c33: Ensure c33 > c34
-            (-20, 5),    # c34: Conservative lower bound
-            (0.2, 0.8),  # p1: Avoid extremes
-            (0.2, 0.8),  # p2: Avoid extremes
-            (0.2, 0.8)   # p3: Avoid extremes
-        ]
+        bounds = [(-50, 50)] * 8 + [(0.1, 0.9)] * 3
         best_solutions = []
         
         print(f"Using Differential Evolution with {num_attempts} attempts...")
@@ -333,8 +322,8 @@ class LotteryOptimizer:
                     self.objective_function,
                     bounds,
                     seed=attempt,
-                    maxiter=700,    
-                    popsize=20,      
+                    maxiter=500,    
+                    popsize=15,      
                     atol=1e-8,      
                     tol=1e-8,       
                     workers=-1,
@@ -342,7 +331,7 @@ class LotteryOptimizer:
                     polish=True    # Skip final polishing for speed
                 )
                 
-                if result.fun < 100: 
+                if result.fun < 200: 
                     # Round lottery values to integers
                     params = result.x.copy()
                     params[:8] = np.round(params[:8])
@@ -356,7 +345,7 @@ class LotteryOptimizer:
                     
                     # Verify rounded solution
                     rounded_violation = self.objective_function(params)
-                    if rounded_violation < 50:  # More lenient for rounded
+                    if rounded_violation < 100:  # More lenient for rounded
                         # Check for uniqueness
                         is_unique = True
                         for existing in best_solutions:
@@ -708,7 +697,7 @@ def main():
     
     # Use fast method by default
     solutions = optimizer.solve_lottery(
-        num_attempts=700,      
+        num_attempts=1500,      
         violation_threshold=5,  
         use_fast_method=False   
     )
