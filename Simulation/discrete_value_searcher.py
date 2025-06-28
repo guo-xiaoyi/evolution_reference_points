@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jun 27 22:14:36 2025
-
-@author: XGuo
-"""
-
-
-# -*- coding: utf-8 -*-
-"""
 Pure Discrete Lottery Optimizer - Converted from Continuous DE
 
 Key changes:
@@ -273,79 +265,168 @@ class DiscreteLotteryOptimizer:
             return None, None
     
     def check_constraints(self, params: List[float]) -> Tuple[Dict[str, float], bool]:
-        """Check all constraints - same logic as original"""
+        """Check all lottery constraints following the EXACT ORIGINAL specification"""
         try:
             self.stats['evaluations'] += 1
             
-            # Extract parameters  
+            # Extract parameters exactly as in original
             b11, b12, c21, c22, c31, c32, c33, c34, p1, p2, p3 = params
-            
-            # Basic validation
-            for p in [p1, p2, p3]:
-                if not (0 < p < 1):
-                    return {'total': 10000}, False
-            
-            Z, p_array = self.create_lottery_structure(params)
+            Z, p = self.create_lottery_structure(params)
             z1, z2, z3, z4 = Z
             
             violations = {}
             total_violations = 0
             
-            # Constraint 1: Null expectation
-            expected_value = float(np.sum(Z * p_array))
+            # Constraint 1: Null initial expectation E(L) = 0
+            expected_value = np.sum(Z * p)
             violations['expected_value'] = abs(expected_value)
             total_violations += violations['expected_value']
             
-            # Constraint 2: Ordering
+            # Constraint 5: Ordering constraint (using EXACT original logic)
             ordering_violations = 0
-            if not (z1 > z2): ordering_violations += (z2 - z1 + 1)
-            if not (z2 >= 0): ordering_violations += (-z2 + 1) if z2 < 0 else 0
-            if not (z3 <= 0): ordering_violations += (z3 + 1) if z3 > 0 else 0
-            if not (z3 > z4): ordering_violations += (z4 - z3 + 1)
-            if abs(z2 - z3) < 0.01: ordering_violations += 2
+            if not (z1 > z2): 
+                ordering_violations += (z2 - z1 + 1)
+            if not (0 < z2):   # ORIGINAL: 0 < z2 (not z2 >= 0)
+                ordering_violations += (-z2 + 1)
+            if not (z3 > 0):   # ORIGINAL: z3 > 0 (not z3 <= 0)
+                ordering_violations += (z3 + 1)
+            if not (z3 > z4): 
+                ordering_violations += (z4 - z3 + 1)
+            if abs(z2 - z3) < 0.01:  # z2 ≠ z3
+                ordering_violations += 2
             
             violations['ordering'] = ordering_violations
             total_violations += ordering_violations
             
-            # Early exit for major violations
-            if ordering_violations > 10:
+            # Calculate E(L1) and E(L2) first (needed for multiple constraints)
+            E_L1 = z1 * p2 + z2 * (1 - p2)  # Expected value of upper lottery
+            E_L2 = z3 * p3 + z4 * (1 - p3)  # Expected value of lower lottery
+            
+            # ===== CONSTRAINT 2: Monotonic interval fulfillment for L =====
+            IL_lower, IL_upper = self.find_monotonic_interval(Z, p)
+            if IL_lower is None or IL_upper is None or IL_lower >= IL_upper:
+                violations['empty_interval'] = 1000
+                total_violations += 1000
+                # Early return since other intervals depend on this
                 violations['total'] = total_violations
                 return violations, False
             
-            # Interval constraints (simplified for speed)
-            IL_lower, IL_upper = self.find_monotonic_interval(Z, p_array)
-            if IL_lower is None:
-                violations['interval'] = 1000
-                total_violations += 1000
+            # Check: 0, E ∈ IL (ORIGINAL: only checks 0, not expected_value)
+            values_to_check_L = {
+                '0': 0,
+            }
+            
+            interval_violations_L = 0
+            for name, value in values_to_check_L.items():
+                if value < IL_lower:
+                    interval_violations_L += (IL_lower - value)
+                elif value > IL_upper:
+                    interval_violations_L += (value - IL_upper)
+            
+            violations['interval_L'] = interval_violations_L
+            total_violations += interval_violations_L
+            
+            # ===== CONSTRAINT 3: Monotonic interval fulfillment for L1 =====
+            Z_L1 = np.array([z1, z2])
+            p_L1 = np.array([p2, 1-p2])
+            IL1_lower, IL1_upper = self.find_monotonic_interval(Z_L1, p_L1)
+            
+            if IL1_lower is None or IL1_upper is None or IL1_lower >= IL1_upper:
+                violations['empty_interval_L1'] = 100
+                total_violations += 100
             else:
-                interval_violations = 0
-                for value in [0, expected_value]:
-                    if value < IL_lower:
-                        interval_violations += (IL_lower - value)
-                    elif value > IL_upper:
-                        interval_violations += (value - IL_upper)
-                violations['interval'] = interval_violations
-                total_violations += interval_violations
+                # Check: b11, b11+c21, E(L1), exp_value ∈ IL1 (EXACT ORIGINAL)
+                values_to_check_L1 = {
+                    'b11': b11,
+                    'b11_c21': b11 + c21,
+                    'E_L1': E_L1,
+                    'exp_value': expected_value  # ORIGINAL includes this
+                }
+                
+                interval_violations_L1 = 0
+                for name, value in values_to_check_L1.items():
+                    if value < IL1_lower:
+                        interval_violations_L1 += (IL1_lower - value)
+                    elif value > IL1_upper:
+                        interval_violations_L1 += (value - IL1_upper)
+                
+                violations['interval_L1'] = interval_violations_L1
+                total_violations += interval_violations_L1
+            
+            # ===== CONSTRAINT 4: Monotonic interval fulfillment for L2 =====
+            Z_L2 = np.array([z3, z4])
+            p_L2 = np.array([p3, 1-p3])
+            IL2_lower, IL2_upper = self.find_monotonic_interval(Z_L2, p_L2)
+            
+            if IL2_lower is None or IL2_upper is None or IL2_lower >= IL2_upper:
+                violations['empty_interval_L2'] = 100
+                total_violations += 100
+            else:
+                # Check: b12, b12+c22, E(L2), exp_value ∈ IL2 (EXACT ORIGINAL)
+                values_to_check_L2 = {
+                    'b12': b12,
+                    'b12_c22': b12 + c22,
+                    'E_L2': E_L2,
+                    'exp_value': expected_value  # ORIGINAL includes this
+                }
+                
+                interval_violations_L2 = 0
+                for name, value in values_to_check_L2.items():
+                    if value < IL2_lower:
+                        interval_violations_L2 += (IL2_lower - value)
+                    elif value > IL2_upper:
+                        interval_violations_L2 += (value - IL2_upper)
+                
+                violations['interval_L2'] = interval_violations_L2
+                total_violations += interval_violations_L2
+            
+            # Basic probability bounds [0,1]
+            prob_bound_violations = 0
+            for i, prob in enumerate([p1, p2, p3]):
+                if prob < 0: 
+                    prob_bound_violations += (-prob)
+                if prob > 1: 
+                    prob_bound_violations += (prob - 1)
+            
+            violations['prob_bounds'] = prob_bound_violations
+            total_violations += prob_bound_violations
             
             violations['total'] = total_violations
             return violations, True
             
-        except Exception:
-            return {'total': 10000}, False
+        except Exception as e:
+            return {'total': 10000, 'error': str(e)}, False
     
     def objective_function(self, params: List[float]) -> float:
-        """Objective function with weighted penalties"""
+        """Objective function following the ORIGINAL constraint specification"""
         violations, valid = self.check_constraints(params)
         
         if not valid:
-            return 10000.0
+            return 10000.0  # Large penalty for invalid solutions
         
-        # Weighted penalties
-        total_violation = (
-            violations.get('ordering', 0) * 100 +
-            violations.get('expected_value', 0) * 50 +
-            violations.get('interval', 0) * 10
-        )
+        # Weighted penalty structure - matching your original
+        total_violation = 0.0
+        
+        # High penalty for ordering violations (most important)
+        total_violation += violations.get('ordering', 0) ** 2
+        
+        # Medium penalty for interval violations
+        total_violation += violations.get('interval_L', 0)  ** 2
+        total_violation += violations.get('interval_L1', 0) ** 2
+        total_violation += violations.get('interval_L2', 0) ** 2
+        
+        # Expected value should be exactly zero
+        total_violation += violations.get('expected_value', 0) ** 2
+        
+        # Probability constraints
+        total_violation += violations.get('prob_bounds', 0) ** 2
+        
+        # Penalties for empty intervals
+        total_violation += violations.get('empty_interval', 0) ** 2
+        total_violation += violations.get('empty_interval_L1', 0)** 2
+        total_violation += violations.get('empty_interval_L2', 0)** 2
+        
+
         
         # Update statistics
         if total_violation < self.stats['best_violation']:
@@ -495,7 +576,7 @@ class DiscreteLotteryOptimizer:
         solutions = []
         
         # Phase 1: Random exploration
-        print("📊 Phase 1: Random exploration...")
+        print(" Phase 1: Random exploration")
         phase1_attempts = self.config.num_attempts // 3
         
         good_lottery_values = {i: [] for i in range(8)}
@@ -516,7 +597,7 @@ class DiscreteLotteryOptimizer:
                     good_probabilities[i].append(params[8 + i])
         
         # Phase 2: Focused search
-        print("🎯 Phase 2: Focused search...")
+        print("Phase 2: Focused search")
         phase2_attempts = self.config.num_attempts - phase1_attempts
         
         for attempt in tqdm(range(phase2_attempts), desc="Focused"):
@@ -560,7 +641,7 @@ class DiscreteLotteryOptimizer:
     
     def solve_lottery(self, method: str = 'parallel') -> List[DiscreteSolution]:
         """Main solving method with multiple discrete strategies"""
-        print(f"🎲 Starting DISCRETE lottery optimization...")
+        print(f" Starting DISCRETE lottery optimization...")
         print(f"Method: {method}")
         print(f"Search space size: ~{len(self.lottery_values)**8 * len(self.prob_choices)**3:,}")
         
@@ -584,7 +665,6 @@ class DiscreteLotteryOptimizer:
         print(f"📊 Statistics:")
         print(f"   Total evaluations: {self.stats['evaluations']:,}")
         print(f"   Solutions found: {len(solutions)}")
-        print(f"   Success rate: {len(solutions)/self.stats['evaluations']*100:.4f}%")
         print(f"   Best violation: {min(s.fun for s in solutions) if solutions else 'N/A'}")
         
         return solutions
@@ -672,8 +752,8 @@ def main():
         alpha=0.88,
         lambda_=2.25, 
         gamma=0.61,
-        num_attempts=5000,          # More attempts since it's faster
-        violation_threshold=5.0,
+        num_attempts=1000000,          # More attempts since it's faster
+        violation_threshold=10.0,
         lottery_min=-50,
         lottery_max=50,
         prob_choices=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
@@ -683,7 +763,7 @@ def main():
     # Create optimizer
     optimizer = DiscreteLotteryOptimizer(config)
     
-    print("🎲 DISCRETE LOTTERY OPTIMIZER")
+    print(" DISCRETE LOTTERY OPTIMIZER")
     print("="*50)
     print("Choose optimization method:")
     print("1. Parallel discrete search (recommended)")
@@ -691,13 +771,13 @@ def main():
     print("3. Simple random discrete search")
     
     # Run optimization
-    solutions = optimizer.solve_lottery(method='parallel')
+    solutions = optimizer.solve_lottery(method='adaptive')
     
     if solutions:
         # Display results
         solution_data = optimizer.display_solutions(solutions)
         
-        print(f"\n🎉 SUCCESS: Found {len(solutions)} discrete solution(s)")
+        print(f"\n SUCCESS: Found {len(solutions)} discrete solution(s)")
         print(f"Best violation: {min(s.fun for s in solutions):.6f}")
         
         # Show search efficiency
@@ -707,7 +787,7 @@ def main():
         
         return solutions
     else:
-        print("\n❌ No solutions found. Try:")
+        print("\n No solutions found. Try:")
         print("  - Increasing num_attempts")
         print("  - Relaxing violation_threshold") 
         print("  - Using adaptive search method")
