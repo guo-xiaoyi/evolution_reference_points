@@ -1,0 +1,49 @@
+Lottery Optimization Results
+Generated on: 2025-06-30 09:13:10
+Number of solutions found: 1
+Prospect Theory Parameters: α=0.88, λ=2.25, γ=0.61
+
+
+================================================================================
+FOUND 1 LOTTERY SOLUTION(S)
+================================================================================
+Prospect Theory Parameters: α=0.88, λ=2.25, γ=0.61
+
+--- SOLUTION 1 ---
+Objective function value: 49.439268
+LOTTERY STRUCTURE:
+  Stage 1: b₁₁= 42, b₁₂= 38
+  Stage 2: c₂₁=-22, c₂₂=-33
+  Stage 3: c₃₁= 21, c₃₂=-24, c₃₃= 46, c₃₄=-41
+  Probabilities: p₁=0.20, p₂=0.20, p₃=0.40
+FINAL OUTCOMES:
+  z₁ = 0+42+-22+21 = 41 (prob=0.040)
+  z₂ = 0+42+-22+-24 = -4 (prob=0.160)
+  z₃ = 0+38+-33+46 = 51 (prob=0.320)
+  z₄ = 0+38+-33+-41 = -36 (prob=0.480)
+CONSTRAINT VERIFICATION:
+  1. Expected value: 0.040000 ≠ 0 ✗
+  2. Ordering constraint ✗
+     Output Lottery Values: 0=0, b₁₁=42, b₁₁+c₂₁=20, b₁₂=38, b₁₂+c₂₂=5
+             E(L) = 0.0, E(L₁)=5.0, E(L₂)=-1.2
+  5. Main interval IL = [-9.08, -4.00]
+     Some values outside IL: ✗
+  6. L1 interval IL1 = [1.94, 41.00]
+     L1 values outside IL1: ✗
+  7. L2 interval IL2 = [-15.90, 51.00]
+     L2 values in IL2: ✓
+
+================================================================================
+SUMMARY TABLE
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4  E[Z]    Σp  Violation
+   1   42   38  -22  -33   21  -24   46  -41 0.200 0.200 0.400  41  -4  51 -36 0.040 0.800     49.439
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+Total solutions found: 1
+Best violation score: 49.439268
+Average violation score: 49.439268
+Worst violation score: 49.439268
+File saved on: 2025-06-30 09:13:10
