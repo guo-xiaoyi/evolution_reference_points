@@ -1,0 +1,125 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-07-23 15:45:23
+Solutions found: 2
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-101, -26] and [26, 101] 
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 15
+  - Total evaluations: 6,779
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 11.386819
+Timestamp: 2025-07-23 15:44:30
+
+Lottery structure:
+  Stage 1: b11= 85, b12=-28
+  Stage 2: c21=-44, c22= 27
+  Stage 3: c31= 43, c32=-37, c33= 49, c34=-101
+  Probabilities: p1=0.500, p2=0.100, p3=0.600
+
+Final outcomes:
+  z1 = 0+85+-44+43 = 84 (prob=0.050)
+  z2 = 0+85+-44+-37 = 4 (prob=0.450)
+  z3 = 0+-28+27+49 = 48 (prob=0.300)
+  z4 = 0+-28+27+-101 = -102 (prob=0.200)
+  Expected value: -0.000000
+
+Constraint verification:
+  1. Expected value constraint: -0.000000 ≈ 0 ✓
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✗
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-21.270, 4.000]
+  5. L1 interval IL1 = [10.387, 84.000]
+     ✗ b11 = 85.000 ∉ IL1
+     ✓ b11+c21 = 41.000 ∈ IL1
+     ✓ E(L1) = 12.000 ∈ IL1
+     ✗ E(L) = -0.000 ∉ IL1
+  6. L2 interval IL2 = [-50.228, 48.000]
+     ✓ b12 = -28.000 ∈ IL2
+     ✓ b12+c22 = -1.000 ∈ IL2
+     ✓ E(L2) = -12.000 ∈ IL2
+     ✓ E(L) = -0.000 ∈ IL2
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 14.775286
+Timestamp: 2025-07-23 15:44:31
+
+Lottery structure:
+  Stage 1: b11= 37, b12= 91
+  Stage 2: c21= 52, c22=-42
+  Stage 3: c31= 56, c32=-94, c33= 51, c34=-79
+  Probabilities: p1=0.300, p2=0.100, p3=0.200
+
+Final outcomes:
+  z1 = 0+37+52+56 = 145 (prob=0.030)
+  z2 = 0+37+52+-94 = -5 (prob=0.270)
+  z3 = 0+91+-42+51 = 100 (prob=0.140)
+  z4 = 0+91+-42+-79 = -30 (prob=0.560)
+  Expected value: 0.200000
+
+Constraint verification:
+  1. Expected value constraint: 0.200000 ≈ 0 ✓
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-1.909, 100.000]
+  5. L1 interval IL1 = [6.975, 145.000]
+     ✓ b11 = 37.000 ∈ IL1
+     ✓ b11+c21 = 89.000 ∈ IL1
+     ✓ E(L1) = 10.000 ∈ IL1
+     ✗ E(L) = 0.200 ∉ IL1
+  6. L2 interval IL2 = [-12.826, 100.000]
+     ✓ b12 = 91.000 ∈ IL2
+     ✓ b12+c22 = 49.000 ∈ IL2
+     ✓ E(L2) = -4.000 ∈ IL2
+     ✓ E(L) = 0.200 ∈ IL2
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3   z4   E[Z]  Violation
+   1   85  -28  -44   27   43  -37   49 -101 0.500 0.100 0.600  84   4  48 -102 -0.000     11.387
+   2   37   91   52  -42   56  -94   51  -79 0.300 0.100 0.200 145  -5 100  -30  0.200     14.775
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 2
+Unique lottery combinations: 2
+Unique probability combinations: 2
+Mean pairwise distance: 185.333
+Distance range: [185.333, 185.333]
+Distance standard deviation: 0.000
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 113.34 seconds
+Total evaluations: 6,781
+Solutions found: 2
+Success rate: 0.029%
+Prefilter rejections: 4,993,221
+Evaluation speed: 60 evals/s
+Best violation value: 11.386819
+Average violation value: 13.081053
+Worst violation value: 14.775286
+Search space coverage: 3.26e-15%
+
+================================================================================
+Optimization Suggestions
+================================================================================
+Suggestions for few solutions:
+  - Increase search attempts
+  - Moderately relax violation threshold
+  - Use more probability choices
+
+File saved on: 2025-07-23 15:45:23
+================================================================================

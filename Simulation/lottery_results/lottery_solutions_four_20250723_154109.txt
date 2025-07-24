@@ -1,0 +1,59 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-07-23 15:41:09
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-101, -26] and [26, 101] 
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 10
+  - Total evaluations: 18,874
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 9.487766
+Timestamp: 2025-07-23 15:38:58
+
+Lottery structure:
+  Stage 1: b11= 62, b12=-34
+  Stage 2: c21=-29, c22=-35
+  Stage 3: c31= 53, c32=-34, c33= 97, c34=-42
+  Probabilities: p1=0.900, p2=0.100, p3=0.400
+
+Final outcomes:
+  z1 = 0+62+-29+53 = 86 (prob=0.090)
+  z2 = 0+62+-29+-34 = -1 (prob=0.810)
+  z3 = 0+-34+-35+97 = 28 (prob=0.040)
+  z4 = 0+-34+-35+-42 = -111 (prob=0.060)
+  Expected value: 1.390000
+
+Constraint verification:
+  1. Expected value constraint: 1.390000 ≈ 0 ✗
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-12.609, -1.000]
+  5. L1 interval IL1 = [5.946, 86.000]
+     ✓ b11 = 62.000 ∈ IL1
+     ✓ b11+c21 = 33.000 ∈ IL1
+     ✓ E(L1) = 7.700 ∈ IL1
+     ✗ E(L) = 1.390 ∉ IL1
+  6. L2 interval IL2 = [-78.889, 28.000]
+     ✓ b12 = -34.000 ∈ IL2
+     ✓ b12+c22 = -69.000 ∈ IL2
+     ✓ E(L2) = -55.400 ∈ IL2
+     ✓ E(L) = 1.390 ∈ IL2
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3   z4  E[Z]  Violation
+   1   62  -34  -29  -35   53  -34   97  -42 0.900 0.100 0.400  86  -1  28 -111 1.390      9.488
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1

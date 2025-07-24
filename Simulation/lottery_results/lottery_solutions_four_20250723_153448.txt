@@ -1,0 +1,161 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-07-23 15:34:48
+Solutions found: 3
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-101, -26] and [26, 101] 
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 10
+  - Total evaluations: 75,811
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 8.823853
+Timestamp: 2025-07-23 15:32:54
+
+Lottery structure:
+  Stage 1: b11= 72, b12= 35
+  Stage 2: c21=-32, c22=-34
+  Stage 3: c31= 53, c32=-45, c33= 65, c34=-78
+  Probabilities: p1=0.900, p2=0.100, p3=0.400
+
+Final outcomes:
+  z1 = 0+72+-32+53 = 93 (prob=0.090)
+  z2 = 0+72+-32+-45 = -5 (prob=0.810)
+  z3 = 0+35+-34+65 = 66 (prob=0.040)
+  z4 = 0+35+-34+-78 = -77 (prob=0.060)
+  Expected value: 2.340000
+
+Constraint verification:
+  1. Expected value constraint: 2.340000 ≈ 0 ✗
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-4.456, 66.000]
+  5. L1 interval IL1 = [2.824, 93.000]
+     ✓ b11 = 72.000 ∈ IL1
+     ✓ b11+c21 = 40.000 ∈ IL1
+     ✓ E(L1) = 4.800 ∈ IL1
+     ✗ E(L) = 2.340 ∉ IL1
+  6. L2 interval IL2 = [-43.964, 66.000]
+     ✓ b12 = 35.000 ∈ IL2
+     ✓ b12+c22 = 1.000 ∈ IL2
+     ✓ E(L2) = -19.800 ∈ IL2
+     ✓ E(L) = 2.340 ∈ IL2
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 9.676837
+Timestamp: 2025-07-23 15:32:15
+
+Lottery structure:
+  Stage 1: b11= 84, b12= 43
+  Stage 2: c21=-52, c22=-29
+  Stage 3: c31= 59, c32=-30, c33= 90, c34=-44
+  Probabilities: p1=0.400, p2=0.100, p3=0.200
+
+Final outcomes:
+  z1 = 0+84+-52+59 = 91 (prob=0.040)
+  z2 = 0+84+-52+-30 = 2 (prob=0.360)
+  z3 = 0+43+-29+90 = 104 (prob=0.120)
+  z4 = 0+43+-29+-44 = -30 (prob=0.480)
+  Expected value: 2.440000
+
+Constraint verification:
+  1. Expected value constraint: 2.440000 ≈ 0 ✗
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✗
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [0.572, 2.000]
+  5. L1 interval IL1 = [9.105, 91.000]
+     ✓ b11 = 84.000 ∈ IL1
+     ✓ b11+c21 = 32.000 ∈ IL1
+     ✓ E(L1) = 10.900 ∈ IL1
+     ✗ E(L) = 2.440 ∉ IL1
+  6. L2 interval IL2 = [-12.298, 104.000]
+     ✓ b12 = 43.000 ∈ IL2
+     ✓ b12+c22 = 14.000 ∈ IL2
+     ✓ E(L2) = -3.200 ∈ IL2
+     ✓ E(L) = 2.440 ∈ IL2
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 9.781876
+Timestamp: 2025-07-23 15:31:25
+
+Lottery structure:
+  Stage 1: b11= 89, b12= 83
+  Stage 2: c21=-42, c22=-65
+  Stage 3: c31= 63, c32=-47, c33= 74, c34=-70
+  Probabilities: p1=0.100, p2=0.100, p3=0.400
+
+Final outcomes:
+  z1 = 0+89+-42+63 = 110 (prob=0.010)
+  z2 = 0+89+-42+-47 = 0 (prob=0.090)
+  z3 = 0+83+-65+74 = 92 (prob=0.360)
+  z4 = 0+83+-65+-70 = -52 (prob=0.540)
+  Expected value: 6.140000
+
+Constraint verification:
+  1. Expected value constraint: 6.140000 ≈ 0 ✗
+  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 ✗
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-11.231, 0.000]
+  5. L1 interval IL1 = [8.782, 110.000]
+     ✓ b11 = 89.000 ∈ IL1
+     ✓ b11+c21 = 47.000 ∈ IL1
+     ✓ E(L1) = 11.000 ∈ IL1
+     ✗ E(L) = 6.140 ∉ IL1
+  6. L2 interval IL2 = [-18.733, 92.000]
+     ✓ b12 = 83.000 ∈ IL2
+     ✓ b12+c22 = 18.000 ∈ IL2
+     ✓ E(L2) = 5.600 ∈ IL2
+     ✓ E(L) = 6.140 ∈ IL2
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4  E[Z]  Violation
+   1   72   35  -32  -34   53  -45   65  -78 0.900 0.100 0.400  93  -5  66 -77 2.340      8.824
+   2   84   43  -52  -29   59  -30   90  -44 0.400 0.100 0.200  91   2 104 -30 2.440      9.677
+   3   89   83  -42  -65   63  -47   74  -70 0.100 0.100 0.400 110   0  92 -52 6.140      9.782
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 3
+Unique lottery combinations: 3
+Unique probability combinations: 3
+Mean pairwise distance: 59.819
+Distance range: [51.723, 65.254]
+Distance standard deviation: 5.836
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 236.06 seconds
+Total evaluations: 75,814
+Solutions found: 3
+Success rate: 0.004%
+Prefilter rejections: 9,924,189
+Evaluation speed: 321 evals/s
+Best violation value: 8.823853
+Average violation value: 9.427522
+Worst violation value: 9.781876
+Search space coverage: 3.65e-14%
+
+================================================================================
+Optimization Suggestions
+================================================================================
+Suggestions for few solutions:
+  - Increase search attempts
+  - Moderately relax violation threshold
+  - Use more probability choices
+
+File saved on: 2025-07-23 15:34:48
+================================================================================

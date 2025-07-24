@@ -1,0 +1,20 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2025-07-18 16:56:31
+Solutions found: 0
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-100, 100]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 5.0
+  - Total evaluations: 95
+  - Parameter space: 11 lottery values + 5 probabilities = 16 parameters
+  - Outcomes: 6 (z1, z2, z3, z4, z5, z6)
+  - Numba acceleration: Enabled
+
+No solutions found!
+Suggestions:
+  - Increase num_attempts
+  - Relax violation_threshold
+  - Adjust parameter ranges

@@ -1,0 +1,2487 @@
+==========================================================================================
+Adaptive High-Performance Discrete Lottery Optimizer - Results Report
+==========================================================================================
+Generated on: 2025-07-24 09:08:42
+Solutions found: 97
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Adaptive algorithm configuration:
+  - Adaptation frequency: 2000
+  - Learning rate: 0.15
+  - Initial exploration rate: 0.3 -> Final: 0.300
+  - Initial temperature: 1.0 -> Final: 0.995
+  - Memory size: 50000
+  - Total adaptations made: 1
+Search configuration:
+  - Lottery range: [-101, -26] and [26, 101]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 15
+  - Total evaluations: 1,177
+  - Numba acceleration: Enabled
+
+============================================================
+Adaptive Learning Summary
+============================================================
+Successful regions discovered: 1
+Parameter regions explored: 585
+Most promising parameter regions:
+  1. Region XHMMHMHM_MLM: 24.3% success rate (87/358 attempts, best violation: 7.408)
+  2. Region XHMMHMHM_LLM: 15.4% success rate (6/39 attempts, best violation: 10.911)
+  3. Region XHMMHMHM_MLL: 15.0% success rate (3/20 attempts, best violation: 11.930)
+  4. Region MMHHHHHM_MMM: 0.0% success rate (0/11 attempts, best violation: 105.230)
+
+Adaptation History (last 5 adaptations):
+  Adaptation -3: Generation 79, Solutions: 1, Best violation: 9.710, Exploration: 0.300
+
+
+======================================================================
+Solution 1 (Generation 80)
+======================================================================
+Objective function value: 7.408137
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 40, c32=-32, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+40 = 73 (prob=0.030)
+  z2 = 0+62+-29+-32 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 2 (Generation 80)
+======================================================================
+Objective function value: 7.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 55, b12= 36
+  Stage 2: c21=-29, c22=-26
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+55+-29+28 = 54 (prob=0.030)
+  z2 = 0+55+-29+-30 = -4 (prob=0.270)
+  z3 = 0+36+-26+30 = 40 (prob=0.210)
+  z4 = 0+36+-26+-28 = -18 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 3 (Generation 80)
+======================================================================
+Objective function value: 8.080444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 59, b12= 36
+  Stage 2: c21=-26, c22=-30
+  Stage 3: c31= 28, c32=-30, c33= 33, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+59+-26+28 = 61 (prob=0.030)
+  z2 = 0+59+-26+-30 = 3 (prob=0.270)
+  z3 = 0+36+-30+33 = 39 (prob=0.210)
+  z4 = 0+36+-30+-28 = -22 (prob=0.490)
+  Expected value: 0.050000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 4 (Generation 80)
+======================================================================
+Objective function value: 8.530444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 61, b12= 36
+  Stage 2: c21=-29, c22=-30
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+61+-29+28 = 60 (prob=0.030)
+  z2 = 0+61+-29+-30 = 2 (prob=0.270)
+  z3 = 0+36+-30+30 = 36 (prob=0.210)
+  z4 = 0+36+-30+-26 = -20 (prob=0.490)
+  Expected value: 0.100000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 5 (Generation 80)
+======================================================================
+Objective function value: 8.829785
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-26, c22=-29
+  Stage 3: c31= 26, c32=-36, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-26+26 = 62 (prob=0.030)
+  z2 = 0+62+-26+-36 = 0 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-26 = -19 (prob=0.490)
+  Expected value: 0.320000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 6 (Generation 80)
+======================================================================
+Objective function value: 8.990444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 26
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 56, c34=-28
+  Probabilities: p1=0.400, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.040)
+  z2 = 0+62+-29+-30 = 3 (prob=0.360)
+  z3 = 0+26+-29+56 = 53 (prob=0.180)
+  z4 = 0+26+-29+-28 = -31 (prob=0.420)
+  Expected value: 0.040000
+
+Parameter region: XHMMHMXM_MLM
+Region success rate: 50.0% (1/2 attempts)
+
+
+======================================================================
+Solution 7 (Generation 80)
+======================================================================
+Objective function value: 9.356654
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-26, c22=-29
+  Stage 3: c31= 46, c32=-35, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-26+46 = 82 (prob=0.030)
+  z2 = 0+62+-26+-35 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.210000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 8 (Generation 80)
+======================================================================
+Objective function value: 9.360279
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-31, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-31 = 2 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.150000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 9 (Generation 80)
+======================================================================
+Objective function value: 9.409455
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-31, c22=-29
+  Stage 3: c31= 34, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-31+34 = 65 (prob=0.030)
+  z2 = 0+62+-31+-30 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.300000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 10 (Generation 80)
+======================================================================
+Objective function value: 9.410114
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 30, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+30 = 63 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.180000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 11 (Generation 80)
+======================================================================
+Objective function value: 9.510279
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 34
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 29, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.400, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+29 = 62 (prob=0.040)
+  z2 = 0+62+-29+-30 = 3 (prob=0.360)
+  z3 = 0+34+-29+30 = 35 (prob=0.180)
+  z4 = 0+34+-29+-28 = -23 (prob=0.420)
+  Expected value: 0.200000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 12 (Generation 80)
+======================================================================
+Objective function value: 9.529291
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-37, c33= 35, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-37 = -4 (prob=0.270)
+  z3 = 0+36+-29+35 = 42 (prob=0.210)
+  z4 = 0+36+-29+-26 = -19 (prob=0.490)
+  Expected value: 0.260000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 13 (Generation 80)
+======================================================================
+Objective function value: 9.558302
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 61, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 41, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+61+-29+41 = 73 (prob=0.030)
+  z2 = 0+61+-29+-30 = 2 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.210000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 14 (Generation 80)
+======================================================================
+Objective function value: 9.620444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 35
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-27
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+35+-29+30 = 36 (prob=0.210)
+  z4 = 0+35+-29+-27 = -21 (prob=0.490)
+  Expected value: -0.090000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 15 (Generation 78)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 16 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 17 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 18 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 19 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 20 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 21 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 22 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 23 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 24 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 25 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 26 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 27 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 28 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 29 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 30 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 31 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 32 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 33 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 34 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 35 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 36 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 37 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 38 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 39 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 40 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 41 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 42 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 43 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 44 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 45 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 46 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 47 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 48 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 49 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 50 (Generation 80)
+======================================================================
+Objective function value: 9.710444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 51 (Generation 80)
+======================================================================
+Objective function value: 10.109785
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 32, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+32 = 65 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.240000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 52 (Generation 80)
+======================================================================
+Objective function value: 10.360609
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 27, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+27 = 60 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.090000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 53 (Generation 80)
+======================================================================
+Objective function value: 10.429455
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 68, b12= 34
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-36, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+68+-29+28 = 67 (prob=0.030)
+  z2 = 0+68+-29+-36 = 3 (prob=0.270)
+  z3 = 0+34+-29+30 = 35 (prob=0.210)
+  z4 = 0+34+-29+-26 = -21 (prob=0.490)
+  Expected value: -0.120000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 54 (Generation 80)
+======================================================================
+Objective function value: 10.529455
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 60, b12= 36
+  Stage 2: c21=-26, c22=-29
+  Stage 3: c31= 28, c32=-36, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+60+-26+28 = 62 (prob=0.030)
+  z2 = 0+60+-26+-36 = -2 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-26 = -19 (prob=0.490)
+  Expected value: -0.220000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 55 (Generation 80)
+======================================================================
+Objective function value: 10.809455
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 34, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+34 = 67 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.300000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 56 (Generation 80)
+======================================================================
+Objective function value: 10.910773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-26
+  Probabilities: p1=0.200, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.020)
+  z2 = 0+62+-29+-30 = 3 (prob=0.180)
+  z3 = 0+36+-29+30 = 37 (prob=0.240)
+  z4 = 0+36+-29+-26 = -19 (prob=0.560)
+  Expected value: -0.040000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+======================================================================
+Solution 57 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 58 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 59 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 60 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 61 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 62 (Generation 80)
+======================================================================
+Objective function value: 11.010773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.060000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 63 (Generation 80)
+======================================================================
+Objective function value: 11.828796
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 65, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-40, c33= 30, c34=-28
+  Probabilities: p1=0.500, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+65+-29+28 = 64 (prob=0.050)
+  z2 = 0+65+-29+-40 = -4 (prob=0.450)
+  z3 = 0+36+-29+30 = 37 (prob=0.150)
+  z4 = 0+36+-29+-28 = -21 (prob=0.350)
+  Expected value: -0.400000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 64 (Generation 80)
+======================================================================
+Objective function value: 11.910444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 60, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+60+-29+28 = 59 (prob=0.030)
+  z2 = 0+60+-29+-30 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.480000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 65 (Generation 80)
+======================================================================
+Objective function value: 11.930444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.500, p2=0.100, p3=0.200
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.050)
+  z2 = 0+62+-29+-30 = 3 (prob=0.450)
+  z3 = 0+36+-29+30 = 37 (prob=0.100)
+  z4 = 0+36+-29+-28 = -21 (prob=0.400)
+  Expected value: -0.300000
+
+Parameter region: XHMMHMHM_MLL
+Region success rate: 15.0% (3/20 attempts)
+
+
+======================================================================
+Solution 66 (Generation 80)
+======================================================================
+Objective function value: 12.310444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 61, b12= 36
+  Stage 2: c21=-29, c22=-28
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+61+-29+28 = 60 (prob=0.030)
+  z2 = 0+61+-29+-30 = 2 (prob=0.270)
+  z3 = 0+36+-28+30 = 38 (prob=0.210)
+  z4 = 0+36+-28+-28 = -20 (prob=0.490)
+  Expected value: 0.520000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 67 (Generation 80)
+======================================================================
+Objective function value: 12.490444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-34
+  Stage 3: c31= 28, c32=-30, c33= 33, c34=-26
+  Probabilities: p1=0.400, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.040)
+  z2 = 0+62+-29+-30 = 3 (prob=0.360)
+  z3 = 0+36+-34+33 = 35 (prob=0.180)
+  z4 = 0+36+-34+-26 = -24 (prob=0.420)
+  Expected value: -0.260000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 68 (Generation 80)
+======================================================================
+Objective function value: 12.700444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 37
+  Stage 2: c21=-29, c22=-30
+  Stage 3: c31= 28, c32=-30, c33= 37, c34=-32
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+37+-30+37 = 44 (prob=0.210)
+  z4 = 0+37+-30+-32 = -25 (prob=0.490)
+  Expected value: -0.370000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 69 (Generation 80)
+======================================================================
+Objective function value: 12.799291
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-37, c33= 36, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-37 = -4 (prob=0.270)
+  z3 = 0+36+-29+36 = 43 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.510000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 70 (Generation 80)
+======================================================================
+Objective function value: 12.908467
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 40, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+40 = 73 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: 0.480000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 71 (Generation 80)
+======================================================================
+Objective function value: 12.920444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-30, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 29, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-30+28 = 60 (prob=0.030)
+  z2 = 0+62+-30+-30 = 2 (prob=0.270)
+  z3 = 0+36+-29+29 = 36 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.390000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 72 (Generation 80)
+======================================================================
+Objective function value: 12.950444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 35
+  Stage 2: c21=-29, c22=-26
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.200, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.020)
+  z2 = 0+62+-29+-30 = 3 (prob=0.180)
+  z3 = 0+35+-26+30 = 39 (prob=0.240)
+  z4 = 0+35+-26+-28 = -19 (prob=0.560)
+  Expected value: 0.480000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+======================================================================
+Solution 73 (Generation 80)
+======================================================================
+Objective function value: 13.030444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-26
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-31
+  Probabilities: p1=0.200, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.020)
+  z2 = 0+62+-29+-30 = 3 (prob=0.180)
+  z3 = 0+36+-26+30 = 40 (prob=0.240)
+  z4 = 0+36+-26+-31 = -21 (prob=0.560)
+  Expected value: -0.400000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+======================================================================
+Solution 74 (Generation 80)
+======================================================================
+Objective function value: 13.031103
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 33
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-26, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-26 = 7 (prob=0.270)
+  z3 = 0+33+-29+30 = 34 (prob=0.210)
+  z4 = 0+33+-29+-26 = -22 (prob=0.490)
+  Expected value: 0.080000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 75 (Generation 80)
+======================================================================
+Objective function value: 13.050444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-32, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 28, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-32+28 = 58 (prob=0.030)
+  z2 = 0+62+-32+-30 = 0 (prob=0.270)
+  z3 = 0+36+-29+28 = 35 (prob=0.210)
+  z4 = 0+36+-29+-26 = -19 (prob=0.490)
+  Expected value: -0.220000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 76 (Generation 80)
+======================================================================
+Objective function value: 13.110773
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-30, c22=-29
+  Stage 3: c31= 26, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-30+26 = 58 (prob=0.030)
+  z2 = 0+62+-30+-30 = 2 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.240000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 77 (Generation 80)
+======================================================================
+Objective function value: 13.290609
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-28
+  Stage 3: c31= 27, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.200, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+27 = 60 (prob=0.020)
+  z2 = 0+62+-29+-30 = 3 (prob=0.180)
+  z3 = 0+36+-28+30 = 38 (prob=0.240)
+  z4 = 0+36+-28+-28 = -20 (prob=0.560)
+  Expected value: -0.340000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+======================================================================
+Solution 78 (Generation 80)
+======================================================================
+Objective function value: 13.299291
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 33
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 39, c32=-26, c33= 28, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+39 = 72 (prob=0.030)
+  z2 = 0+62+-29+-26 = 7 (prob=0.270)
+  z3 = 0+33+-29+28 = 32 (prob=0.210)
+  z4 = 0+33+-29+-26 = -22 (prob=0.490)
+  Expected value: -0.010000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 79 (Generation 80)
+======================================================================
+Objective function value: 13.307808
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 38
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 44, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.100, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+44 = 77 (prob=0.010)
+  z2 = 0+62+-29+-30 = 3 (prob=0.090)
+  z3 = 0+38+-29+30 = 39 (prob=0.270)
+  z4 = 0+38+-29+-28 = -19 (prob=0.630)
+  Expected value: -0.400000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+======================================================================
+Solution 80 (Generation 80)
+======================================================================
+Objective function value: 13.348137
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 54, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 42, c32=-30, c33= 36, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+54+-29+42 = 67 (prob=0.030)
+  z2 = 0+54+-29+-30 = -5 (prob=0.270)
+  z3 = 0+36+-29+36 = 43 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.600000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 81 (Generation 80)
+======================================================================
+Objective function value: 13.350444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 58, b12= 41
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.200
+
+Final outcomes:
+  z1 = 0+58+-29+28 = 57 (prob=0.030)
+  z2 = 0+58+-29+-30 = -1 (prob=0.270)
+  z3 = 0+41+-29+30 = 42 (prob=0.140)
+  z4 = 0+41+-29+-26 = -14 (prob=0.560)
+  Expected value: -0.520000
+
+Parameter region: XHMMHMHM_MLL
+Region success rate: 15.0% (3/20 attempts)
+
+
+======================================================================
+Solution 82 (Generation 80)
+======================================================================
+Objective function value: 13.910444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-32, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+26 = 59 (prob=0.030)
+  z2 = 0+62+-29+-32 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.480000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 83 (Generation 80)
+======================================================================
+Objective function value: 14.088467
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-40
+  Stage 3: c31= 40, c32=-30, c33= 49, c34=-31
+  Probabilities: p1=0.500, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+40 = 73 (prob=0.050)
+  z2 = 0+62+-29+-30 = 3 (prob=0.450)
+  z3 = 0+36+-40+49 = 45 (prob=0.150)
+  z4 = 0+36+-40+-31 = -35 (prob=0.350)
+  Expected value: -0.500000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 84 (Generation 80)
+======================================================================
+Objective function value: 14.102143
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 32
+  Stage 2: c21=-26, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.200, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-26+28 = 64 (prob=0.060)
+  z2 = 0+62+-26+-30 = 6 (prob=0.240)
+  z3 = 0+32+-29+30 = 33 (prob=0.210)
+  z4 = 0+32+-29+-28 = -25 (prob=0.490)
+  Expected value: -0.040000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 85 (Generation 80)
+======================================================================
+Objective function value: 14.120444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 34
+  Stage 2: c21=-29, c22=-26
+  Stage 3: c31= 28, c32=-30, c33= 29, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+34+-26+29 = 37 (prob=0.210)
+  z4 = 0+34+-26+-28 = -20 (prob=0.490)
+  Expected value: 0.610000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 86 (Generation 80)
+======================================================================
+Objective function value: 14.120444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-27
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-27 = -20 (prob=0.490)
+  Expected value: 0.610000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 87 (Generation 80)
+======================================================================
+Objective function value: 14.147638
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 46
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 38, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.100
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+46+-29+38 = 55 (prob=0.070)
+  z4 = 0+46+-29+-28 = -11 (prob=0.630)
+  Expected value: -0.440000
+
+Parameter region: XHMMHMHM_MLL
+Region success rate: 15.0% (3/20 attempts)
+
+
+======================================================================
+Solution 88 (Generation 80)
+======================================================================
+Objective function value: 14.160444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 26, c34=-27
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-30 = 3 (prob=0.270)
+  z3 = 0+36+-29+26 = 33 (prob=0.210)
+  z4 = 0+36+-29+-27 = -20 (prob=0.490)
+  Expected value: -0.230000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 89 (Generation 80)
+======================================================================
+Objective function value: 14.160609
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 61, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 26, c32=-31, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+61+-29+26 = 58 (prob=0.030)
+  z2 = 0+61+-29+-31 = 1 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.510000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 90 (Generation 80)
+======================================================================
+Objective function value: 14.330279
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 67, b12= 36
+  Stage 2: c21=-26, c22=-29
+  Stage 3: c31= 26, c32=-33, c33= 30, c34=-31
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+67+-26+26 = 67 (prob=0.030)
+  z2 = 0+67+-26+-33 = 8 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-31 = -24 (prob=0.490)
+  Expected value: 0.180000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 91 (Generation 80)
+======================================================================
+Objective function value: 14.459950
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-33, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-33 = 0 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.690000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 92 (Generation 80)
+======================================================================
+Objective function value: 14.459950
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 28, c32=-33, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.030)
+  z2 = 0+62+-29+-33 = 0 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-28 = -21 (prob=0.490)
+  Expected value: -0.690000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 93 (Generation 80)
+======================================================================
+Objective function value: 14.510444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 38
+  Stage 2: c21=-33, c22=-29
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-33+28 = 57 (prob=0.030)
+  z2 = 0+62+-33+-30 = -1 (prob=0.270)
+  z3 = 0+38+-29+30 = 39 (prob=0.210)
+  z4 = 0+38+-29+-28 = -19 (prob=0.490)
+  Expected value: 0.320000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 94 (Generation 80)
+======================================================================
+Objective function value: 14.530114
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-29
+  Stage 3: c31= 29, c32=-31, c33= 30, c34=-26
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+29 = 62 (prob=0.030)
+  z2 = 0+62+-29+-31 = 2 (prob=0.270)
+  z3 = 0+36+-29+30 = 37 (prob=0.210)
+  z4 = 0+36+-29+-26 = -19 (prob=0.490)
+  Expected value: 0.860000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 95 (Generation 80)
+======================================================================
+Objective function value: 14.909126
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-26, c22=-26
+  Stage 3: c31= 28, c32=-38, c33= 30, c34=-28
+  Probabilities: p1=0.300, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-26+28 = 64 (prob=0.030)
+  z2 = 0+62+-26+-38 = -2 (prob=0.270)
+  z3 = 0+36+-26+30 = 40 (prob=0.210)
+  z4 = 0+36+-26+-28 = -18 (prob=0.490)
+  Expected value: 0.960000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 96 (Generation 80)
+======================================================================
+Objective function value: 14.918991
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-29, c22=-28
+  Stage 3: c31= 28, c32=-38, c33= 26, c34=-28
+  Probabilities: p1=0.300, p2=0.200, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-29+28 = 61 (prob=0.060)
+  z2 = 0+62+-29+-38 = -5 (prob=0.240)
+  z3 = 0+36+-28+26 = 34 (prob=0.210)
+  z4 = 0+36+-28+-28 = -20 (prob=0.490)
+  Expected value: -0.200000
+
+Parameter region: XHMMHMHM_MLM
+Region success rate: 24.3% (87/358 attempts)
+
+
+======================================================================
+Solution 97 (Generation 80)
+======================================================================
+Objective function value: 14.950444
+Diversity score: 0.000
+Timestamp: 2025-07-24 09:08:42
+
+Lottery structure:
+  Stage 1: b11= 62, b12= 36
+  Stage 2: c21=-36, c22=-26
+  Stage 3: c31= 28, c32=-30, c33= 30, c34=-28
+  Probabilities: p1=0.200, p2=0.100, p3=0.300
+
+Final outcomes:
+  z1 = 0+62+-36+28 = 54 (prob=0.020)
+  z2 = 0+62+-36+-30 = -4 (prob=0.180)
+  z3 = 0+36+-26+30 = 40 (prob=0.240)
+  z4 = 0+36+-26+-28 = -18 (prob=0.560)
+  Expected value: -0.120000
+
+Parameter region: XHMMHMHM_LLM
+Region success rate: 15.4% (6/39 attempts)
+
+
+==========================================================================================
+Adaptive Solution Summary Table
+==========================================================================================
+ Sol  Gen  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4   E[Z]  Violation  Diversity      Region
+   1   80   62   36  -29  -29   40  -32   30  -28 0.300 0.100 0.300  73   1  37 -21 -0.060      7.408      0.000 XHMMHMHM...
+   2   80   55   36  -29  -26   28  -30   30  -28 0.300 0.100 0.300  54  -4  40 -18  0.120      7.710      0.000 XHMMHMHM...
+   3   80   59   36  -26  -30   28  -30   33  -28 0.300 0.100 0.300  61   3  39 -22  0.050      8.080      0.000 XHMMHMHM...
+   4   80   61   36  -29  -30   28  -30   30  -26 0.300 0.100 0.300  60   2  36 -20  0.100      8.530      0.000 XHMMHMHM...
+   5   80   62   36  -26  -29   26  -36   30  -26 0.300 0.100 0.300  62   0  37 -19  0.320      8.830      0.000 XHMMHMHM...
+   6   80   62   26  -29  -29   28  -30   56  -28 0.400 0.100 0.300  61   3  53 -31  0.040      8.990      0.000 XHMMHMXM...
+   7   80   62   36  -26  -29   46  -35   30  -28 0.300 0.100 0.300  82   1  37 -21  0.210      9.357      0.000 XHMMHMHM...
+   8   80   62   36  -29  -29   28  -31   30  -28 0.300 0.100 0.300  61   2  37 -21 -0.150      9.360      0.000 XHMMHMHM...
+   9   80   62   36  -31  -29   34  -30   30  -28 0.300 0.100 0.300  65   1  37 -21 -0.300      9.409      0.000 XHMMHMHM...
+  10   80   62   36  -29  -29   30  -30   30  -28 0.300 0.100 0.300  63   3  37 -21  0.180      9.410      0.000 XHMMHMHM...
+  11   80   62   34  -29  -29   29  -30   30  -28 0.400 0.100 0.300  62   3  35 -23  0.200      9.510      0.000 XHMMHMHM...
+  12   80   62   36  -29  -29   28  -37   35  -26 0.300 0.100 0.300  61  -4  42 -19  0.260      9.529      0.000 XHMMHMHM...
+  13   80   61   36  -29  -29   41  -30   30  -28 0.300 0.100 0.300  73   2  37 -21  0.210      9.558      0.000 XHMMHMHM...
+  14   80   62   35  -29  -29   28  -30   30  -27 0.300 0.100 0.300  61   3  36 -21 -0.090      9.620      0.000 XHMMHMHM...
+  15   78   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  16   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  17   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  18   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  19   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  20   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  21   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  22   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  23   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  24   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  25   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  26   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  27   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  28   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  29   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  30   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  31   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  32   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  33   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  34   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  35   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  36   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  37   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  38   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  39   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  40   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  41   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  42   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  43   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  44   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  45   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  46   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  47   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  48   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  49   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  50   80   62   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  61   3  37 -21  0.120      9.710      0.000 XHMMHMHM...
+  51   80   62   36  -29  -29   32  -30   30  -28 0.300 0.100 0.300  65   3  37 -21  0.240     10.110      0.000 XHMMHMHM...
+  52   80   62   36  -29  -29   27  -30   30  -28 0.300 0.100 0.300  60   3  37 -21  0.090     10.361      0.000 XHMMHMHM...
+  53   80   68   34  -29  -29   28  -36   30  -26 0.300 0.100 0.300  67   3  35 -21 -0.120     10.429      0.000 XHMMHMHM...
+  54   80   60   36  -26  -29   28  -36   30  -26 0.300 0.100 0.300  62  -2  37 -19 -0.220     10.529      0.000 XHMMHMHM...
+  55   80   62   36  -29  -29   34  -30   30  -28 0.300 0.100 0.300  67   3  37 -21  0.300     10.809      0.000 XHMMHMHM...
+  56   80   62   36  -29  -29   26  -30   30  -26 0.200 0.100 0.300  59   3  37 -19 -0.040     10.911      0.000 XHMMHMHM...
+  57   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  58   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  59   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  60   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  61   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  62   80   62   36  -29  -29   26  -30   30  -28 0.300 0.100 0.300  59   3  37 -21  0.060     11.011      0.000 XHMMHMHM...
+  63   80   65   36  -29  -29   28  -40   30  -28 0.500 0.100 0.300  64  -4  37 -21 -0.400     11.829      0.000 XHMMHMHM...
+  64   80   60   36  -29  -29   28  -30   30  -28 0.300 0.100 0.300  59   1  37 -21 -0.480     11.910      0.000 XHMMHMHM...
+  65   80   62   36  -29  -29   28  -30   30  -28 0.500 0.100 0.200  61   3  37 -21 -0.300     11.930      0.000 XHMMHMHM...
+  66   80   61   36  -29  -28   28  -30   30  -28 0.300 0.100 0.300  60   2  38 -20  0.520     12.310      0.000 XHMMHMHM...
+  67   80   62   36  -29  -34   28  -30   33  -26 0.400 0.100 0.300  61   3  35 -24 -0.260     12.490      0.000 XHMMHMHM...
+  68   80   62   37  -29  -30   28  -30   37  -32 0.300 0.100 0.300  61   3  44 -25 -0.370     12.700      0.000 XHMMHMHM...
+  69   80   62   36  -29  -29   28  -37   36  -28 0.300 0.100 0.300  61  -4  43 -21 -0.510     12.799      0.000 XHMMHMHM...
+  70   80   62   36  -29  -29   40  -30   30  -28 0.300 0.100 0.300  73   3  37 -21  0.480     12.908      0.000 XHMMHMHM...
+  71   80   62   36  -30  -29   28  -30   29  -28 0.300 0.100 0.300  60   2  36 -21 -0.390     12.920      0.000 XHMMHMHM...
+  72   80   62   35  -29  -26   28  -30   30  -28 0.200 0.100 0.300  61   3  39 -19  0.480     12.950      0.000 XHMMHMHM...
+  73   80   62   36  -29  -26   28  -30   30  -31 0.200 0.100 0.300  61   3  40 -21 -0.400     13.030      0.000 XHMMHMHM...
+  74   80   62   33  -29  -29   28  -26   30  -26 0.300 0.100 0.300  61   7  34 -22  0.080     13.031      0.000 XHMMHMHM...
+  75   80   62   36  -32  -29   28  -30   28  -26 0.300 0.100 0.300  58   0  35 -19 -0.220     13.050      0.000 XHMMHMHM...
+  76   80   62   36  -30  -29   26  -30   30  -28 0.300 0.100 0.300  58   2  37 -21 -0.240     13.111      0.000 XHMMHMHM...
+  77   80   62   36  -29  -28   27  -30   30  -28 0.200 0.100 0.300  60   3  38 -20 -0.340     13.291      0.000 XHMMHMHM...
+  78   80   62   33  -29  -29   39  -26   28  -26 0.300 0.100 0.300  72   7  32 -22 -0.010     13.299      0.000 XHMMHMHM...
+  79   80   62   38  -29  -29   44  -30   30  -28 0.100 0.100 0.300  77   3  39 -19 -0.400     13.308      0.000 XHMMHMHM...
+  80   80   54   36  -29  -29   42  -30   36  -28 0.300 0.100 0.300  67  -5  43 -21 -0.600     13.348      0.000 XHMMHMHM...
+  81   80   58   41  -29  -29   28  -30   30  -26 0.300 0.100 0.200  57  -1  42 -14 -0.520     13.350      0.000 XHMMHMHM...
+  82   80   62   36  -29  -29   26  -32   30  -28 0.300 0.100 0.300  59   1  37 -21 -0.480     13.910      0.000 XHMMHMHM...
+  83   80   62   36  -29  -40   40  -30   49  -31 0.500 0.100 0.300  73   3  45 -35 -0.500     14.088      0.000 XHMMHMHM...
+  84   80   62   32  -26  -29   28  -30   30  -28 0.300 0.200 0.300  64   6  33 -25 -0.040     14.102      0.000 XHMMHMHM...
+  85   80   62   34  -29  -26   28  -30   29  -28 0.300 0.100 0.300  61   3  37 -20  0.610     14.120      0.000 XHMMHMHM...
+  86   80   62   36  -29  -29   28  -30   30  -27 0.300 0.100 0.300  61   3  37 -20  0.610     14.120      0.000 XHMMHMHM...
+  87   80   62   46  -29  -29   28  -30   38  -28 0.300 0.100 0.100  61   3  55 -11 -0.440     14.148      0.000 XHMMHMHM...
+  88   80   62   36  -29  -29   28  -30   26  -27 0.300 0.100 0.300  61   3  33 -20 -0.230     14.160      0.000 XHMMHMHM...
+  89   80   61   36  -29  -29   26  -31   30  -28 0.300 0.100 0.300  58   1  37 -21 -0.510     14.161      0.000 XHMMHMHM...
+  90   80   67   36  -26  -29   26  -33   30  -31 0.300 0.100 0.300  67   8  37 -24  0.180     14.330      0.000 XHMMHMHM...
+  91   80   62   36  -29  -29   28  -33   30  -28 0.300 0.100 0.300  61   0  37 -21 -0.690     14.460      0.000 XHMMHMHM...
+  92   80   62   36  -29  -29   28  -33   30  -28 0.300 0.100 0.300  61   0  37 -21 -0.690     14.460      0.000 XHMMHMHM...
+  93   80   62   38  -33  -29   28  -30   30  -28 0.300 0.100 0.300  57  -1  39 -19  0.320     14.510      0.000 XHMMHMHM...
+  94   80   62   36  -29  -29   29  -31   30  -26 0.300 0.100 0.300  62   2  37 -19  0.860     14.530      0.000 XHMMHMHM...
+  95   80   62   36  -26  -26   28  -38   30  -28 0.300 0.100 0.300  64  -2  40 -18  0.960     14.909      0.000 XHMMHMHM...
+  96   80   62   36  -29  -28   28  -38   26  -28 0.300 0.200 0.300  61  -5  34 -20 -0.200     14.919      0.000 XHMMHMHM...
+  97   80   62   36  -36  -26   28  -30   30  -28 0.200 0.100 0.300  54  -4  40 -18 -0.120     14.950      0.000 XHMMHMHM...
+
+==========================================================================================
+Adaptive Performance Statistics
+==========================================================================================
+Total runtime: 28.81 seconds
+Total evaluations: 1,177
+Solutions found: 97
+Success rate: 8.2413%
+Adaptations made: 1
+Adaptation frequency: every 2000 evaluations
+Average solutions per generation: 1.21
+Exploration rate evolution: 0.3 -> 0.300
+Temperature evolution: 1.0 -> 0.995
+Parameter regions explored: 585
+Successful regions discovered: 1
+Best violation value: 7.408137
+Average violation value: 11.108694
+Generation range: 78 - 80
+Early solutions (gen 1-10): 0
+Late solutions (gen >100): 0
+
+File saved on: 2025-07-24 09:08:42
+==========================================================================================
