@@ -1,0 +1,335 @@
+============================================================
+Solution 2
+============================================================
+Objective function value: 6.420000
+Timestamp: 2025-07-24 15:23:00
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=  2, b12=  3
+  Stage 2: c21=  2, c22=  1, c23= 17
+  Stage 3: c31= 14, c32= -7, c33= 28
+           c34=-19, c35= 24, c36=-26
+  Probabilities: p1=0.900, p2=0.100, p3=0.300
+                 p4=0.600, p5=0.100
+
+Final outcomes (6 outcomes):
+  z1 = 0+2+2+14 = 18 (prob=0.090)
+  z2 = 0+2+2+-7 = -3 (prob=0.810)
+  z3 = 0+3+1+28 = 32 (prob=0.018)
+  z4 = 0+3+1+-19 = -15 (prob=0.012)
+  z5 = 0+3+17+24 = 44 (prob=0.007)
+  z6 = 0+3+17+-26 = -6 (prob=0.063)
+  Expected value: -0.484000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: -0.484000 ≈ 0 ✓
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 18.0 > 0 > -3.0  = True
+     z3  > 0  > z4: 32.0 > 0 > -15.0  = True
+     z5 > 0 > z6 : 44.0 > 0 > -6.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = -0.900 (upper lottery)
+  E(L2) = 13.200 (lower first sub-lottery)
+  E(L3) = -1.000 (lower second sub-lottery)
+  E(L4) = 3.260 (lower compound lottery)
+
+  4. Main interval IL = [-1.012, 18.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-1.323, 18.000]
+     ✓ b11 = 2.000 ∈ IL1
+     ✓ b11+c21 = 4.000 ∈ IL1
+     ✓ E(L1) = -0.900 ∈ IL1
+     ✓ E(L) = -0.484 ∈ IL1
+  6. L2 interval IL2 = [1.222, 32.000]
+     ✓ b12 = 3.000 ∈ IL2
+     ✓ b12+c22 = 4.000 ∈ IL2
+     ✓ E(L2) = 13.200 ∈ IL2
+     ✓ E(L4) = 3.260 ∈ IL2
+  7. L3 interval IL3 = [-2.008, 44.000]
+     ✓ b12 = 3.000 ∈ IL3
+     ✓ b12+c23 = 20.000 ∈ IL3
+     ✓ E(L3) = -1.000 ∈ IL3
+     ✓ E(L4) = 3.260 ∈ IL3
+
+
+     ============================================================
+Solution 6
+============================================================
+Objective function value: 7.000000
+Timestamp: 2025-07-24 15:18:51
+
+Lottery structure (6 outcomes):
+  Stage 1: b11= 11, b12= 14
+  Stage 2: c21=  5, c22=-10, c23= -1
+  Stage 3: c31= 12, c32=-22, c33= 21
+           c34=-21, c35=  8, c36=-29
+  Probabilities: p1=0.200, p2=0.100, p3=0.500
+                 p4=0.200, p5=0.700
+
+Final outcomes (6 outcomes):
+  z1 = 0+11+5+12 = 28 (prob=0.020)
+  z2 = 0+11+5+-22 = -6 (prob=0.180)
+  z3 = 0+14+-10+21 = 25 (prob=0.080)
+  z4 = 0+14+-10+-21 = -17 (prob=0.320)
+  z5 = 0+14+-1+8 = 21 (prob=0.280)
+  z6 = 0+14+-1+-29 = -16 (prob=0.120)
+  Expected value: -0.000000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: -0.000000 ≈ 0 ✓
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 28.0 > 0 > -6.0  = True
+     z3  > 0  > z4: 25.0 > 0 > -17.0  = True
+     z5 > 0 > z6 : 21.0 > 0 > -16.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = -2.600 (upper lottery)
+  E(L2) = -8.600 (lower first sub-lottery)
+  E(L3) = 9.900 (lower second sub-lottery)
+  E(L4) = 0.650 (lower compound lottery)
+
+  4. Main interval IL = [-5.269, 21.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-3.286, 28.000]
+     ✓ b11 = 11.000 ∈ IL1
+     ✓ b11+c21 = 16.000 ∈ IL1
+     ✓ E(L1) = -2.600 ∈ IL1
+     ✓ E(L) = -0.000 ∈ IL1
+  6. L2 interval IL2 = [-11.452, 25.000]
+     ✓ b12 = 14.000 ∈ IL2
+     ✓ b12+c22 = 4.000 ∈ IL2
+     ✓ E(L2) = -8.600 ∈ IL2
+     ✓ E(L4) = 0.650 ∈ IL2
+  7. L3 interval IL3 = [-0.563, 21.000]
+     ✓ b12 = 14.000 ∈ IL3
+     ✓ b12+c23 = 13.000 ∈ IL3
+     ✓ E(L3) = 9.900 ∈ IL3
+     ✓ E(L4) = 0.650 ∈ IL3
+============================================================
+Solution 8
+============================================================
+Objective function value: 7.480000
+Timestamp: 2025-07-24 15:13:22
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=  3, b12= 10
+  Stage 2: c21=  0, c22=  6, c23=-15
+  Stage 3: c31= 30, c32= -6, c33= 16
+           c34=-30, c35= 27, c36= -9
+  Probabilities: p1=0.100, p2=0.100, p3=0.600
+                 p4=0.300, p5=0.400
+
+Final outcomes (6 outcomes):
+  z1 = 0+3+0+30 = 33 (prob=0.010)
+  z2 = 0+3+0+-6 = -3 (prob=0.090)
+  z3 = 0+10+6+16 = 32 (prob=0.162)
+  z4 = 0+10+6+-30 = -14 (prob=0.378)
+  z5 = 0+10+-15+27 = 22 (prob=0.144)
+  z6 = 0+10+-15+-9 = -14 (prob=0.216)
+  Expected value: 0.096000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: 0.096000 ≈ 0 ✓
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 33.0 > 0 > -3.0  = True
+     z3  > 0  > z4: 32.0 > 0 > -14.0  = True
+     z5 > 0 > z6 : 22.0 > 0 > -14.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = 0.600 (upper lottery)
+  E(L2) = -0.200 (lower first sub-lottery)
+  E(L3) = 0.400 (lower second sub-lottery)
+  E(L4) = 0.040 (lower compound lottery)
+
+  4. Main interval IL = [-3.868, -3.000]
+     0 ∈ IL: False
+  5. L1 interval IL1 = [-0.126, 33.000]
+     ✓ b11 = 3.000 ∈ IL1
+     ✓ b11+c21 = 3.000 ∈ IL1
+     ✓ E(L1) = 0.600 ∈ IL1
+     ✓ E(L) = 0.096 ∈ IL1
+  6. L2 interval IL2 = [-5.669, 32.000]
+     ✓ b12 = 10.000 ∈ IL2
+     ✓ b12+c22 = 16.000 ∈ IL2
+     ✓ E(L2) = -0.200 ∈ IL2
+     ✓ E(L4) = 0.040 ∈ IL2
+  7. L3 interval IL3 = [-5.683, 22.000]
+     ✓ b12 = 10.000 ∈ IL3
+     ✓ b12+c23 = -5.000 ∈ IL3
+     ✓ E(L3) = 0.400 ∈ IL3
+     ✓ E(L4) = 0.040 ∈ IL3
+============================================================
+Solution 12
+============================================================
+Objective function value: 8.140000
+Timestamp: 2025-07-24 15:20:31
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=  3, b12=  2
+  Stage 2: c21= -1, c22= -1, c23= -2
+  Stage 3: c31= 27, c32= -9, c33= 11
+           c34= -7, c35= 12, c36=-12
+  Probabilities: p1=0.400, p2=0.300, p3=0.100
+                 p4=0.100, p5=0.400
+
+Final outcomes (6 outcomes):
+  z1 = 0+3+-1+27 = 29 (prob=0.120)
+  z2 = 0+3+-1+-9 = -7 (prob=0.280)
+  z3 = 0+2+-1+11 = 12 (prob=0.006)
+  z4 = 0+2+-1+-7 = -6 (prob=0.054)
+  z5 = 0+2+-2+12 = 12 (prob=0.216)
+  z6 = 0+2+-2+-12 = -12 (prob=0.324)
+  Expected value: -0.028000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: -0.028000 ≈ 0 ✓
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 29.0 > 0 > -7.0  = True
+     z3  > 0  > z4: 12.0 > 0 > -6.0  = True
+     z5 > 0 > z6 : 12.0 > 0 > -12.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = 3.800 (upper lottery)
+  E(L2) = -4.200 (lower first sub-lottery)
+  E(L3) = -2.400 (lower second sub-lottery)
+  E(L4) = -2.580 (lower compound lottery)
+
+  4. Main interval IL = [-3.394, 12.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-0.480, 29.000]
+     ✓ b11 = 3.000 ∈ IL1
+     ✓ b11+c21 = 2.000 ∈ IL1
+     ✓ E(L1) = 3.800 ∈ IL1
+     ✓ E(L) = -0.028 ∈ IL1
+  6. L2 interval IL2 = [-4.563, 12.000]
+     ✓ b12 = 2.000 ∈ IL2
+     ✓ b12+c22 = 1.000 ∈ IL2
+     ✓ E(L2) = -4.200 ∈ IL2
+     ✓ E(L4) = -2.580 ∈ IL2
+  7. L3 interval IL3 = [-6.456, 12.000]
+     ✓ b12 = 2.000 ∈ IL3
+     ✓ b12+c23 = 0.000 ∈ IL3
+     ✓ E(L3) = -2.400 ∈ IL3
+     ✓ E(L4) = -2.580 ∈ IL3
+
+ ============================================================
+Solution 27
+============================================================
+Objective function value: 8.800000
+Timestamp: 2025-07-24 15:24:38
+
+Lottery structure (6 outcomes):
+  Stage 1: b11= 15, b12= -2
+  Stage 2: c21= -5, c22=  4, c23=  1
+  Stage 3: c31= 25, c32=-15, c33=  4
+           c34=-14, c35= 29, c36=-12
+  Probabilities: p1=0.500, p2=0.100, p3=0.200
+                 p4=0.500, p5=0.400
+
+Final outcomes (6 outcomes):
+  z1 = 0+15+-5+25 = 35 (prob=0.050)
+  z2 = 0+15+-5+-15 = -5 (prob=0.450)
+  z3 = 0+-2+4+4 = 6 (prob=0.050)
+  z4 = 0+-2+4+-14 = -12 (prob=0.050)
+  z5 = 0+-2+1+29 = 28 (prob=0.160)
+  z6 = 0+-2+1+-12 = -13 (prob=0.240)
+  Expected value: 0.560000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: 0.560000 ≈ 0 ✗
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 35.0 > 0 > -5.0  = True
+     z3  > 0  > z4: 6.0 > 0 > -12.0  = True
+     z5 > 0 > z6 : 28.0 > 0 > -13.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = -1.000 (upper lottery)
+  E(L2) = -3.000 (lower first sub-lottery)
+  E(L3) = 3.400 (lower second sub-lottery)
+  E(L4) = 2.120 (lower compound lottery)
+
+  4. Main interval IL = [-2.756, 6.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-1.807, 35.000]
+     ✓ b11 = 15.000 ∈ IL1
+     ✓ b11+c21 = 10.000 ∈ IL1
+     ✓ E(L1) = -1.000 ∈ IL1
+     ✓ E(L) = 0.560 ∈ IL1
+  6. L2 interval IL2 = [-6.876, 6.000]
+     ✓ b12 = -2.000 ∈ IL2
+     ✓ b12+c22 = 2.000 ∈ IL2
+     ✓ E(L2) = -3.000 ∈ IL2
+     ✓ E(L4) = 2.120 ∈ IL2
+  7. L3 interval IL3 = [-3.528, 28.000]
+     ✓ b12 = -2.000 ∈ IL3
+     ✓ b12+c23 = -1.000 ∈ IL3
+     ✓ E(L3) = 3.400 ∈ IL3
+     ✓ E(L4) = 2.120 ∈ IL3
+
+
+     ============================================================
+Solution 48
+============================================================
+Objective function value: 9.800000
+Timestamp: 2025-07-24 15:15:06
+
+Lottery structure (6 outcomes):
+  Stage 1: b11= 25, b12=  4
+  Stage 2: c21=-24, c22=-12, c23=  1
+  Stage 3: c31= 28, c32= -6, c33= 14
+           c34=-18, c35= 15, c36=-23
+  Probabilities: p1=0.500, p2=0.100, p3=0.200
+                 p4=0.700, p5=0.600
+
+Final outcomes (6 outcomes):
+  z1 = 0+25+-24+28 = 29 (prob=0.050)
+  z2 = 0+25+-24+-6 = -5 (prob=0.450)
+  z3 = 0+4+-12+14 = 6 (prob=0.070)
+  z4 = 0+4+-12+-18 = -26 (prob=0.030)
+  z5 = 0+4+1+15 = 20 (prob=0.240)
+  z6 = 0+4+1+-23 = -18 (prob=0.160)
+  Expected value: 0.760000
+  Probability sum: 1.000000 (should be 1.0)
+
+Constraint verification:
+  1. Expected value constraint: 0.760000 ≈ 0 ✗
+  2. Ordering constraints: ✗
+     z1 > 0 > z2 : 29.0 > 0 > -5.0  = True
+     z3  > 0  > z4: 6.0 > 0 > -26.0  = True
+     z5 > 0 > z6 : 20.0 > 0 > -18.0  = True
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+
+Sub-lottery expected values:
+  E(L1) = -1.600 (upper lottery)
+  E(L2) = -3.600 (lower first sub-lottery)
+  E(L3) = 4.800 (lower second sub-lottery)
+  E(L4) = 3.120 (lower compound lottery)
+
+  4. Main interval IL = [-4.604, 6.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-2.286, 29.000]
+     ✓ b11 = 25.000 ∈ IL1
+     ✓ b11+c21 = 1.000 ∈ IL1
+     ✓ E(L1) = -1.600 ∈ IL1
+     ✓ E(L) = 0.760 ∈ IL1
+  6. L2 interval IL2 = [-12.649, 6.000]
+     ✓ b12 = 4.000 ∈ IL2
+     ✓ b12+c22 = -8.000 ∈ IL2
+     ✓ E(L2) = -3.600 ∈ IL2
+     ✓ E(L4) = 3.120 ∈ IL2
+  7. L3 interval IL3 = [-4.885, 20.000]
+     ✓ b12 = 4.000 ∈ IL3
+     ✓ b12+c23 = 5.000 ∈ IL3
+     ✓ E(L3) = 4.800 ∈ IL3
+     ✓ E(L4) = 3.120 ∈ IL3

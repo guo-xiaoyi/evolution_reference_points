@@ -121,7 +121,7 @@ def fast_check_basic_constraints(params):
     
     # Expected value constraint
     expected_value = np.sum(Z * p_array)
-    expected_violation = abs(expected_value)
+    expected_violation = (abs(expected_value))**2
     
     # Ordering constraints - CORRECTED for 6 outcomes
     ordering_violations = 0.0
@@ -443,7 +443,7 @@ class OptimizedLotteryOptimizer:
             
             # Constraint 1: Zero initial expectation
             expected_value = np.sum(Z * p)
-            violations['expected_value'] = (abs(expected_value))*5
+            violations['expected_value'] = (abs(expected_value))**2
             total_violations += violations['expected_value']
             
             # Constraint 5: Ordering constraints for 6 outcomes
@@ -980,8 +980,8 @@ def main():
         alpha=0.88,
         lambda_=2.25,
         gamma=0.61,
-        num_attempts=80000000,
-        violation_threshold=15.0,
+        num_attempts=1000000000,
+        violation_threshold=20.0,
         prob_choices=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
         batch_size=5000,
         early_termination_solutions=50,
