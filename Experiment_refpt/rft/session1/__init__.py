@@ -99,6 +99,8 @@ class Player(BasePlayer):
 class Welcome(Page):
     pass
 
+class session1(Page):
+    pass
 
 class Introduction(Page):
     pass
@@ -143,4 +145,4 @@ class Results(Page):
         }
 
 
-page_sequence = [Welcome, Introduction, Play]
+page_sequence = [Welcome, session1, Introduction, Play]
