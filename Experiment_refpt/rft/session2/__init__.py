@@ -7,7 +7,7 @@ Players make decisions using a multiple choice list.
 """
 
 class Constants(BaseConstants):
-    name_in_url = 'compound_lottery_session1'
+    name_in_url = 'compound_lottery_session2'
     players_per_group = None
     num_rounds = 1
     

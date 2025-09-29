@@ -7,7 +7,7 @@ Players make decisions using a multiple choice list.
 """
 
 class Constants(BaseConstants):
-    name_in_url = 'compound_lottery_session1'
+    name_in_url = 'compound_lottery_session3'
     players_per_group = None
     num_rounds = 1
     
@@ -99,7 +99,7 @@ class Player(BasePlayer):
 class Welcome(Page):
     pass
 
-class session1(Page):
+class session3(Page):
     pass
 
 class Introduction(Page):
@@ -134,6 +134,11 @@ class Play(Page):
         player.selected_option = getattr(player, choice_attr)
 
 
+
+
+class Survey(Page):
+    pass
+
 class Results(Page):
     @staticmethod
     def vars_for_template(player):
@@ -145,4 +150,4 @@ class Results(Page):
         }
 
 
-page_sequence = [Welcome, session1, Introduction, Play]
+page_sequence = [Welcome, session3, Introduction, Play, Survey]
