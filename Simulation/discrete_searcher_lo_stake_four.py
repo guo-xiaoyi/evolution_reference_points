@@ -29,6 +29,11 @@ from functools import lru_cache
 import pickle
 from scipy.spatial.distance import pdist
 
+
+
+random.seed(9000)
+
+
 # Try to import numba, fallback to regular functions if unavailable
 try:
     from numba import jit, prange
@@ -118,20 +123,25 @@ def fast_check_basic_constraints(params):
     expected_value = np.sum(Z * p)
     expected_violation = abs(expected_value)
     
-    # Ordering constraints
-    ordering_violations = 0.0
-    if z1 <= z2:
-        ordering_violations += (z2 - z1 + 1)
-    if z2 <= 0:
-        ordering_violations += (-z2 + 1)
-    if z3 <= 0:
-        ordering_violations += (-z3 + 1)
-    if z3 <= z4:
-        ordering_violations += (z4 - z3 + 1)
-    if abs(z2 - z3) < 0.01:
-        ordering_violations += 2
+    # approximity = 0.0
+    # approximity += abs(z1 - z2) + abs(z2 - z3) + abs(z3- z4) + abs(z1 - z4)
     
-    total_violation = expected_violation + ordering_violations
+    
+    
+    # Ordering constraints
+    # ordering_violations = 0.0
+    # if z1 <= z2:
+    #     ordering_violations += (z2 - z1 + 1)
+    # if z2 <= 0:
+    #     ordering_violations += (-z2 + 1)
+    # if z3 <= 0:
+    #     ordering_violations += (-z3 + 1)
+    # if z3 <= z4:
+    #     ordering_violations += (z4 - z3 + 1)
+    # if abs(z2 - z3) < 0.01:
+    #     ordering_violations += 2
+    
+    total_violation = expected_violation
     
     return True, total_violation
 
@@ -418,20 +428,20 @@ class OptimizedLotteryOptimizer:
             total_violations += violations['expected_value']
             
             # Constraint 5: Ordering constraints
-            ordering_violations = 0
-            if not (z1 > z2):
-                ordering_violations += (z2 - z1 + 1)
-            if not (0 < z2):
-                ordering_violations += (-z2 + 1)
-            if not (z3 > 0):
-                ordering_violations += (-z3 + 1)
-            if not (z3 > z4):
-                ordering_violations += (z4 - z3 + 1)
-            if abs(z2 - z3) < 0.01:
-                ordering_violations += 2
+            # ordering_violations = 0
+            # if not (z1 > z2):
+            #     ordering_violations += (z2 - z1 + 1)
+            # if not (0 < z2):
+            #     ordering_violations += (-z2 + 1)
+            # if not (z3 > 0):
+            #     ordering_violations += (-z3 + 1)
+            # if not (z3 > z4):
+            #     ordering_violations += (z4 - z3 + 1)
+            # if abs(z2 - z3) < 0.01:
+            #     ordering_violations += 2
             
-            violations['ordering'] = ordering_violations
-            total_violations += ordering_violations
+            # violations['ordering'] = ordering_violations
+            # total_violations += ordering_violations
             
             # Calculate E(L1) and E(L2)
             E_L1 = z1 * p2 + z2 * (1 - p2)
@@ -685,9 +695,8 @@ class OptimizedLotteryOptimizer:
                     # Constraint verification
                     violations, valid = self.check_full_constraints(solution.params)
                     f.write("Constraint verification:\n")
-                    f.write(f"  1. Expected value constraint: {expected_value:.6f} ≈ 0 {'✓' if abs(expected_value) < 1 else '✗'}\n")
-                    f.write(f"  2. Ordering constraint: z1> 0 > z2 and z3>0>z4 {'✓' if (z1 > 0 > z2 and z3 > 0 > z4) else '✗'}\n")
-                    f.write(f"  3. Probability constraint: all probabilities ∈ [0,1] {'✓' if all(0 <= p <= 1 for p in solution.probabilities) else '✗'}\n")
+                    f.write(f"  Expected value constraint: {expected_value:.6f} ≈ 0 {'✓' if abs(expected_value) < 1 else '✗'}\n")
+                    f.write(f"  Probability constraint: all probabilities ∈ [0,1] {'✓' if all(0 <= p <= 1 for p in solution.probabilities) else '✗'}\n")
                     
                     # Interval information
                     IL_lower, IL_upper = self.find_monotonic_interval(Z, p)
@@ -701,7 +710,7 @@ class OptimizedLotteryOptimizer:
                     values_to_check_L1 = [solution.b11, solution.b11 + solution.c21, E_L1, expected_value]
                     IL1_lower, IL1_upper = self.find_monotonic_interval(Z_L1, p_L1)
                     if IL1_lower is not None and IL1_upper is not None:
-                        f.write(f"  5. L1 interval IL1 = [{IL1_lower:.3f}, {IL1_upper:.3f}]\n")
+                        f.write(f"   L1 interval IL1 = [{IL1_lower:.3f}, {IL1_upper:.3f}]\n")
                         for j, value in enumerate(values_to_check_L1):
                             value_names = ['b11', 'b11+c21', 'E(L1)', 'E(L)']
                             if IL1_lower <= value <= IL1_upper:
@@ -709,7 +718,7 @@ class OptimizedLotteryOptimizer:
                             else:
                                 f.write(f"     ✗ {value_names[j]} = {value:.3f} ∉ IL1\n")
                     else:
-                        f.write(f"  5. L1 interval invalid: IL1_lower={IL1_lower}, IL1_upper={IL1_upper}\n")
+                        f.write(f"  L1 interval invalid: IL1_lower={IL1_lower}, IL1_upper={IL1_upper}\n")
                     
                     Z_L2 = np.array([z3, z4])
                     p_L2 = np.array([solution.p3, 1 - solution.p3])
@@ -717,7 +726,7 @@ class OptimizedLotteryOptimizer:
                     values_to_check_L2 = [solution.b12, solution.b12 + solution.c22, E_L2, expected_value]
                     IL2_lower, IL2_upper = self.find_monotonic_interval(Z_L2, p_L2)
                     if IL2_lower is not None and IL2_upper is not None:
-                        f.write(f"  6. L2 interval IL2 = [{IL2_lower:.3f}, {IL2_upper:.3f}]\n")
+                        f.write(f"   L2 interval IL2 = [{IL2_lower:.3f}, {IL2_upper:.3f}]\n")
                         for j, value in enumerate(values_to_check_L2):
                             value_names = ['b12', 'b12+c22', 'E(L2)', 'E(L)']
                             if IL2_lower <= value <= IL2_upper:
@@ -725,7 +734,7 @@ class OptimizedLotteryOptimizer:
                             else:
                                 f.write(f"     ✗ {value_names[j]} = {value:.3f} ∉ IL2\n")
                     else:
-                        f.write(f"  6. L2 interval invalid: IL2_lower={IL2_lower}, IL2_upper={IL2_upper}\n")
+                        f.write(f" L2 interval invalid: IL2_lower={IL2_lower}, IL2_upper={IL2_upper}\n")
                 
                 # Summary table
                 f.write(f"\n{'='*80}\n")
@@ -878,10 +887,10 @@ def main():
         alpha=0.88,
         lambda_=2.25,
         gamma=0.61,
-        num_attempts=100000000,
-        violation_threshold=10,
-        lottery_min=-25,
-        lottery_max=25,
+        num_attempts=1000000,
+        violation_threshold=1,
+        lottery_min=-50,
+        lottery_max=50,
         prob_choices=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
         batch_size=10000,
         early_termination_solutions=100,

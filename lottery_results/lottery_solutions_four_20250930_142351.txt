@@ -1,0 +1,58 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-09-30 14:23:51
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-600, -500] and [500, 600] 
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1
+  - Total evaluations: 189
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.500000
+Timestamp: 2025-09-30 14:23:21
+
+Lottery structure:
+  Stage 1: b11=580, b12=550
+  Stage 2: c21=-520, c22=-565
+  Stage 3: c31=-600, c32=595, c33=-580, c34=590
+  Probabilities: p1=0.300, p2=0.300, p3=0.600
+
+Final outcomes:
+  z1 = 0+580+-520+-600 = -540 (prob=0.090)
+  z2 = 0+580+-520+595 = 655 (prob=0.210)
+  z3 = 0+550+-565+-580 = -595 (prob=0.420)
+  z4 = 0+550+-565+590 = 575 (prob=0.280)
+  Expected value: 0.050000
+
+Constraint verification:
+  1. Expected value constraint: 0.050000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-230.233, 575.000]
+  5. L1 interval IL1 = [-41.417, 655.000]
+     ✓ b11 = 580.000 ∈ IL1
+     ✓ b11+c21 = 60.000 ∈ IL1
+     ✓ E(L1) = 296.500 ∈ IL1
+     ✓ E(L) = 0.050 ∈ IL1
+  6. L2 interval IL2 = [-324.709, 575.000]
+     ✓ b12 = 550.000 ∈ IL2
+     ✓ b12+c22 = -15.000 ∈ IL2
+     ✓ E(L2) = -127.000 ∈ IL2
+     ✓ E(L) = 0.050 ∈ IL2
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3   z1  z2   z3  z4  E[Z]  Violation
+   1  580  550 -520 -565 -600  595 -580  590 0.300 0.300 0.600 -540 655 -595 575 0.050      0.500
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1

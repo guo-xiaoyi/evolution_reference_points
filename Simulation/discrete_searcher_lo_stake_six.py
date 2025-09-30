@@ -123,28 +123,28 @@ def fast_check_basic_constraints(params):
     expected_value = np.sum(Z * p_array)
     expected_violation = (abs(expected_value)) ** 2
     
-    # Ordering constraints - CORRECTED for 6 outcomes
-    ordering_violations = 0.0
-    if z1 <= z2:
-        ordering_violations += (z2 - z1 + 1)
-    if z2 <= 0:
-        ordering_violations += (-z2 + 1)
-    if z3 <= 0:
-        ordering_violations += (-z3 + 1)
-    if z3 <= z4:
-        ordering_violations += (z4 - z3 + 1)
-    if z5 <= 0:
-        ordering_violations += (-z5 + 1)
-    if z5 <= z6:
-        ordering_violations += (z6 - z5 + 1)
+    # # Ordering constraints - CORRECTED for 6 outcomes
+    # ordering_violations = 0.0
+    # if z1 <= z2:
+    #     ordering_violations += (z2 - z1 + 1)
+    # if z2 <= 0:
+    #     ordering_violations += (-z2 + 1)
+    # if z3 <= 0:
+    #     ordering_violations += (-z3 + 1)
+    # if z3 <= z4:
+    #     ordering_violations += (z4 - z3 + 1)
+    # if z5 <= 0:
+    #     ordering_violations += (-z5 + 1)
+    # if z5 <= z6:
+    #     ordering_violations += (z6 - z5 + 1)
     
-    # Additional ordering constraints to ensure proper structure
-    if abs(z2 - z3) < 0.01:  # z2 ≠ z3
-        ordering_violations += 2
-    if abs(z4 - z5) < 0.01:  # z4 ≠ z5
-        ordering_violations += 2
+    # # Additional ordering constraints to ensure proper structure
+    # if abs(z2 - z3) < 0.01:  # z2 ≠ z3
+    #     ordering_violations += 2
+    # if abs(z4 - z5) < 0.01:  # z4 ≠ z5
+    #     ordering_violations += 2
     
-    total_violation = expected_violation + ordering_violations
+    total_violation = expected_violation
     
     return True, total_violation
 
@@ -302,26 +302,26 @@ class OptimizedLotteryOptimizer:
         expected_value = np.sum(Z * p_array)
         expected_violation = abs(expected_value)
         
-        # Ordering constraints
-        ordering_violations = 0.0
-        if z1 <= z2:
-            ordering_violations += (z2 - z1 + 1)
-        if z2 <= 0:
-            ordering_violations += (-z2 + 1)
-        if z3 <= 0:
-            ordering_violations += (-z3 + 1)
-        if z3 <= z4:
-            ordering_violations += (z4 - z3 + 1)
-        if z5 <= 0:
-            ordering_violations += (-z5 + 1)
-        if z5 <= z6:
-            ordering_violations += (z6 - z5 + 1)
-        if abs(z2 - z3) < 0.01:
-            ordering_violations += 2
-        if abs(z4 - z5) < 0.01:
-            ordering_violations += 2
+        # # Ordering constraints
+        # ordering_violations = 0.0
+        # if z1 <= z2:
+        #     ordering_violations += (z2 - z1 + 1)
+        # if z2 <= 0:
+        #     ordering_violations += (-z2 + 1)
+        # if z3 <= 0:
+        #     ordering_violations += (-z3 + 1)
+        # if z3 <= z4:
+        #     ordering_violations += (z4 - z3 + 1)
+        # if z5 <= 0:
+        #     ordering_violations += (-z5 + 1)
+        # if z5 <= z6:
+        #     ordering_violations += (z6 - z5 + 1)
+        # if abs(z2 - z3) < 0.01:
+        #     ordering_violations += 2
+        # if abs(z4 - z5) < 0.01:
+        #     ordering_violations += 2
         
-        total_violation = expected_violation + ordering_violations
+        total_violation = expected_violation 
         
         return True, total_violation
     
@@ -442,27 +442,27 @@ class OptimizedLotteryOptimizer:
             violations['expected_value'] = (abs(expected_value))*5
             total_violations += violations['expected_value']
             
-            # Constraint 5: Ordering constraints for 6 outcomes
-            ordering_violations = 0
-            if not (z1 > z2):
-                ordering_violations += (z2 - z1 + 1)
-            if not (0 < z2):
-                ordering_violations += (-z2 + 1)
-            if not (z3 > 0):
-                ordering_violations += (-z3 + 1)
-            if not (z3 > z4):
-                ordering_violations += (z4 - z3 + 1)
-            if not (z5 > 0):
-                ordering_violations += (-z5 + 1)
-            if not (z5 > z6):
-                ordering_violations += (z6 - z5 + 1)
-            if abs(z2 - z3) < 0.01:
-                ordering_violations += 2
-            if abs(z4 - z5) < 0.01:
-                ordering_violations += 2
+            # # Constraint 5: Ordering constraints for 6 outcomes
+            # ordering_violations = 0
+            # if not (z1 > z2):
+            #     ordering_violations += (z2 - z1 + 1)
+            # if not (0 < z2):
+            #     ordering_violations += (-z2 + 1)
+            # if not (z3 > 0):
+            #     ordering_violations += (-z3 + 1)
+            # if not (z3 > z4):
+            #     ordering_violations += (z4 - z3 + 1)
+            # if not (z5 > 0):
+            #     ordering_violations += (-z5 + 1)
+            # if not (z5 > z6):
+            #     ordering_violations += (z6 - z5 + 1)
+            # if abs(z2 - z3) < 0.01:
+            #     ordering_violations += 2
+            # if abs(z4 - z5) < 0.01:
+            #     ordering_violations += 2
             
-            violations['ordering'] = ordering_violations
-            total_violations += ordering_violations
+            # violations['ordering'] = ordering_violations
+            # total_violations += ordering_violations
             
             # Calculate expected values for sub-lotteries
             E_L1 = z1 * p2 + z2 * (1 - p2)  # Upper lottery expected value
@@ -764,14 +764,14 @@ class OptimizedLotteryOptimizer:
                     f.write("\n")
                     
                     # Constraint verification
-                    violations, valid = self.check_full_constraints(solution.params)
-                    f.write("Constraint verification:\n")
-                    f.write(f"  1. Expected value constraint: {expected_value:.6f} ≈ 0 {'✓' if abs(expected_value) < 0.5 else '✗'}\n")
-                    f.write(f"  2. Ordering constraints: {'✓' if violations.get('ordering', 0) < 1 else '✗'}\n")
-                    f.write(f"     z1 > 0 > z2 : {z1} > 0 > {z2}  = {z1 > 0 > z2 }\n")
-                    f.write(f"     z3  > 0  > z4: {z3} > 0 > {z4}  = {z3   > 0 > z4}\n")
-                    f.write(f"     z5 > 0 > z6 : {z5} > 0 > {z6}  = {z5  > 0 > z6 }\n")
-                    f.write(f"  3. Probability constraint: all probabilities ∈ [0,1] {'✓' if all(0 <= p <= 1 for p in solution.probabilities) else '✗'}\n")
+                    # violations, valid = self.check_full_constraints(solution.params)
+                    # f.write("Constraint verification:\n")
+                    # f.write(f"  1. Expected value constraint: {expected_value:.6f} ≈ 0 {'✓' if abs(expected_value) < 0.5 else '✗'}\n")
+                    # f.write(f"  2. Ordering constraints: {'✓' if violations.get('ordering', 0) < 1 else '✗'}\n")
+                    # f.write(f"     z1 > 0 > z2 : {z1} > 0 > {z2}  = {z1 > 0 > z2 }\n")
+                    # f.write(f"     z3  > 0  > z4: {z3} > 0 > {z4}  = {z3   > 0 > z4}\n")
+                    # f.write(f"     z5 > 0 > z6 : {z5} > 0 > {z6}  = {z5  > 0 > z6 }\n")
+                    # f.write(f"  3. Probability constraint: all probabilities ∈ [0,1] {'✓' if all(0 <= p <= 1 for p in solution.probabilities) else '✗'}\n")
                     
                     # Calculate sub-lottery expected values
                     E_L1 = z1 * solution.p2 + z2 * (1 - solution.p2)
@@ -976,10 +976,10 @@ def main():
         alpha=0.88,
         lambda_=2.25,
         gamma=0.61,
-        num_attempts=80000000,
-        violation_threshold=10,
-        lottery_min=-30,
-        lottery_max=30,
+        num_attempts=1000000,
+        violation_threshold=1,
+        lottery_min=-50,
+        lottery_max=50,
         prob_choices=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
         batch_size=5000,
         early_termination_solutions=50,
