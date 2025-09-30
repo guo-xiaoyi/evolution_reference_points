@@ -1,0 +1,228 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-09-30 15:36:52
+Solutions found: 5
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-1000, -100] and [100, 1000] 
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1
+  - Total evaluations: 1,902
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-09-30 15:28:14
+
+Lottery structure:
+  Stage 1: b11=130, b12=-130
+  Stage 2: c21=-265, c22=-145
+  Stage 3: c31=460, c32=-510, c33=-710, c34=530
+  Probabilities: p1=0.100, p2=0.600, p3=0.200
+
+Final outcomes:
+  z1 = 0+130+-265+460 = 325 (prob=0.060)
+  z2 = 0+130+-265+-510 = -645 (prob=0.040)
+  z3 = 0+-130+-145+-710 = -985 (prob=0.180)
+  z4 = 0+-130+-145+530 = 255 (prob=0.720)
+  Expected value: 0.000000
+
+Constraint verification:
+  1. Expected value constraint: 0.000000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-357.132, 255.000]
+  5. L1 interval IL1 = [-310.210, 325.000]
+     ✓ b11 = 130.000 ∈ IL1
+     ✓ b11+c21 = -135.000 ∈ IL1
+     ✓ E(L1) = -63.000 ∈ IL1
+     ✓ E(L) = 0.000 ∈ IL1
+  6. L2 interval IL2 = [-352.774, 255.000]
+     ✓ b12 = -130.000 ∈ IL2
+     ✓ b12+c22 = -275.000 ∈ IL2
+     ✓ E(L2) = 7.000 ∈ IL2
+     ✓ E(L) = 0.000 ∈ IL2
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-09-30 15:32:47
+
+Lottery structure:
+  Stage 1: b11=305, b12=-220
+  Stage 2: c21=-410, c22=185
+  Stage 3: c31=-330, c32=900, c33=-670, c34=140
+  Probabilities: p1=0.500, p2=0.600, p3=0.200
+
+Final outcomes:
+  z1 = 0+305+-410+-330 = -435 (prob=0.300)
+  z2 = 0+305+-410+900 = 795 (prob=0.200)
+  z3 = 0+-220+185+-670 = -705 (prob=0.100)
+  z4 = 0+-220+185+140 = 105 (prob=0.400)
+  Expected value: 0.000000
+
+Constraint verification:
+  1. Expected value constraint: 0.000000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-222.910, 105.000]
+  5. L1 interval IL1 = [-150.848, 795.000]
+     ✓ b11 = 305.000 ∈ IL1
+     ✓ b11+c21 = -105.000 ∈ IL1
+     ✓ E(L1) = 57.000 ∈ IL1
+     ✓ E(L) = 0.000 ∈ IL1
+  6. L2 interval IL2 = [-292.014, 105.000]
+     ✓ b12 = -220.000 ∈ IL2
+     ✓ b12+c22 = -35.000 ∈ IL2
+     ✓ E(L2) = -57.000 ∈ IL2
+     ✓ E(L) = 0.000 ∈ IL2
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-09-30 15:30:37
+
+Lottery structure:
+  Stage 1: b11=740, b12=600
+  Stage 2: c21=-695, c22=-155
+  Stage 3: c31=-195, c32=735, c33=-820, c34=335
+  Probabilities: p1=0.800, p2=0.800, p3=0.800
+
+Final outcomes:
+  z1 = 0+740+-695+-195 = -150 (prob=0.640)
+  z2 = 0+740+-695+735 = 780 (prob=0.160)
+  z3 = 0+600+-155+-820 = -375 (prob=0.160)
+  z4 = 0+600+-155+335 = 780 (prob=0.040)
+  Expected value: -0.000000
+
+Constraint verification:
+  1. Expected value constraint: -0.000000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-70.806, 780.000]
+  5. L1 interval IL1 = [-27.141, 780.000]
+     ✓ b11 = 740.000 ∈ IL1
+     ✓ b11+c21 = 45.000 ∈ IL1
+     ✓ E(L1) = 36.000 ∈ IL1
+     ✓ E(L) = -0.000 ∈ IL1
+  6. L2 interval IL2 = [-222.418, 780.000]
+     ✓ b12 = 600.000 ∈ IL2
+     ✓ b12+c22 = 445.000 ∈ IL2
+     ✓ E(L2) = -144.000 ∈ IL2
+     ✓ E(L) = -0.000 ∈ IL2
+
+============================================================
+Solution 4
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-09-30 15:22:33
+
+Lottery structure:
+  Stage 1: b11=395, b12=-525
+  Stage 2: c21=-285, c22=140
+  Stage 3: c31=415, c32=-830, c33=885, c34=-545
+  Probabilities: p1=0.700, p2=0.800, p3=0.200
+
+Final outcomes:
+  z1 = 0+395+-285+415 = 525 (prob=0.560)
+  z2 = 0+395+-285+-830 = -720 (prob=0.140)
+  z3 = 0+-525+140+885 = 500 (prob=0.060)
+  z4 = 0+-525+140+-545 = -930 (prob=0.240)
+  Expected value: -0.000000
+
+Constraint verification:
+  1. Expected value constraint: -0.000000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-396.456, 500.000]
+  5. L1 interval IL1 = [-85.225, 525.000]
+     ✓ b11 = 395.000 ∈ IL1
+     ✓ b11+c21 = 110.000 ∈ IL1
+     ✓ E(L1) = 276.000 ∈ IL1
+     ✓ E(L) = -0.000 ∈ IL1
+  6. L2 interval IL2 = [-741.089, 500.000]
+     ✓ b12 = -525.000 ∈ IL2
+     ✓ b12+c22 = -385.000 ∈ IL2
+     ✓ E(L2) = -644.000 ∈ IL2
+     ✓ E(L) = -0.000 ∈ IL2
+
+============================================================
+Solution 5
+============================================================
+Objective function value: 0.500000
+Timestamp: 2025-09-30 15:33:43
+
+Lottery structure:
+  Stage 1: b11=340, b12=180
+  Stage 2: c21=-370, c22=-140
+  Stage 3: c31=655, c32=-315, c33=-580, c34=695
+  Probabilities: p1=0.700, p2=0.200, p3=0.300
+
+Final outcomes:
+  z1 = 0+340+-370+655 = 625 (prob=0.140)
+  z2 = 0+340+-370+-315 = -345 (prob=0.560)
+  z3 = 0+180+-140+-580 = -540 (prob=0.090)
+  z4 = 0+180+-140+695 = 735 (prob=0.210)
+  Expected value: 0.050000
+
+Constraint verification:
+  1. Expected value constraint: 0.050000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-149.967, 625.000]
+  5. L1 interval IL1 = [-216.857, 625.000]
+     ✓ b11 = 340.000 ∈ IL1
+     ✓ b11+c21 = -30.000 ∈ IL1
+     ✓ E(L1) = -151.000 ∈ IL1
+     ✓ E(L) = 0.050 ∈ IL1
+  6. L2 interval IL2 = [-8.040, 735.000]
+     ✓ b12 = 180.000 ∈ IL2
+     ✓ b12+c22 = 40.000 ∈ IL2
+     ✓ E(L2) = 352.500 ∈ IL2
+     ✓ E(L) = 0.050 ∈ IL2
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3   z1   z2   z3   z4   E[Z]  Violation
+   1  130 -130 -265 -145  460 -510 -710  530 0.100 0.600 0.200  325 -645 -985  255  0.000      0.000
+   2  305 -220 -410  185 -330  900 -670  140 0.500 0.600 0.200 -435  795 -705  105  0.000      0.000
+   3  740  600 -695 -155 -195  735 -820  335 0.800 0.800 0.800 -150  780 -375  780 -0.000      0.000
+   4  395 -525 -285  140  415 -830  885 -545 0.700 0.800 0.200  525 -720  500 -930 -0.000      0.000
+   5  340  180 -370 -140  655 -315 -580  695 0.700 0.200 0.300  625 -345 -540  735  0.050      0.500
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 5
+Unique lottery combinations: 5
+Unique probability combinations: 5
+Mean pairwise distance: 1797.124
+Distance range: [520.985, 2853.511]
+Distance standard deviation: 638.691
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 943.57 seconds
+Total evaluations: 1,907
+Solutions found: 5
+Success rate: 0.262%
+Prefilter rejections: 9,998,098
+Evaluation speed: 2 evals/s
+Best violation value: 0.000000
+Average violation value: 0.100000
+Worst violation value: 0.500000
+Search space coverage: 8.87e-19%
+
+================================================================================
+Optimization Suggestions
+================================================================================
+Suggestions for few solutions:
+  - Increase search attempts
+  - Moderately relax violation threshold
+  - Use more probability choices
+
+File saved on: 2025-09-30 15:36:52
+================================================================================

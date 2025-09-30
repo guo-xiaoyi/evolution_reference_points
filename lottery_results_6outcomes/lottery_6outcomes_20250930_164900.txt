@@ -1,0 +1,75 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2025-09-30 16:49:00
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-100, 100]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 1,492
+  - Parameter space: 11 lottery values + 5 probabilities = 16 parameters
+  - Outcomes: 6 (z1, z2, z3, z4, z5, z6)
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.620944
+Timestamp: 2025-09-30 16:48:31
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=409, b12=566
+  Stage 2: c21=-586, c22=-237, c23=-671
+  Stage 3: c31=-461, c32=933, c33=-581
+           c34=404, c35=787, c36=-604
+  Probabilities: p1=0.600, p2=0.600, p3=0.700
+                 p4=0.500, p5=0.400
+
+Final outcomes (6 outcomes):
+  z1 = 0+409+-586+-461 = -638 (prob=0.360)
+  z2 = 0+409+-586+933 = 756 (prob=0.240)
+  z3 = 0+566+-237+-581 = -252 (prob=0.140)
+  z4 = 0+566+-237+404 = 733 (prob=0.140)
+  z5 = 0+566+-671+787 = 682 (prob=0.048)
+  z6 = 0+566+-671+-604 = -709 (prob=0.072)
+  Expected value: 0.788000
+  Probability sum: 1.000000 (should be 1.0)
+
+
+Sub-lottery expected values:
+  E(L1) = -80.400 (upper lottery)
+  E(L2) = 240.500 (lower first sub-lottery)
+  E(L3) = -152.600 (lower second sub-lottery)
+  E(L4) = 122.570 (lower compound lottery)
+
+  4. Main interval IL = [-207.839, 682.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-315.961, 756.000]
+     ✓ b11 = 409.000 ∈ IL1
+     ✓ b11+c21 = -177.000 ∈ IL1
+     ✓ E(L1) = -80.400 ∈ IL1
+     ✓ E(L) = 0.788 ∈ IL1
+  6. L2 interval IL2 = [28.380, 733.000]
+     ✓ b12 = 566.000 ∈ IL2
+     ✓ b12+c22 = 329.000 ∈ IL2
+     ✓ E(L2) = 240.500 ∈ IL2
+     ✓ E(L4) = 122.570 ∈ IL2
+  7. L3 interval IL3 = [-387.654, 682.000]
+     ✓ b12 = 566.000 ∈ IL3
+     ✓ b12+c23 = -105.000 ∈ IL3
+     ✓ E(L3) = -152.600 ∈ IL3
+     ✓ E(L4) = 122.570 ∈ IL3
+
+================================================================================
+Solution Summary Table (6 Outcomes)
+================================================================================
+ Sol  b11  b12  c21  c22  c23  c31  c32  c33  c34  c35  c36    p1    p2    p3    p4    p5   z1  z2   z3  z4  z5   z6  E[Z]  Violation
+   1  409  566 -586 -237 -671 -461  933 -581  404  787 -604 0.600 0.600 0.700 0.500 0.400 -638 756 -252 733 682 -709 0.788      0.621
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1
