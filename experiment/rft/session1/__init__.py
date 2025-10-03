@@ -17,30 +17,23 @@ class Constants(BaseConstants):
     # Dictionary of lottery structures
     lotteries = {
         'lottery_1': {
-            'name': 'Simple Three-Period Lottery',
-            'description': 'A basic compound lottery with three periods',
+            'name': 'Four-Outcome Three-Period Lottery 0',
+            'description': 'Example lottery with four final outcomes',
             'periods': {
-                0: [
-                    {'label': 'Start', 'probability': 1.0, 'abs_prob' : 1.0}
-                ],
+                0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
                 1: [
                     {'label': '+$10', 'probability': 0.6, 'from': 'Start', 'abs_prob' : 0.6},
                     {'label': '-$10', 'probability': 0.4, 'from': 'Start', 'abs_prob' : 0.4}
                 ],
                 2: [
-                    {'label': '+$7', 'probability': 0.7, 'from': '+$10', 'abs_prob' : 0.42},
-                    {'label': '-$1', 'probability': 0.3, 'from': '+$10', 'abs_prob' : 0.18},
-                    {'label': '+$7.4', 'probability': 0.4, 'from': '-$10', 'abs_prob' : 0.16},
-                    {'label': '-$12', 'probability': 0.6, 'from': '-$10', 'abs_prob' : 0.24}
+                    {'label': '+$7', 'probability': 1, 'from': '+$10', 'abs_prob' : 0.6},
+                    {'label': '-$12', 'probability': 1, 'from': '-$10', 'abs_prob' : 0.4}
                 ],
                 3: [
-                    {'label': '+$8', 'probability': 0.8, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.336},
-                    {'label': '+$0', 'probability': 0.2, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.084},
-                    {'label': '+$2', 'probability': 1, 'from': '-$1', 'parent': '+$10', 'abs_prob' : 0.18},
-                    {'label': '+$5', 'probability': 0.2, 'from': '+$7.4', 'parent': '-$10', 'abs_prob' : 0.096},
-                    {'label': '-$5', 'probability': 0.8, 'from': '+$7.4', 'parent': '-$10', 'abs_prob' : 0.064},
-                    {'label': '+$3', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.12},
-                    {'label': '-$15', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.12}
+                    {'label': '+$8', 'probability': 0.8, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.48},
+                    {'label': '+$0', 'probability': 0.2, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.12},
+                    {'label': '+$2', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.2},
+                    {'label': '+$5', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.2},
                 ]
             }
         },
@@ -112,13 +105,12 @@ class Play(Page):
     
     @staticmethod
     def vars_for_template(player):
+        import json
         lottery = Constants.lotteries[player.lottery_id]
-        
         return {
-            'lottery': lottery,
+            'lottery': json.dumps(lottery),  # Pass as JSON string for JS
             'lottery_name': lottery['name'],
             'lottery_description': lottery['description'],
-            'period_0': lottery['periods'][0],
             'period_1': lottery['periods'][1],
             'period_2': lottery['periods'][2],
             'period_3': lottery['periods'][3]

@@ -1,0 +1,2240 @@
+================================================================================
+Unified Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-10-03 15:30:47
+Mode: outcomes=4, stake=lo
+Solutions found: 100
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-50, 50]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 31,018
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 27, b12=  4
+  Stage 2: c21=-12, c22= 11
+  Stage 3: c31=-25, c32= 47, c33=-33, c34=  5
+  Probabilities: p1=0.600, p2=0.800, p3=0.700
+Final outcomes:
+  z1 = 0+27+-12+-25 = -10 (prob=0.480)
+  z2 = 0+27+-12+47 = 62 (prob=0.120)
+  z3 = 0+4+11+-33 = -18 (prob=0.280)
+  z4 = 0+4+11+5 = 20 (prob=0.120)
+  Expected value: -0.000000
+  Main interval IL = [-4.044, 20.000]
+  L1 interval IL1 = [-0.488, 62.000]
+  L2 interval IL2 = [-11.118, 20.000]
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 0.030000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -9, b12= 36
+  Stage 2: c21= -3, c22=-29
+  Stage 3: c31= 50, c32=-27, c33= 47, c34=-36
+  Probabilities: p1=0.900, p2=0.500, p3=0.400
+Final outcomes:
+  z1 = 0+-9+-3+50 = 38 (prob=0.450)
+  z2 = 0+-9+-3+-27 = -39 (prob=0.450)
+  z3 = 0+36+-29+47 = 54 (prob=0.040)
+  z4 = 0+36+-29+-36 = -29 (prob=0.060)
+  Expected value: -0.030000
+  Main interval IL = [-15.013, 38.000]
+  L1 interval IL1 = [-17.082, 38.000]
+  L2 interval IL2 = [-9.826, 54.000]
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 0.040000
+Timestamp: 2025-10-03 15:30:23
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 15, b12=-27
+  Stage 2: c21= 15, c22= -2
+  Stage 3: c31= 15, c32=-49, c33=-48, c34= 36
+  Probabilities: p1=0.600, p2=0.400, p3=0.200
+Final outcomes:
+  z1 = 0+15+15+15 = 45 (prob=0.240)
+  z2 = 0+15+15+-49 = -19 (prob=0.360)
+  z3 = 0+-27+-2+-48 = -77 (prob=0.080)
+  z4 = 0+-27+-2+36 = 7 (prob=0.320)
+  Expected value: 0.040000
+  Main interval IL = [-16.211, 7.000]
+  L1 interval IL1 = [-4.215, 45.000]
+  L2 interval IL2 = [-34.172, 7.000]
+
+============================================================
+Solution 4
+============================================================
+Objective function value: 0.040000
+Timestamp: 2025-10-03 15:30:47
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -3, b12=-19
+  Stage 2: c21= 14, c22=  2
+  Stage 3: c31= 33, c32=-37, c33=-31, c34= 36
+  Probabilities: p1=0.800, p2=0.400, p3=0.400
+Final outcomes:
+  z1 = 0+-3+14+33 = 44 (prob=0.320)
+  z2 = 0+-3+14+-37 = -26 (prob=0.480)
+  z3 = 0+-19+2+-31 = -48 (prob=0.080)
+  z4 = 0+-19+2+36 = 19 (prob=0.120)
+  Expected value: 0.040000
+  Main interval IL = [-14.400, 19.000]
+  L1 interval IL1 = [-9.829, 44.000]
+  L2 interval IL2 = [-24.875, 19.000]
+
+============================================================
+Solution 5
+============================================================
+Objective function value: 0.060000
+Timestamp: 2025-10-03 15:30:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-26, b12= 25
+  Stage 2: c21=-16, c22=-15
+  Stage 3: c31= 49, c32=-24, c33=-43, c34= 20
+  Probabilities: p1=0.200, p2=0.300, p3=0.300
+Final outcomes:
+  z1 = 0+-26+-16+49 = 7 (prob=0.060)
+  z2 = 0+-26+-16+-24 = -66 (prob=0.140)
+  z3 = 0+25+-15+-43 = -33 (prob=0.240)
+  z4 = 0+25+-15+20 = 30 (prob=0.560)
+  Expected value: 0.060000
+  Main interval IL = [-23.604, 7.000]
+  L1 interval IL1 = [-52.779, 7.000]
+  L2 interval IL2 = [-6.715, 30.000]
+
+============================================================
+Solution 6
+============================================================
+Objective function value: 0.060000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  7, b12=  2
+  Stage 2: c21= -6, c22=-20
+  Stage 3: c31=-46, c32=  8, c33=-47, c34= 24
+  Probabilities: p1=0.700, p2=0.100, p3=0.200
+Final outcomes:
+  z1 = 0+7+-6+-46 = -45 (prob=0.070)
+  z2 = 0+7+-6+8 = 9 (prob=0.630)
+  z3 = 0+2+-20+-47 = -65 (prob=0.060)
+  z4 = 0+2+-20+24 = 6 (prob=0.240)
+  Expected value: 0.060000
+  Main interval IL = [-20.841, 6.000]
+  L1 interval IL1 = [-10.115, 9.000]
+  L2 interval IL2 = [-28.800, 6.000]
+
+============================================================
+Solution 7
+============================================================
+Objective function value: 0.060000
+Timestamp: 2025-10-03 15:30:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12= 18
+  Stage 2: c21=  3, c22= 14
+  Stage 3: c31=-23, c32= 17, c33=-46, c34= 27
+  Probabilities: p1=0.100, p2=0.600, p3=0.800
+Final outcomes:
+  z1 = 0+-2+3+-23 = -22 (prob=0.060)
+  z2 = 0+-2+3+17 = 18 (prob=0.040)
+  z3 = 0+18+14+-46 = -14 (prob=0.720)
+  z4 = 0+18+14+27 = 59 (prob=0.180)
+  Expected value: -0.060000
+  Main interval IL = [-5.775, 18.000]
+  L1 interval IL1 = [-12.759, 18.000]
+  L2 interval IL2 = [-4.356, 59.000]
+
+============================================================
+Solution 8
+============================================================
+Objective function value: 0.070000
+Timestamp: 2025-10-03 15:30:44
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12= 26
+  Stage 2: c21=  3, c22=-22
+  Stage 3: c31=  1, c32= -6, c33= 24, c34=-42
+  Probabilities: p1=0.900, p2=0.700, p3=0.600
+Final outcomes:
+  z1 = 0+-2+3+1 = 2 (prob=0.630)
+  z2 = 0+-2+3+-6 = -5 (prob=0.270)
+  z3 = 0+26+-22+24 = 28 (prob=0.060)
+  z4 = 0+26+-22+-42 = -38 (prob=0.040)
+  Expected value: 0.070000
+  Main interval IL = [-4.913, 2.000]
+  L1 interval IL1 = [-2.079, 2.000]
+  L2 interval IL2 = [-15.220, 28.000]
+
+============================================================
+Solution 9
+============================================================
+Objective function value: 0.080000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12=-10
+  Stage 2: c21=-23, c22=  1
+  Stage 3: c31=-24, c32= 28, c33= 32, c34=-38
+  Probabilities: p1=0.800, p2=0.300, p3=0.300
+Final outcomes:
+  z1 = 0+17+-23+-24 = -30 (prob=0.240)
+  z2 = 0+17+-23+28 = 22 (prob=0.560)
+  z3 = 0+-10+1+32 = 23 (prob=0.060)
+  z4 = 0+-10+1+-38 = -47 (prob=0.140)
+  Expected value: -0.080000
+  Main interval IL = [-17.870, 22.000]
+  L1 interval IL1 = [-8.304, 22.000]
+  L2 interval IL2 = [-34.322, 23.000]
+
+============================================================
+Solution 10
+============================================================
+Objective function value: 0.080000
+Timestamp: 2025-10-03 15:30:06
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12=  6
+  Stage 2: c21= -1, c22=  8
+  Stage 3: c31=-43, c32= 28, c33=-39, c34=  3
+  Probabilities: p1=0.200, p2=0.400, p3=0.500
+Final outcomes:
+  z1 = 0+17+-1+-43 = -27 (prob=0.080)
+  z2 = 0+17+-1+28 = 44 (prob=0.120)
+  z3 = 0+6+8+-39 = -25 (prob=0.400)
+  z4 = 0+6+8+3 = 17 (prob=0.400)
+  Expected value: -0.080000
+  Main interval IL = [-10.023, 17.000]
+  L1 interval IL1 = [-2.495, 44.000]
+  L2 interval IL2 = [-13.045, 17.000]
+
+============================================================
+Solution 11
+============================================================
+Objective function value: 0.100000
+Timestamp: 2025-10-03 15:30:38
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12= 38
+  Stage 2: c21=-19, c22=-12
+  Stage 3: c31=-42, c32= 44, c33=-39, c34= 26
+  Probabilities: p1=0.100, p2=0.500, p3=0.800
+Final outcomes:
+  z1 = 0+17+-19+-42 = -44 (prob=0.050)
+  z2 = 0+17+-19+44 = 42 (prob=0.050)
+  z3 = 0+38+-12+-39 = -13 (prob=0.720)
+  z4 = 0+38+-12+26 = 52 (prob=0.180)
+  Expected value: -0.100000
+  Main interval IL = [-7.045, 42.000]
+  L1 interval IL1 = [-19.520, 42.000]
+  L2 interval IL2 = [-4.413, 52.000]
+
+============================================================
+Solution 12
+============================================================
+Objective function value: 0.110000
+Timestamp: 2025-10-03 15:30:41
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12=-12
+  Stage 2: c21=  4, c22=  6
+  Stage 3: c31=-48, c32=  4, c33=-47, c34= 20
+  Probabilities: p1=0.900, p2=0.100, p3=0.300
+Final outcomes:
+  z1 = 0+-2+4+-48 = -46 (prob=0.090)
+  z2 = 0+-2+4+4 = 6 (prob=0.810)
+  z3 = 0+-12+6+-47 = -53 (prob=0.030)
+  z4 = 0+-12+6+20 = 14 (prob=0.070)
+  Expected value: 0.110000
+  Main interval IL = [-17.106, 6.000]
+  L1 interval IL1 = [-12.407, 6.000]
+  L2 interval IL2 = [-25.046, 14.000]
+
+============================================================
+Solution 13
+============================================================
+Objective function value: 0.110000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -6, b12= 11
+  Stage 2: c21= -5, c22= 20
+  Stage 3: c31= -5, c32= 31, c33=-50, c34= 17
+  Probabilities: p1=0.100, p2=0.800, p3=0.700
+Final outcomes:
+  z1 = 0+-6+-5+-5 = -16 (prob=0.080)
+  z2 = 0+-6+-5+31 = 20 (prob=0.020)
+  z3 = 0+11+20+-50 = -19 (prob=0.630)
+  z4 = 0+11+20+17 = 48 (prob=0.270)
+  Expected value: 0.110000
+  Main interval IL = [-7.579, 20.000]
+  L1 interval IL1 = [-11.244, 20.000]
+  L2 interval IL2 = [-6.866, 48.000]
+
+============================================================
+Solution 14
+============================================================
+Objective function value: 0.110000
+Timestamp: 2025-10-03 15:30:47
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-20, b12= -6
+  Stage 2: c21=-10, c22=  4
+  Stage 3: c31=-20, c32= 33, c33= 48, c34=-42
+  Probabilities: p1=0.300, p2=0.900, p3=0.700
+Final outcomes:
+  z1 = 0+-20+-10+-20 = -50 (prob=0.270)
+  z2 = 0+-20+-10+33 = 3 (prob=0.030)
+  z3 = 0+-6+4+48 = 46 (prob=0.490)
+  z4 = 0+-6+4+-42 = -44 (prob=0.210)
+  Expected value: -0.110000
+  Main interval IL = [-24.981, 3.000]
+  L1 interval IL1 = [-45.769, 3.000]
+  L2 interval IL2 = [-6.450, 46.000]
+
+============================================================
+Solution 15
+============================================================
+Objective function value: 0.120000
+Timestamp: 2025-10-03 15:30:15
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  6, b12= 19
+  Stage 2: c21= 10, c22=-17
+  Stage 3: c31= 26, c32=-25, c33=-32, c34= 31
+  Probabilities: p1=0.300, p2=0.100, p3=0.500
+Final outcomes:
+  z1 = 0+6+10+26 = 42 (prob=0.030)
+  z2 = 0+6+10+-25 = -9 (prob=0.270)
+  z3 = 0+19+-17+-32 = -30 (prob=0.350)
+  z4 = 0+19+-17+31 = 33 (prob=0.350)
+  Expected value: -0.120000
+  Main interval IL = [-8.188, 33.000]
+  L1 interval IL1 = [-4.928, 42.000]
+  L2 interval IL2 = [-12.067, 33.000]
+
+============================================================
+Solution 16
+============================================================
+Objective function value: 0.140000
+Timestamp: 2025-10-03 15:30:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 30, b12=  0
+  Stage 2: c21=-12, c22= 13
+  Stage 3: c31=-48, c32= 32, c33=-27, c34= 40
+  Probabilities: p1=0.800, p2=0.600, p3=0.900
+Final outcomes:
+  z1 = 0+30+-12+-48 = -30 (prob=0.480)
+  z2 = 0+30+-12+32 = 50 (prob=0.320)
+  z3 = 0+0+13+-27 = -14 (prob=0.180)
+  z4 = 0+0+13+40 = 53 (prob=0.020)
+  Expected value: 0.140000
+  Main interval IL = [-9.664, 50.000]
+  L1 interval IL1 = [-11.519, 50.000]
+  L2 interval IL2 = [-8.651, 53.000]
+
+============================================================
+Solution 17
+============================================================
+Objective function value: 0.150000
+Timestamp: 2025-10-03 15:30:30
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  7, b12= -1
+  Stage 2: c21= -8, c22= 34
+  Stage 3: c31= 17, c32=-31, c33=-43, c34= 38
+  Probabilities: p1=0.500, p2=0.700, p3=0.900
+Final outcomes:
+  z1 = 0+7+-8+17 = 16 (prob=0.350)
+  z2 = 0+7+-8+-31 = -32 (prob=0.150)
+  z3 = 0+-1+34+-43 = -10 (prob=0.450)
+  z4 = 0+-1+34+38 = 71 (prob=0.050)
+  Expected value: -0.150000
+  Main interval IL = [-6.593, 16.000]
+  L1 interval IL1 = [-11.973, 16.000]
+  L2 interval IL2 = [-3.533, 71.000]
+
+============================================================
+Solution 18
+============================================================
+Objective function value: 0.160000
+Timestamp: 2025-10-03 15:30:38
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 15, b12=  6
+  Stage 2: c21=-12, c22=-14
+  Stage 3: c31=-37, c32= 46, c33=-42, c34= 42
+  Probabilities: p1=0.900, p2=0.600, p3=0.300
+Final outcomes:
+  z1 = 0+15+-12+-37 = -34 (prob=0.540)
+  z2 = 0+15+-12+46 = 49 (prob=0.360)
+  z3 = 0+6+-14+-42 = -50 (prob=0.030)
+  z4 = 0+6+-14+42 = 34 (prob=0.070)
+  Expected value: 0.160000
+  Main interval IL = [-15.053, 34.000]
+  L1 interval IL1 = [-14.826, 49.000]
+  L2 interval IL2 = [-14.953, 34.000]
+
+============================================================
+Solution 19
+============================================================
+Objective function value: 0.190000
+Timestamp: 2025-10-03 15:30:32
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 13, b12= 43
+  Stage 2: c21= -5, c22=-30
+  Stage 3: c31=-35, c32=  9, c33=-47, c34= 32
+  Probabilities: p1=0.700, p2=0.600, p3=0.300
+Final outcomes:
+  z1 = 0+13+-5+-35 = -27 (prob=0.420)
+  z2 = 0+13+-5+9 = 17 (prob=0.280)
+  z3 = 0+43+-30+-47 = -34 (prob=0.090)
+  z4 = 0+43+-30+32 = 45 (prob=0.210)
+  Expected value: -0.190000
+  Main interval IL = [-11.990, 17.000]
+  L1 interval IL1 = [-16.835, 17.000]
+  L2 interval IL2 = [-1.039, 45.000]
+
+============================================================
+Solution 20
+============================================================
+Objective function value: 0.208019
+Timestamp: 2025-10-03 15:30:09
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 25, b12=-18
+  Stage 2: c21=-10, c22=  3
+  Stage 3: c31= 11, c32=-37, c33=-16, c34= 41
+  Probabilities: p1=0.800, p2=0.500, p3=0.600
+Final outcomes:
+  z1 = 0+25+-10+11 = 26 (prob=0.400)
+  z2 = 0+25+-10+-37 = -22 (prob=0.400)
+  z3 = 0+-18+3+-16 = -31 (prob=0.120)
+  z4 = 0+-18+3+41 = 26 (prob=0.080)
+  Expected value: -0.040000
+  Main interval IL = [-11.339, 26.000]
+  L1 interval IL1 = [-8.337, 26.000]
+  L2 interval IL2 = [-17.832, 26.000]
+
+============================================================
+Solution 21
+============================================================
+Objective function value: 0.220000
+Timestamp: 2025-10-03 15:30:43
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 40, b12= 13
+  Stage 2: c21=-17, c22=-18
+  Stage 3: c31=-45, c32= 17, c33=-34, c34= 48
+  Probabilities: p1=0.100, p2=0.900, p3=0.500
+Final outcomes:
+  z1 = 0+40+-17+-45 = -22 (prob=0.090)
+  z2 = 0+40+-17+17 = 40 (prob=0.010)
+  z3 = 0+13+-18+-34 = -39 (prob=0.450)
+  z4 = 0+13+-18+48 = 43 (prob=0.450)
+  Expected value: 0.220000
+  Main interval IL = [-15.775, 40.000]
+  L1 interval IL1 = [-17.050, 40.000]
+  L2 interval IL2 = [-15.659, 43.000]
+
+============================================================
+Solution 22
+============================================================
+Objective function value: 0.260000
+Timestamp: 2025-10-03 15:30:34
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 21, b12=-14
+  Stage 2: c21=-33, c22= 17
+  Stage 3: c31=-28, c32= 44, c33= 27, c34=-36
+  Probabilities: p1=0.800, p2=0.400, p3=0.300
+Final outcomes:
+  z1 = 0+21+-33+-28 = -40 (prob=0.320)
+  z2 = 0+21+-33+44 = 32 (prob=0.480)
+  z3 = 0+-14+17+27 = 30 (prob=0.060)
+  z4 = 0+-14+17+-36 = -33 (prob=0.140)
+  Expected value: -0.260000
+  Main interval IL = [-17.438, 30.000]
+  L1 interval IL1 = [-15.150, 32.000]
+  L2 interval IL2 = [-21.590, 30.000]
+
+============================================================
+Solution 23
+============================================================
+Objective function value: 0.280000
+Timestamp: 2025-10-03 15:30:24
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -7, b12= 18
+  Stage 2: c21= -5, c22=-16
+  Stage 3: c31= 20, c32=-37, c33=-24, c34= 34
+  Probabilities: p1=0.200, p2=0.800, p3=0.600
+Final outcomes:
+  z1 = 0+-7+-5+20 = 8 (prob=0.160)
+  z2 = 0+-7+-5+-37 = -49 (prob=0.040)
+  z3 = 0+18+-16+-24 = -22 (prob=0.480)
+  z4 = 0+18+-16+34 = 36 (prob=0.320)
+  Expected value: 0.280000
+  Main interval IL = [-12.132, 8.000]
+  L1 interval IL1 = [-19.938, 8.000]
+  L2 interval IL2 = [-8.601, 36.000]
+
+============================================================
+Solution 24
+============================================================
+Objective function value: 0.310000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12=-10
+  Stage 2: c21=-13, c22= 12
+  Stage 3: c31= 19, c32=-43, c33= 29, c34=-30
+  Probabilities: p1=0.900, p2=0.400, p3=0.300
+Final outcomes:
+  z1 = 0+32+-13+19 = 38 (prob=0.360)
+  z2 = 0+32+-13+-43 = -24 (prob=0.540)
+  z3 = 0+-10+12+29 = 31 (prob=0.030)
+  z4 = 0+-10+12+-30 = -28 (prob=0.070)
+  Expected value: -0.310000
+  Main interval IL = [-11.265, 31.000]
+  L1 interval IL1 = [-9.677, 38.000]
+  L2 interval IL2 = [-17.314, 31.000]
+
+============================================================
+Solution 25
+============================================================
+Objective function value: 0.320000
+Timestamp: 2025-10-03 15:30:05
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  2, b12= -2
+  Stage 2: c21=  3, c22= -7
+  Stage 3: c31=-19, c32= 25, c33= 23, c34= -8
+  Probabilities: p1=0.600, p2=0.600, p3=0.400
+Final outcomes:
+  z1 = 0+2+3+-19 = -14 (prob=0.360)
+  z2 = 0+2+3+25 = 30 (prob=0.240)
+  z3 = 0+-2+-7+23 = 14 (prob=0.160)
+  z4 = 0+-2+-7+-8 = -17 (prob=0.240)
+  Expected value: 0.320000
+  Main interval IL = [-6.199, 14.000]
+  L1 interval IL1 = [-3.835, 30.000]
+  L2 interval IL2 = [-9.838, 14.000]
+
+============================================================
+Solution 26
+============================================================
+Objective function value: 0.320000
+Timestamp: 2025-10-03 15:30:18
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -3, b12= 38
+  Stage 2: c21=  6, c22=-13
+  Stage 3: c31= 47, c32=-33, c33= 40, c34=-48
+  Probabilities: p1=0.600, p2=0.500, p3=0.100
+Final outcomes:
+  z1 = 0+-3+6+47 = 50 (prob=0.300)
+  z2 = 0+-3+6+-33 = -30 (prob=0.300)
+  z3 = 0+38+-13+40 = 65 (prob=0.040)
+  z4 = 0+38+-13+-48 = -23 (prob=0.360)
+  Expected value: 0.320000
+  Main interval IL = [-10.501, 50.000]
+  L1 interval IL1 = [-7.228, 50.000]
+  L2 interval IL2 = [-15.974, 65.000]
+
+============================================================
+Solution 27
+============================================================
+Objective function value: 0.320000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12= 20
+  Stage 2: c21=-10, c22= 14
+  Stage 3: c31= 18, c32=-43, c33=-45, c34= 15
+  Probabilities: p1=0.400, p2=0.700, p3=0.900
+Final outcomes:
+  z1 = 0+17+-10+18 = 25 (prob=0.280)
+  z2 = 0+17+-10+-43 = -36 (prob=0.120)
+  z3 = 0+20+14+-45 = -11 (prob=0.540)
+  z4 = 0+20+14+15 = 49 (prob=0.060)
+  Expected value: -0.320000
+  Main interval IL = [-7.591, 25.000]
+  L1 interval IL1 = [-10.549, 25.000]
+  L2 interval IL2 = [-6.210, 49.000]
+
+============================================================
+Solution 28
+============================================================
+Objective function value: 0.350000
+Timestamp: 2025-10-03 15:30:14
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 40, b12= 41
+  Stage 2: c21=-19, c22= -5
+  Stage 3: c31=-37, c32= 30, c33= 42, c34=-50
+  Probabilities: p1=0.500, p2=0.700, p3=0.100
+Final outcomes:
+  z1 = 0+40+-19+-37 = -16 (prob=0.350)
+  z2 = 0+40+-19+30 = 51 (prob=0.150)
+  z3 = 0+41+-5+42 = 78 (prob=0.050)
+  z4 = 0+41+-5+-50 = -14 (prob=0.450)
+  Expected value: -0.350000
+  Main interval IL = [-3.670, 51.000]
+  L1 interval IL1 = [-3.866, 51.000]
+  L2 interval IL2 = [-6.655, 78.000]
+
+============================================================
+Solution 29
+============================================================
+Objective function value: 0.370000
+Timestamp: 2025-10-03 15:30:43
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 13, b12=-15
+  Stage 2: c21= -4, c22= 16
+  Stage 3: c31= 24, c32=-50, c33= 21, c34=-44
+  Probabilities: p1=0.100, p2=0.200, p3=0.700
+Final outcomes:
+  z1 = 0+13+-4+24 = 33 (prob=0.020)
+  z2 = 0+13+-4+-50 = -41 (prob=0.080)
+  z3 = 0+-15+16+21 = 22 (prob=0.630)
+  z4 = 0+-15+16+-44 = -43 (prob=0.270)
+  Expected value: -0.370000
+  Main interval IL = [-20.380, 22.000]
+  L1 interval IL1 = [-31.224, 33.000]
+  L2 interval IL2 = [-15.880, 22.000]
+
+============================================================
+Solution 30
+============================================================
+Objective function value: 0.380000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -1, b12=-20
+  Stage 2: c21=  8, c22=-11
+  Stage 3: c31=-40, c32= 19, c33= 45, c34=-40
+  Probabilities: p1=0.600, p2=0.300, p3=0.700
+Final outcomes:
+  z1 = 0+-1+8+-40 = -33 (prob=0.180)
+  z2 = 0+-1+8+19 = 26 (prob=0.420)
+  z3 = 0+-20+-11+45 = 14 (prob=0.280)
+  z4 = 0+-20+-11+-40 = -71 (prob=0.120)
+  Expected value: 0.380000
+  Main interval IL = [-22.007, 14.000]
+  L1 interval IL1 = [-8.384, 26.000]
+  L2 interval IL2 = [-35.536, 14.000]
+
+============================================================
+Solution 31
+============================================================
+Objective function value: 0.380000
+Timestamp: 2025-10-03 15:30:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-21, b12=  7
+  Stage 2: c21=  6, c22= -5
+  Stage 3: c31=-22, c32= 16, c33=-11, c34=  9
+  Probabilities: p1=0.300, p2=0.300, p3=0.300
+Final outcomes:
+  z1 = 0+-21+6+-22 = -37 (prob=0.090)
+  z2 = 0+-21+6+16 = 1 (prob=0.210)
+  z3 = 0+7+-5+-11 = -9 (prob=0.210)
+  z4 = 0+7+-5+9 = 11 (prob=0.490)
+  Expected value: 0.380000
+  Main interval IL = [-8.742, 1.000]
+  L1 interval IL1 = [-21.145, 1.000]
+  L2 interval IL2 = [-0.656, 11.000]
+
+============================================================
+Solution 32
+============================================================
+Objective function value: 0.380000
+Timestamp: 2025-10-03 15:30:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12= 15
+  Stage 2: c21=-19, c22= -5
+  Stage 3: c31= 27, c32=-19, c33=-32, c34= 35
+  Probabilities: p1=0.700, p2=0.400, p3=0.600
+Final outcomes:
+  z1 = 0+17+-19+27 = 25 (prob=0.280)
+  z2 = 0+17+-19+-19 = -21 (prob=0.420)
+  z3 = 0+15+-5+-32 = -22 (prob=0.180)
+  z4 = 0+15+-5+35 = 45 (prob=0.120)
+  Expected value: -0.380000
+  Main interval IL = [-8.405, 25.000]
+  L1 interval IL1 = [-10.373, 25.000]
+  L2 interval IL2 = [-6.522, 45.000]
+
+============================================================
+Solution 33
+============================================================
+Objective function value: 0.380000
+Timestamp: 2025-10-03 15:30:29
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-11, b12= 20
+  Stage 2: c21= -4, c22= -4
+  Stage 3: c31= 22, c32=-22, c33=-27, c34= 15
+  Probabilities: p1=0.100, p2=0.600, p3=0.700
+Final outcomes:
+  z1 = 0+-11+-4+22 = 7 (prob=0.060)
+  z2 = 0+-11+-4+-22 = -37 (prob=0.040)
+  z3 = 0+20+-4+-27 = -11 (prob=0.630)
+  z4 = 0+20+-4+15 = 31 (prob=0.270)
+  Expected value: 0.380000
+  Main interval IL = [-7.092, 7.000]
+  L1 interval IL1 = [-21.814, 7.000]
+  L2 interval IL2 = [-3.393, 31.000]
+
+============================================================
+Solution 34
+============================================================
+Objective function value: 0.390000
+Timestamp: 2025-10-03 15:30:09
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -3, b12=  8
+  Stage 2: c21=-31, c22=  1
+  Stage 3: c31=-41, c32= 36, c33= 12, c34=-45
+  Probabilities: p1=0.300, p2=0.300, p3=0.800
+Final outcomes:
+  z1 = 0+-3+-31+-41 = -75 (prob=0.090)
+  z2 = 0+-3+-31+36 = 2 (prob=0.210)
+  z3 = 0+8+1+12 = 21 (prob=0.560)
+  z4 = 0+8+1+-45 = -36 (prob=0.140)
+  Expected value: 0.390000
+  Main interval IL = [-23.457, 2.000]
+  L1 interval IL1 = [-42.874, 2.000]
+  L2 interval IL2 = [-6.938, 21.000]
+
+============================================================
+Solution 35
+============================================================
+Objective function value: 0.400000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 23, b12= -3
+  Stage 2: c21= -7, c22= 21
+  Stage 3: c31=-28, c32= 34, c33= 38, c34=-50
+  Probabilities: p1=0.400, p2=0.900, p3=0.400
+Final outcomes:
+  z1 = 0+23+-7+-28 = -12 (prob=0.360)
+  z2 = 0+23+-7+34 = 50 (prob=0.040)
+  z3 = 0+-3+21+38 = 56 (prob=0.240)
+  z4 = 0+-3+21+-50 = -32 (prob=0.360)
+  Expected value: -0.400000
+  Main interval IL = [-8.243, 50.000]
+  L1 interval IL1 = [-7.050, 50.000]
+  L2 interval IL2 = [-11.670, 56.000]
+
+============================================================
+Solution 36
+============================================================
+Objective function value: 0.400000
+Timestamp: 2025-10-03 15:30:14
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  8, b12=  1
+  Stage 2: c21=  0, c22= -5
+  Stage 3: c31=-43, c32= 25, c33= 32, c34=-44
+  Probabilities: p1=0.800, p2=0.400, p3=0.300
+Final outcomes:
+  z1 = 0+8+0+-43 = -35 (prob=0.320)
+  z2 = 0+8+0+25 = 33 (prob=0.480)
+  z3 = 0+1+-5+32 = 28 (prob=0.060)
+  z4 = 0+1+-5+-44 = -48 (prob=0.140)
+  Expected value: -0.400000
+  Main interval IL = [-19.462, 28.000]
+  L1 interval IL1 = [-11.530, 33.000]
+  L2 interval IL2 = [-34.236, 28.000]
+
+============================================================
+Solution 37
+============================================================
+Objective function value: 0.420000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 42, b12= 24
+  Stage 2: c21=-31, c22= -1
+  Stage 3: c31= 31, c32=-38, c33=-32, c34= 13
+  Probabilities: p1=0.700, p2=0.400, p3=0.800
+Final outcomes:
+  z1 = 0+42+-31+31 = 42 (prob=0.280)
+  z2 = 0+42+-31+-38 = -27 (prob=0.420)
+  z3 = 0+24+-1+-32 = -9 (prob=0.240)
+  z4 = 0+24+-1+13 = 36 (prob=0.060)
+  Expected value: 0.420000
+  Main interval IL = [-6.782, 36.000]
+  L1 interval IL1 = [-11.060, 42.000]
+  L2 interval IL2 = [-3.055, 36.000]
+
+============================================================
+Solution 38
+============================================================
+Objective function value: 0.460000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12= 41
+  Stage 2: c21=-17, c22=-19
+  Stage 3: c31=-43, c32= 47, c33= 49, c34=-30
+  Probabilities: p1=0.400, p2=0.700, p3=0.100
+Final outcomes:
+  z1 = 0+32+-17+-43 = -28 (prob=0.280)
+  z2 = 0+32+-17+47 = 62 (prob=0.120)
+  z3 = 0+41+-19+49 = 71 (prob=0.060)
+  z4 = 0+41+-19+-30 = -8 (prob=0.540)
+  Expected value: -0.460000
+  Main interval IL = [-4.091, 62.000]
+  L1 interval IL1 = [-11.700, 62.000]
+  L2 interval IL2 = [-1.693, 71.000]
+
+============================================================
+Solution 39
+============================================================
+Objective function value: 0.470000
+Timestamp: 2025-10-03 15:30:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-22, b12= 18
+  Stage 2: c21=  7, c22=-21
+  Stage 3: c31= 33, c32=-21, c33=-29, c34= 46
+  Probabilities: p1=0.300, p2=0.400, p3=0.500
+Final outcomes:
+  z1 = 0+-22+7+33 = 18 (prob=0.120)
+  z2 = 0+-22+7+-21 = -36 (prob=0.180)
+  z3 = 0+18+-21+-29 = -32 (prob=0.350)
+  z4 = 0+18+-21+46 = 43 (prob=0.350)
+  Expected value: -0.470000
+  Main interval IL = [-15.717, 18.000]
+  L1 interval IL1 = [-23.525, 18.000]
+  L2 interval IL2 = [-10.651, 43.000]
+
+============================================================
+Solution 40
+============================================================
+Objective function value: 0.480000
+Timestamp: 2025-10-03 15:30:41
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 33, b12= 16
+  Stage 2: c21=-38, c22= -3
+  Stage 3: c31=-39, c32= 47, c33=-29, c34= 29
+  Probabilities: p1=0.600, p2=0.400, p3=0.900
+Final outcomes:
+  z1 = 0+33+-38+-39 = -44 (prob=0.240)
+  z2 = 0+33+-38+47 = 42 (prob=0.360)
+  z3 = 0+16+-3+-29 = -16 (prob=0.360)
+  z4 = 0+16+-3+29 = 42 (prob=0.040)
+  Expected value: 0.480000
+  Main interval IL = [-12.474, 42.000]
+  L1 interval IL1 = [-14.318, 42.000]
+  L2 interval IL2 = [-11.370, 42.000]
+
+============================================================
+Solution 41
+============================================================
+Objective function value: 0.500000
+Timestamp: 2025-10-03 15:30:06
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12= 22
+  Stage 2: c21=  4, c22= -5
+  Stage 3: c31= 33, c32=-49, c33= 35, c34=-42
+  Probabilities: p1=0.500, p2=0.100, p3=0.400
+Final outcomes:
+  z1 = 0+32+4+33 = 69 (prob=0.050)
+  z2 = 0+32+4+-49 = -13 (prob=0.450)
+  z3 = 0+22+-5+35 = 52 (prob=0.200)
+  z4 = 0+22+-5+-42 = -25 (prob=0.300)
+  Expected value: 0.500000
+  Main interval IL = [-5.461, 52.000]
+  L1 interval IL1 = [-6.454, 69.000]
+  L2 interval IL2 = [-7.212, 52.000]
+
+============================================================
+Solution 42
+============================================================
+Objective function value: 0.500000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  3, b12=-13
+  Stage 2: c21= 29, c22= 28
+  Stage 3: c31= 21, c32=-49, c33= 24, c34=-41
+  Probabilities: p1=0.400, p2=0.400, p3=0.300
+Final outcomes:
+  z1 = 0+3+29+21 = 53 (prob=0.160)
+  z2 = 0+3+29+-49 = -17 (prob=0.240)
+  z3 = 0+-13+28+24 = 39 (prob=0.180)
+  z4 = 0+-13+28+-41 = -26 (prob=0.420)
+  Expected value: 0.500000
+  Main interval IL = [-7.395, 39.000]
+  L1 interval IL1 = [-0.829, 53.000]
+  L2 interval IL2 = [-14.228, 39.000]
+
+============================================================
+Solution 43
+============================================================
+Objective function value: 0.540000
+Timestamp: 2025-10-03 15:30:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  0, b12=  1
+  Stage 2: c21=  3, c22=-32
+  Stage 3: c31= 22, c32=-37, c33=-44, c34= 48
+  Probabilities: p1=0.700, p2=0.800, p3=0.500
+Final outcomes:
+  z1 = 0+0+3+22 = 25 (prob=0.560)
+  z2 = 0+0+3+-37 = -34 (prob=0.140)
+  z3 = 0+1+-32+-44 = -75 (prob=0.150)
+  z4 = 0+1+-32+48 = 17 (prob=0.150)
+  Expected value: 0.540000
+  Main interval IL = [-24.149, 17.000]
+  L1 interval IL1 = [-3.918, 25.000]
+  L2 interval IL2 = [-48.812, 17.000]
+
+============================================================
+Solution 44
+============================================================
+Objective function value: 0.550000
+Timestamp: 2025-10-03 15:30:18
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -4, b12= 17
+  Stage 2: c21=  7, c22= 10
+  Stage 3: c31= 22, c32=-42, c33=-36, c34=  7
+  Probabilities: p1=0.500, p2=0.700, p3=0.900
+Final outcomes:
+  z1 = 0+-4+7+22 = 25 (prob=0.350)
+  z2 = 0+-4+7+-42 = -39 (prob=0.150)
+  z3 = 0+17+10+-36 = -9 (prob=0.450)
+  z4 = 0+17+10+7 = 34 (prob=0.050)
+  Expected value: 0.550000
+  Main interval IL = [-8.268, 25.000]
+  L1 interval IL1 = [-12.298, 25.000]
+  L2 interval IL2 = [-5.567, 34.000]
+
+============================================================
+Solution 45
+============================================================
+Objective function value: 0.560000
+Timestamp: 2025-10-03 15:30:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  3, b12= 33
+  Stage 2: c21= 29, c22=-33
+  Stage 3: c31= 15, c32=-43, c33=-34, c34= 46
+  Probabilities: p1=0.700, p2=0.100, p3=0.400
+Final outcomes:
+  z1 = 0+3+29+15 = 47 (prob=0.070)
+  z2 = 0+3+29+-43 = -11 (prob=0.630)
+  z3 = 0+33+-33+-34 = -34 (prob=0.120)
+  z4 = 0+33+-33+46 = 46 (prob=0.180)
+  Expected value: 0.560000
+  Main interval IL = [-5.997, 46.000]
+  L1 interval IL1 = [-6.370, 47.000]
+  L2 interval IL2 = [-6.388, 46.000]
+
+============================================================
+Solution 46
+============================================================
+Objective function value: 0.560000
+Timestamp: 2025-10-03 15:30:46
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 13, b12= -1
+  Stage 2: c21=-28, c22=  9
+  Stage 3: c31=-42, c32= 30, c33=-39, c34=  2
+  Probabilities: p1=0.600, p2=0.200, p3=0.300
+Final outcomes:
+  z1 = 0+13+-28+-42 = -57 (prob=0.120)
+  z2 = 0+13+-28+30 = 15 (prob=0.480)
+  z3 = 0+-1+9+-39 = -31 (prob=0.120)
+  z4 = 0+-1+9+2 = 10 (prob=0.280)
+  Expected value: -0.560000
+  Main interval IL = [-19.246, 10.000]
+  L1 interval IL1 = [-20.290, 15.000]
+  L2 interval IL2 = [-13.894, 10.000]
+
+============================================================
+Solution 47
+============================================================
+Objective function value: 0.570000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 31, b12= -3
+  Stage 2: c21=-19, c22=-11
+  Stage 3: c31= 32, c32=-33, c33=-30, c34= 17
+  Probabilities: p1=0.900, p2=0.400, p3=0.900
+Final outcomes:
+  z1 = 0+31+-19+32 = 44 (prob=0.360)
+  z2 = 0+31+-19+-33 = -21 (prob=0.540)
+  z3 = 0+-3+-11+-30 = -44 (prob=0.090)
+  z4 = 0+-3+-11+17 = 3 (prob=0.010)
+  Expected value: 0.570000
+  Main interval IL = [-14.273, 3.000]
+  L1 interval IL1 = [-5.984, 44.000]
+  L2 interval IL2 = [-40.248, 3.000]
+
+============================================================
+Solution 48
+============================================================
+Objective function value: 0.580000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 15, b12=  0
+  Stage 2: c21= -8, c22= -3
+  Stage 3: c31=-18, c32= 13, c33= 16, c34=-10
+  Probabilities: p1=0.700, p2=0.600, p3=0.300
+Final outcomes:
+  z1 = 0+15+-8+-18 = -11 (prob=0.420)
+  z2 = 0+15+-8+13 = 20 (prob=0.280)
+  z3 = 0+0+-3+16 = 13 (prob=0.090)
+  z4 = 0+0+-3+-10 = -13 (prob=0.210)
+  Expected value: -0.580000
+  Main interval IL = [-5.310, 13.000]
+  L1 interval IL1 = [-3.838, 20.000]
+  L2 interval IL2 = [-8.291, 13.000]
+
+============================================================
+Solution 49
+============================================================
+Objective function value: 0.580000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 48, b12=  0
+  Stage 2: c21=-30, c22=-26
+  Stage 3: c31= 46, c32=-47, c33=-28, c34= 45
+  Probabilities: p1=0.600, p2=0.500, p3=0.600
+Final outcomes:
+  z1 = 0+48+-30+46 = 64 (prob=0.300)
+  z2 = 0+48+-30+-47 = -29 (prob=0.300)
+  z3 = 0+0+-26+-28 = -54 (prob=0.240)
+  z4 = 0+0+-26+45 = 19 (prob=0.160)
+  Expected value: 0.580000
+  Main interval IL = [-17.933, 19.000]
+  L1 interval IL1 = [-2.528, 64.000]
+  L2 interval IL2 = [-37.136, 19.000]
+
+============================================================
+Solution 50
+============================================================
+Objective function value: 0.600000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 39, b12= 30
+  Stage 2: c21=-23, c22= -4
+  Stage 3: c31= 25, c32=-47, c33= 26, c34=-37
+  Probabilities: p1=0.200, p2=0.300, p3=0.200
+Final outcomes:
+  z1 = 0+39+-23+25 = 41 (prob=0.060)
+  z2 = 0+39+-23+-47 = -31 (prob=0.140)
+  z3 = 0+30+-4+26 = 52 (prob=0.160)
+  z4 = 0+30+-4+-37 = -11 (prob=0.640)
+  Expected value: -0.600000
+  Main interval IL = [-6.288, 41.000]
+  L1 interval IL1 = [-17.960, 41.000]
+  L2 interval IL2 = [-2.677, 52.000]
+
+============================================================
+Solution 51
+============================================================
+Objective function value: 0.600000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-13, b12= -2
+  Stage 2: c21=-26, c22=  9
+  Stage 3: c31=-48, c32= 40, c33=  4, c34=-35
+  Probabilities: p1=0.200, p2=0.300, p3=0.900
+Final outcomes:
+  z1 = 0+-13+-26+-48 = -87 (prob=0.060)
+  z2 = 0+-13+-26+40 = 1 (prob=0.140)
+  z3 = 0+-2+9+4 = 11 (prob=0.720)
+  z4 = 0+-2+9+-35 = -28 (prob=0.080)
+  Expected value: 0.600000
+  Main interval IL = [-21.194, 1.000]
+  L1 interval IL1 = [-50.284, 1.000]
+  L2 interval IL2 = [-2.805, 11.000]
+
+============================================================
+Solution 52
+============================================================
+Objective function value: 0.600000
+Timestamp: 2025-10-03 15:30:37
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 23, b12= 10
+  Stage 2: c21=-14, c22=  0
+  Stage 3: c31=-26, c32= 23, c33= 19, c34=-33
+  Probabilities: p1=0.800, p2=0.600, p3=0.300
+Final outcomes:
+  z1 = 0+23+-14+-26 = -17 (prob=0.480)
+  z2 = 0+23+-14+23 = 32 (prob=0.320)
+  z3 = 0+10+0+19 = 29 (prob=0.060)
+  z4 = 0+10+0+-33 = -23 (prob=0.140)
+  Expected value: 0.600000
+  Main interval IL = [-7.850, 29.000]
+  L1 interval IL1 = [-5.680, 32.000]
+  L2 interval IL2 = [-13.582, 29.000]
+
+============================================================
+Solution 53
+============================================================
+Objective function value: 0.600000
+Timestamp: 2025-10-03 15:30:42
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 30, b12= 28
+  Stage 2: c21=-32, c22=  7
+  Stage 3: c31=-30, c32= 43, c33=  4, c34=-50
+  Probabilities: p1=0.300, p2=0.800, p3=0.400
+Final outcomes:
+  z1 = 0+30+-32+-30 = -32 (prob=0.240)
+  z2 = 0+30+-32+43 = 41 (prob=0.060)
+  z3 = 0+28+7+4 = 39 (prob=0.280)
+  z4 = 0+28+7+-50 = -15 (prob=0.420)
+  Expected value: -0.600000
+  Main interval IL = [-9.376, 39.000]
+  L1 interval IL1 = [-22.356, 41.000]
+  L2 interval IL2 = [-2.525, 39.000]
+
+============================================================
+Solution 54
+============================================================
+Objective function value: 0.630000
+Timestamp: 2025-10-03 15:30:15
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 15, b12=  4
+  Stage 2: c21=-27, c22= -3
+  Stage 3: c31=-34, c32= 43, c33=-31, c34= 38
+  Probabilities: p1=0.900, p2=0.400, p3=0.500
+Final outcomes:
+  z1 = 0+15+-27+-34 = -46 (prob=0.360)
+  z2 = 0+15+-27+43 = 31 (prob=0.540)
+  z3 = 0+4+-3+-31 = -30 (prob=0.050)
+  z4 = 0+4+-3+38 = 39 (prob=0.050)
+  Expected value: 0.630000
+  Main interval IL = [-17.208, 31.000]
+  L1 interval IL1 = [-19.424, 31.000]
+  L2 interval IL2 = [-10.359, 39.000]
+
+============================================================
+Solution 55
+============================================================
+Objective function value: 0.640000
+Timestamp: 2025-10-03 15:30:12
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  8, b12=-14
+  Stage 2: c21=-11, c22= -5
+  Stage 3: c31=-45, c32= 42, c33=-26, c34= 45
+  Probabilities: p1=0.600, p2=0.200, p3=0.800
+Final outcomes:
+  z1 = 0+8+-11+-45 = -48 (prob=0.120)
+  z2 = 0+8+-11+42 = 39 (prob=0.480)
+  z3 = 0+-14+-5+-26 = -45 (prob=0.320)
+  z4 = 0+-14+-5+45 = 26 (prob=0.080)
+  Expected value: 0.640000
+  Main interval IL = [-21.442, 26.000]
+  L1 interval IL1 = [-3.642, 39.000]
+  L2 interval IL2 = [-35.620, 26.000]
+
+============================================================
+Solution 56
+============================================================
+Objective function value: 0.640000
+Timestamp: 2025-10-03 15:30:06
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  9, b12=-26
+  Stage 2: c21=-15, c22=  5
+  Stage 3: c31= 44, c32=-34, c33=-49, c34= 35
+  Probabilities: p1=0.800, p2=0.700, p3=0.900
+Final outcomes:
+  z1 = 0+9+-15+44 = 38 (prob=0.560)
+  z2 = 0+9+-15+-34 = -40 (prob=0.240)
+  z3 = 0+-26+5+-49 = -70 (prob=0.180)
+  z4 = 0+-26+5+35 = 14 (prob=0.020)
+  Expected value: -0.640000
+  Main interval IL = [-28.436, 14.000]
+  L1 interval IL1 = [-7.457, 38.000]
+  L2 interval IL2 = [-63.294, 14.000]
+
+============================================================
+Solution 57
+============================================================
+Objective function value: 0.650000
+Timestamp: 2025-10-03 15:30:38
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 22, b12= -9
+  Stage 2: c21=-32, c22=  8
+  Stage 3: c31=-34, c32= 35, c33=-26, c34= 50
+  Probabilities: p1=0.100, p2=0.900, p3=0.600
+Final outcomes:
+  z1 = 0+22+-32+-34 = -44 (prob=0.090)
+  z2 = 0+22+-32+35 = 25 (prob=0.010)
+  z3 = 0+-9+8+-26 = -27 (prob=0.540)
+  z4 = 0+-9+8+50 = 49 (prob=0.360)
+  Expected value: -0.650000
+  Main interval IL = [-16.396, 25.000]
+  L1 interval IL1 = [-38.491, 25.000]
+  L2 interval IL2 = [-9.443, 49.000]
+
+============================================================
+Solution 58
+============================================================
+Objective function value: 0.650773
+Timestamp: 2025-10-03 15:30:15
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -8, b12= -4
+  Stage 2: c21= 18, c22= 12
+  Stage 3: c31=-41, c32= 49, c33= 40, c34=-16
+  Probabilities: p1=0.300, p2=0.600, p3=0.100
+Final outcomes:
+  z1 = 0+-8+18+-41 = -31 (prob=0.180)
+  z2 = 0+-8+18+49 = 59 (prob=0.120)
+  z3 = 0+-4+12+40 = 48 (prob=0.070)
+  z4 = 0+-4+12+-16 = -8 (prob=0.630)
+  Expected value: -0.180000
+  Main interval IL = [-4.752, 48.000]
+  L1 interval IL1 = [-10.208, 59.000]
+  L2 interval IL2 = [-3.529, 48.000]
+
+============================================================
+Solution 59
+============================================================
+Objective function value: 0.660000
+Timestamp: 2025-10-03 15:30:19
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 45, b12=  8
+  Stage 2: c21=-28, c22=-17
+  Stage 3: c31=-39, c32= 28, c33=-17, c34= 18
+  Probabilities: p1=0.800, p2=0.600, p3=0.900
+Final outcomes:
+  z1 = 0+45+-28+-39 = -22 (prob=0.480)
+  z2 = 0+45+-28+28 = 45 (prob=0.320)
+  z3 = 0+8+-17+-17 = -26 (prob=0.180)
+  z4 = 0+8+-17+18 = 9 (prob=0.020)
+  Expected value: -0.660000
+  Main interval IL = [-11.972, 9.000]
+  L1 interval IL1 = [-6.522, 45.000]
+  L2 interval IL2 = [-23.206, 9.000]
+
+============================================================
+Solution 60
+============================================================
+Objective function value: 0.660000
+Timestamp: 2025-10-03 15:30:14
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 15, b12= 23
+  Stage 2: c21= -9, c22=-10
+  Stage 3: c31= 32, c32=-24, c33=-19, c34= 38
+  Probabilities: p1=0.400, p2=0.300, p3=0.900
+Final outcomes:
+  z1 = 0+15+-9+32 = 38 (prob=0.120)
+  z2 = 0+15+-9+-24 = -18 (prob=0.280)
+  z3 = 0+23+-10+-19 = -6 (prob=0.540)
+  z4 = 0+23+-10+38 = 51 (prob=0.060)
+  Expected value: -0.660000
+  Main interval IL = [-2.951, 38.000]
+  L1 interval IL1 = [-7.858, 38.000]
+  L2 interval IL2 = [-1.449, 51.000]
+
+============================================================
+Solution 61
+============================================================
+Objective function value: 0.660000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 13, b12= -2
+  Stage 2: c21= -9, c22= 34
+  Stage 3: c31=-37, c32= 44, c33=-42, c34= 31
+  Probabilities: p1=0.200, p2=0.500, p3=0.900
+Final outcomes:
+  z1 = 0+13+-9+-37 = -33 (prob=0.100)
+  z2 = 0+13+-9+44 = 48 (prob=0.100)
+  z3 = 0+-2+34+-42 = -10 (prob=0.720)
+  z4 = 0+-2+34+31 = 63 (prob=0.080)
+  Expected value: -0.660000
+  Main interval IL = [-4.979, 48.000]
+  L1 interval IL1 = [-9.943, 48.000]
+  L2 interval IL2 = [-4.172, 63.000]
+
+============================================================
+Solution 62
+============================================================
+Objective function value: 0.670150
+Timestamp: 2025-10-03 15:30:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 10, b12=-26
+  Stage 2: c21= -3, c22= 12
+  Stage 3: c31=  5, c32=-17, c33=-32, c34= 39
+  Probabilities: p1=0.800, p2=0.600, p3=0.500
+Final outcomes:
+  z1 = 0+10+-3+5 = 12 (prob=0.480)
+  z2 = 0+10+-3+-17 = -10 (prob=0.320)
+  z3 = 0+-26+12+-32 = -46 (prob=0.100)
+  z4 = 0+-26+12+39 = 25 (prob=0.100)
+  Expected value: 0.460000
+  Main interval IL = [-9.523, 12.000]
+  L1 interval IL1 = [-2.407, 12.000]
+  L2 interval IL2 = [-25.790, 25.000]
+
+============================================================
+Solution 63
+============================================================
+Objective function value: 0.700000
+Timestamp: 2025-10-03 15:30:23
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  7, b12= -8
+  Stage 2: c21= -6, c22=  5
+  Stage 3: c31= 12, c32=-30, c33=-44, c34= 36
+  Probabilities: p1=0.500, p2=0.700, p3=0.400
+Final outcomes:
+  z1 = 0+7+-6+12 = 13 (prob=0.350)
+  z2 = 0+7+-6+-30 = -29 (prob=0.150)
+  z3 = 0+-8+5+-44 = -47 (prob=0.200)
+  z4 = 0+-8+5+36 = 33 (prob=0.300)
+  Expected value: 0.700000
+  Main interval IL = [-16.451, 13.000]
+  L1 interval IL1 = [-11.477, 13.000]
+  L2 interval IL2 = [-19.388, 33.000]
+
+============================================================
+Solution 64
+============================================================
+Objective function value: 0.710000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 43, b12=  1
+  Stage 2: c21=-42, c22= -8
+  Stage 3: c31=-33, c32= 50, c33= 37, c34=-42
+  Probabilities: p1=0.700, p2=0.700, p3=0.800
+Final outcomes:
+  z1 = 0+43+-42+-33 = -32 (prob=0.490)
+  z2 = 0+43+-42+50 = 51 (prob=0.210)
+  z3 = 0+1+-8+37 = 30 (prob=0.240)
+  z4 = 0+1+-8+-42 = -49 (prob=0.060)
+  Expected value: -0.710000
+  Main interval IL = [-14.785, 30.000]
+  L1 interval IL1 = [-16.968, 51.000]
+  L2 interval IL2 = [-8.721, 30.000]
+
+============================================================
+Solution 65
+============================================================
+Objective function value: 0.710000
+Timestamp: 2025-10-03 15:30:38
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  6, b12=  7
+  Stage 2: c21= 11, c22=-10
+  Stage 3: c31= 15, c32=-48, c33=-19, c34= 22
+  Probabilities: p1=0.900, p2=0.500, p3=0.400
+Final outcomes:
+  z1 = 0+6+11+15 = 32 (prob=0.450)
+  z2 = 0+6+11+-48 = -31 (prob=0.450)
+  z3 = 0+7+-10+-19 = -22 (prob=0.040)
+  z4 = 0+7+-10+22 = 19 (prob=0.060)
+  Expected value: 0.710000
+  Main interval IL = [-11.864, 19.000]
+  L1 interval IL1 = [-13.067, 32.000]
+  L2 interval IL2 = [-7.849, 19.000]
+
+============================================================
+Solution 66
+============================================================
+Objective function value: 0.712751
+Timestamp: 2025-10-03 15:30:24
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 30, b12= 14
+  Stage 2: c21=-21, c22=-25
+  Stage 3: c31=-28, c32= 30, c33= 41, c34= -3
+  Probabilities: p1=0.500, p2=0.500, p3=0.100
+Final outcomes:
+  z1 = 0+30+-21+-28 = -19 (prob=0.250)
+  z2 = 0+30+-21+30 = 39 (prob=0.250)
+  z3 = 0+14+-25+41 = 30 (prob=0.050)
+  z4 = 0+14+-25+-3 = -14 (prob=0.450)
+  Expected value: 0.200000
+  Main interval IL = [-6.335, 30.000]
+  L1 interval IL1 = [-2.490, 39.000]
+  L2 interval IL2 = [-10.487, 30.000]
+
+============================================================
+Solution 67
+============================================================
+Objective function value: 0.720000
+Timestamp: 2025-10-03 15:30:12
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  1, b12= 27
+  Stage 2: c21=  0, c22= -8
+  Stage 3: c31=-31, c32= 15, c33= 12, c34=-50
+  Probabilities: p1=0.300, p2=0.400, p3=0.500
+Final outcomes:
+  z1 = 0+1+0+-31 = -30 (prob=0.120)
+  z2 = 0+1+0+15 = 16 (prob=0.180)
+  z3 = 0+27+-8+12 = 31 (prob=0.350)
+  z4 = 0+27+-8+-50 = -31 (prob=0.350)
+  Expected value: -0.720000
+  Main interval IL = [-13.888, 16.000]
+  L1 interval IL1 = [-14.123, 16.000]
+  L2 interval IL2 = [-13.352, 31.000]
+
+============================================================
+Solution 68
+============================================================
+Objective function value: 0.730000
+Timestamp: 2025-10-03 15:30:12
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12=-39
+  Stage 2: c21=  7, c22= 27
+  Stage 3: c31=-47, c32= 36, c33= 12, c34=-49
+  Probabilities: p1=0.900, p2=0.700, p3=0.600
+Final outcomes:
+  z1 = 0+17+7+-47 = -23 (prob=0.630)
+  z2 = 0+17+7+36 = 60 (prob=0.270)
+  z3 = 0+-39+27+12 = 0 (prob=0.060)
+  z4 = 0+-39+27+-49 = -61 (prob=0.040)
+  Expected value: -0.730000
+  Main interval IL = [-14.562, 0.000]
+  L1 interval IL1 = [-7.968, 60.000]
+  L2 interval IL2 = [-39.946, 0.000]
+
+============================================================
+Solution 69
+============================================================
+Objective function value: 0.740000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-11, b12= 15
+  Stage 2: c21= 15, c22=-24
+  Stage 3: c31= 36, c32=-31, c33= -8, c34= 49
+  Probabilities: p1=0.900, p2=0.400, p3=0.800
+Final outcomes:
+  z1 = 0+-11+15+36 = 40 (prob=0.360)
+  z2 = 0+-11+15+-31 = -27 (prob=0.540)
+  z3 = 0+15+-24+-8 = -17 (prob=0.080)
+  z4 = 0+15+-24+49 = 40 (prob=0.020)
+  Expected value: -0.740000
+  Main interval IL = [-10.559, 40.000]
+  L1 interval IL1 = [-11.522, 40.000]
+  L2 interval IL2 = [-9.470, 40.000]
+
+============================================================
+Solution 70
+============================================================
+Objective function value: 0.760000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  4, b12= 37
+  Stage 2: c21= -1, c22=-37
+  Stage 3: c31=-10, c32= 10, c33= 50, c34=-22
+  Probabilities: p1=0.600, p2=0.700, p3=0.300
+Final outcomes:
+  z1 = 0+4+-1+-10 = -7 (prob=0.420)
+  z2 = 0+4+-1+10 = 13 (prob=0.180)
+  z3 = 0+37+-37+50 = 50 (prob=0.120)
+  z4 = 0+37+-37+-22 = -22 (prob=0.280)
+  Expected value: -0.760000
+  Main interval IL = [-4.905, 13.000]
+  L1 interval IL1 = [-3.378, 13.000]
+  L2 interval IL2 = [-8.960, 50.000]
+
+============================================================
+Solution 71
+============================================================
+Objective function value: 0.760000
+Timestamp: 2025-10-03 15:30:32
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 30, b12=  4
+  Stage 2: c21=-31, c22= 20
+  Stage 3: c31= 33, c32= -7, c33=-35, c34= 28
+  Probabilities: p1=0.600, p2=0.100, p3=0.700
+Final outcomes:
+  z1 = 0+30+-31+33 = 32 (prob=0.060)
+  z2 = 0+30+-31+-7 = -8 (prob=0.540)
+  z3 = 0+4+20+-35 = -11 (prob=0.280)
+  z4 = 0+4+20+28 = 52 (prob=0.120)
+  Expected value: 0.760000
+  Main interval IL = [-1.677, 32.000]
+  L1 interval IL1 = [-4.807, 32.000]
+  L2 interval IL2 = [0.410, 52.000]
+
+============================================================
+Solution 72
+============================================================
+Objective function value: 0.760000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 43, b12= 37
+  Stage 2: c21=-39, c22=-45
+  Stage 3: c31=-49, c32= 43, c33=-46, c34= 45
+  Probabilities: p1=0.400, p2=0.500, p3=0.400
+Final outcomes:
+  z1 = 0+43+-39+-49 = -45 (prob=0.200)
+  z2 = 0+43+-39+43 = 47 (prob=0.200)
+  z3 = 0+37+-45+-46 = -54 (prob=0.240)
+  z4 = 0+37+-45+45 = 37 (prob=0.360)
+  Expected value: 0.760000
+  Main interval IL = [-21.359, 37.000]
+  L1 interval IL1 = [-18.812, 47.000]
+  L2 interval IL2 = [-22.592, 37.000]
+
+============================================================
+Solution 73
+============================================================
+Objective function value: 0.760000
+Timestamp: 2025-10-03 15:30:16
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  2, b12= -4
+  Stage 2: c21=  6, c22=  3
+  Stage 3: c31=-47, c32= 31, c33=-19, c34= 48
+  Probabilities: p1=0.200, p2=0.800, p3=0.600
+Final outcomes:
+  z1 = 0+2+6+-47 = -39 (prob=0.160)
+  z2 = 0+2+6+31 = 39 (prob=0.040)
+  z3 = 0+-4+3+-19 = -20 (prob=0.480)
+  z4 = 0+-4+3+48 = 47 (prob=0.320)
+  Expected value: 0.760000
+  Main interval IL = [-11.748, 39.000]
+  L1 interval IL1 = [-28.696, 39.000]
+  L2 interval IL2 = [-4.522, 47.000]
+
+============================================================
+Solution 74
+============================================================
+Objective function value: 0.780000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-16, b12= 22
+  Stage 2: c21= -8, c22= 13
+  Stage 3: c31=-33, c32= 45, c33=  7, c34=-43
+  Probabilities: p1=0.100, p2=0.400, p3=0.200
+Final outcomes:
+  z1 = 0+-16+-8+-33 = -57 (prob=0.040)
+  z2 = 0+-16+-8+45 = 21 (prob=0.060)
+  z3 = 0+22+13+7 = 42 (prob=0.180)
+  z4 = 0+22+13+-43 = -8 (prob=0.720)
+  Expected value: 0.780000
+  Main interval IL = [-6.408, 21.000]
+  L1 interval IL1 = [-30.079, 21.000]
+  L2 interval IL2 = [-1.395, 42.000]
+
+============================================================
+Solution 75
+============================================================
+Objective function value: 0.780000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12= 45
+  Stage 2: c21=-38, c22= -7
+  Stage 3: c31= 48, c32=-21, c33= 13, c34=-50
+  Probabilities: p1=0.200, p2=0.300, p3=0.200
+Final outcomes:
+  z1 = 0+32+-38+48 = 42 (prob=0.060)
+  z2 = 0+32+-38+-21 = -27 (prob=0.140)
+  z3 = 0+45+-7+13 = 51 (prob=0.160)
+  z4 = 0+45+-7+-50 = -12 (prob=0.640)
+  Expected value: -0.780000
+  Main interval IL = [-6.026, 42.000]
+  L1 interval IL1 = [-14.503, 42.000]
+  L2 interval IL2 = [-3.677, 51.000]
+
+============================================================
+Solution 76
+============================================================
+Objective function value: 0.780000
+Timestamp: 2025-10-03 15:30:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 19, b12= 37
+  Stage 2: c21=-26, c22=-19
+  Stage 3: c31=-48, c32= 37, c33=-30, c34= 47
+  Probabilities: p1=0.400, p2=0.300, p3=0.900
+Final outcomes:
+  z1 = 0+19+-26+-48 = -55 (prob=0.120)
+  z2 = 0+19+-26+37 = 30 (prob=0.280)
+  z3 = 0+37+-19+-30 = -12 (prob=0.540)
+  z4 = 0+37+-19+47 = 65 (prob=0.060)
+  Expected value: -0.780000
+  Main interval IL = [-10.403, 30.000]
+  L1 interval IL1 = [-19.536, 30.000]
+  L2 interval IL2 = [-5.853, 65.000]
+
+============================================================
+Solution 77
+============================================================
+Objective function value: 0.800000
+Timestamp: 2025-10-03 15:30:05
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12= -1
+  Stage 2: c21=-20, c22= 35
+  Stage 3: c31=-34, c32= 33, c33=-46, c34=  6
+  Probabilities: p1=0.800, p2=0.700, p3=0.700
+Final outcomes:
+  z1 = 0+32+-20+-34 = -22 (prob=0.560)
+  z2 = 0+32+-20+33 = 45 (prob=0.240)
+  z3 = 0+-1+35+-46 = -12 (prob=0.140)
+  z4 = 0+-1+35+6 = 40 (prob=0.060)
+  Expected value: -0.800000
+  Main interval IL = [-6.643, 40.000]
+  L1 interval IL1 = [-9.866, 45.000]
+  L2 interval IL2 = [-2.582, 40.000]
+
+============================================================
+Solution 78
+============================================================
+Objective function value: 0.800000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 21, b12= -8
+  Stage 2: c21=  1, c22= -3
+  Stage 3: c31=-33, c32=  4, c33= 19, c34=-12
+  Probabilities: p1=0.800, p2=0.700, p3=0.600
+Final outcomes:
+  z1 = 0+21+1+-33 = -11 (prob=0.560)
+  z2 = 0+21+1+4 = 26 (prob=0.240)
+  z3 = 0+-8+-3+19 = 8 (prob=0.120)
+  z4 = 0+-8+-3+-12 = -23 (prob=0.080)
+  Expected value: -0.800000
+  Main interval IL = [-6.504, 8.000]
+  L1 interval IL1 = [-4.299, 26.000]
+  L2 interval IL2 = [-12.301, 8.000]
+
+============================================================
+Solution 79
+============================================================
+Objective function value: 0.800000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 16, b12= 26
+  Stage 2: c21=  0, c22=-16
+  Stage 3: c31=-35, c32=  6, c33= 26, c34=-28
+  Probabilities: p1=0.800, p2=0.600, p3=0.600
+Final outcomes:
+  z1 = 0+16+0+-35 = -19 (prob=0.480)
+  z2 = 0+16+0+6 = 22 (prob=0.320)
+  z3 = 0+26+-16+26 = 36 (prob=0.120)
+  z4 = 0+26+-16+-28 = -18 (prob=0.080)
+  Expected value: 0.800000
+  Main interval IL = [-6.460, 22.000]
+  L1 interval IL1 = [-9.528, 22.000]
+  L2 interval IL2 = [0.638, 36.000]
+
+============================================================
+Solution 80
+============================================================
+Objective function value: 0.810000
+Timestamp: 2025-10-03 15:30:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  6, b12= -2
+  Stage 2: c21=-37, c22= 19
+  Stage 3: c31= 48, c32=-35, c33=-41, c34= 48
+  Probabilities: p1=0.100, p2=0.600, p3=0.700
+Final outcomes:
+  z1 = 0+6+-37+48 = 17 (prob=0.060)
+  z2 = 0+6+-37+-35 = -66 (prob=0.040)
+  z3 = 0+-2+19+-41 = -24 (prob=0.630)
+  z4 = 0+-2+19+48 = 65 (prob=0.270)
+  Expected value: 0.810000
+  Main interval IL = [-13.850, 17.000]
+  L1 interval IL1 = [-37.353, 17.000]
+  L2 interval IL2 = [-7.881, 65.000]
+
+============================================================
+Solution 81
+============================================================
+Objective function value: 0.820000
+Timestamp: 2025-10-03 15:30:06
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  6, b12=  7
+  Stage 2: c21=-11, c22=  3
+  Stage 3: c31= 38, c32=-38, c33=-37, c34= 49
+  Probabilities: p1=0.100, p2=0.600, p3=0.700
+Final outcomes:
+  z1 = 0+6+-11+38 = 33 (prob=0.060)
+  z2 = 0+6+-11+-38 = -43 (prob=0.040)
+  z3 = 0+7+3+-37 = -27 (prob=0.630)
+  z4 = 0+7+3+49 = 59 (prob=0.270)
+  Expected value: -0.820000
+  Main interval IL = [-12.379, 33.000]
+  L1 interval IL1 = [-16.769, 33.000]
+  L2 interval IL2 = [-11.425, 59.000]
+
+============================================================
+Solution 82
+============================================================
+Objective function value: 0.840000
+Timestamp: 2025-10-03 15:30:31
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12= 46
+  Stage 2: c21=-14, c22=-32
+  Stage 3: c31=-37, c32= 36, c33=-35, c34= 40
+  Probabilities: p1=0.300, p2=0.600, p3=0.600
+Final outcomes:
+  z1 = 0+-2+-14+-37 = -53 (prob=0.180)
+  z2 = 0+-2+-14+36 = 20 (prob=0.120)
+  z3 = 0+46+-32+-35 = -21 (prob=0.420)
+  z4 = 0+46+-32+40 = 54 (prob=0.280)
+  Expected value: -0.840000
+  Main interval IL = [-15.342, 20.000]
+  L1 interval IL1 = [-36.136, 20.000]
+  L2 interval IL2 = [-3.674, 54.000]
+
+============================================================
+Solution 83
+============================================================
+Objective function value: 0.860000
+Timestamp: 2025-10-03 15:30:22
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12=-15
+  Stage 2: c21= 10, c22= 14
+  Stage 3: c31=-49, c32= 36, c33=-37, c34=  5
+  Probabilities: p1=0.600, p2=0.500, p3=0.200
+Final outcomes:
+  z1 = 0+-2+10+-49 = -41 (prob=0.300)
+  z2 = 0+-2+10+36 = 44 (prob=0.300)
+  z3 = 0+-15+14+-37 = -38 (prob=0.080)
+  z4 = 0+-15+14+5 = 4 (prob=0.320)
+  Expected value: -0.860000
+  Main interval IL = [-17.542, 4.000]
+  L1 interval IL1 = [-16.805, 44.000]
+  L2 interval IL2 = [-16.586, 4.000]
+
+============================================================
+Solution 84
+============================================================
+Objective function value: 0.880000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  9, b12= 11
+  Stage 2: c21= 12, c22=-11
+  Stage 3: c31=-43, c32= 31, c33=-12, c34= 40
+  Probabilities: p1=0.800, p2=0.700, p3=0.700
+Final outcomes:
+  z1 = 0+9+12+-43 = -22 (prob=0.560)
+  z2 = 0+9+12+31 = 52 (prob=0.240)
+  z3 = 0+11+-11+-12 = -12 (prob=0.140)
+  z4 = 0+11+-11+40 = 40 (prob=0.060)
+  Expected value: 0.880000
+  Main interval IL = [-5.760, 40.000]
+  L1 interval IL1 = [-8.598, 52.000]
+  L2 interval IL2 = [-2.582, 40.000]
+
+============================================================
+Solution 85
+============================================================
+Objective function value: 0.900000
+Timestamp: 2025-10-03 15:30:04
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 17, b12=  9
+  Stage 2: c21=-28, c22= 26
+  Stage 3: c31= 43, c32=-37, c33= 16, c34=-50
+  Probabilities: p1=0.500, p2=0.600, p3=0.200
+Final outcomes:
+  z1 = 0+17+-28+43 = 32 (prob=0.300)
+  z2 = 0+17+-28+-37 = -48 (prob=0.200)
+  z3 = 0+9+26+16 = 51 (prob=0.100)
+  z4 = 0+9+26+-50 = -15 (prob=0.400)
+  Expected value: -0.900000
+  Main interval IL = [-11.916, 32.000]
+  L1 interval IL1 = [-20.388, 32.000]
+  L2 interval IL2 = [-6.281, 51.000]
+
+============================================================
+Solution 86
+============================================================
+Objective function value: 0.900000
+Timestamp: 2025-10-03 15:30:23
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 32, b12= 11
+  Stage 2: c21= -4, c22= -2
+  Stage 3: c31=-45, c32= 44, c33=-31, c34=  6
+  Probabilities: p1=0.400, p2=0.900, p3=0.300
+Final outcomes:
+  z1 = 0+32+-4+-45 = -17 (prob=0.360)
+  z2 = 0+32+-4+44 = 72 (prob=0.040)
+  z3 = 0+11+-2+-31 = -22 (prob=0.180)
+  z4 = 0+11+-2+6 = 15 (prob=0.420)
+  Expected value: -0.900000
+  Main interval IL = [-7.644, 15.000]
+  L1 interval IL1 = [-9.895, 72.000]
+  L2 interval IL2 = [-6.563, 15.000]
+
+============================================================
+Solution 87
+============================================================
+Objective function value: 0.910000
+Timestamp: 2025-10-03 15:30:11
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -5, b12=  5
+  Stage 2: c21= 15, c22= 17
+  Stage 3: c31= 21, c32=-46, c33= 28, c34=-31
+  Probabilities: p1=0.300, p2=0.600, p3=0.100
+Final outcomes:
+  z1 = 0+-5+15+21 = 31 (prob=0.180)
+  z2 = 0+-5+15+-46 = -36 (prob=0.120)
+  z3 = 0+5+17+28 = 50 (prob=0.070)
+  z4 = 0+5+17+-31 = -9 (prob=0.630)
+  Expected value: -0.910000
+  Main interval IL = [-6.521, 31.000]
+  L1 interval IL1 = [-12.875, 31.000]
+  L2 interval IL2 = [-4.290, 50.000]
+
+============================================================
+Solution 88
+============================================================
+Objective function value: 0.920000
+Timestamp: 2025-10-03 15:30:15
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 19, b12= 27
+  Stage 2: c21=-15, c22=  0
+  Stage 3: c31=-41, c32= 43, c33=-38, c34= 50
+  Probabilities: p1=0.200, p2=0.400, p3=0.900
+Final outcomes:
+  z1 = 0+19+-15+-41 = -37 (prob=0.080)
+  z2 = 0+19+-15+43 = 47 (prob=0.120)
+  z3 = 0+27+0+-38 = -11 (prob=0.720)
+  z4 = 0+27+0+50 = 77 (prob=0.080)
+  Expected value: 0.920000
+  Main interval IL = [-4.400, 47.000]
+  L1 interval IL1 = [-8.008, 47.000]
+  L2 interval IL2 = [-3.974, 77.000]
+
+============================================================
+Solution 89
+============================================================
+Objective function value: 0.920000
+Timestamp: 2025-10-03 15:30:29
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  6, b12= 34
+  Stage 2: c21=-20, c22=-25
+  Stage 3: c31=-23, c32= 43, c33= 35, c34=-24
+  Probabilities: p1=0.400, p2=0.600, p3=0.400
+Final outcomes:
+  z1 = 0+6+-20+-23 = -37 (prob=0.240)
+  z2 = 0+6+-20+43 = 29 (prob=0.160)
+  z3 = 0+34+-25+35 = 44 (prob=0.240)
+  z4 = 0+34+-25+-24 = -15 (prob=0.360)
+  Expected value: 0.920000
+  Main interval IL = [-9.582, 29.000]
+  L1 interval IL1 = [-21.753, 29.000]
+  L2 interval IL2 = [-1.370, 44.000]
+
+============================================================
+Solution 90
+============================================================
+Objective function value: 0.940000
+Timestamp: 2025-10-03 15:30:17
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 33, b12= 15
+  Stage 2: c21=-22, c22=  9
+  Stage 3: c31=-27, c32= 31, c33=-50, c34= 13
+  Probabilities: p1=0.400, p2=0.500, p3=0.700
+Final outcomes:
+  z1 = 0+33+-22+-27 = -16 (prob=0.200)
+  z2 = 0+33+-22+31 = 42 (prob=0.200)
+  z3 = 0+15+9+-50 = -26 (prob=0.420)
+  z4 = 0+15+9+13 = 37 (prob=0.180)
+  Expected value: 0.940000
+  Main interval IL = [-7.443, 37.000]
+  L1 interval IL1 = [0.510, 42.000]
+  L2 interval IL2 = [-14.590, 37.000]
+
+============================================================
+Solution 91
+============================================================
+Objective function value: 0.960000
+Timestamp: 2025-10-03 15:30:10
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-13, b12=  2
+  Stage 2: c21= -1, c22= 31
+  Stage 3: c31=-33, c32= 41, c33=  2, c34=-48
+  Probabilities: p1=0.200, p2=0.700, p3=0.400
+Final outcomes:
+  z1 = 0+-13+-1+-33 = -47 (prob=0.140)
+  z2 = 0+-13+-1+41 = 27 (prob=0.060)
+  z3 = 0+2+31+2 = 35 (prob=0.320)
+  z4 = 0+2+31+-48 = -15 (prob=0.480)
+  Expected value: -0.960000
+  Main interval IL = [-12.267, 27.000]
+  L1 interval IL1 = [-33.598, 27.000]
+  L2 interval IL2 = [-3.449, 35.000]
+
+============================================================
+Solution 92
+============================================================
+Objective function value: 0.960000
+Timestamp: 2025-10-03 15:30:24
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -2, b12=-11
+  Stage 2: c21= 27, c22=  6
+  Stage 3: c31=-43, c32=  5, c33=-43, c34= 29
+  Probabilities: p1=0.800, p2=0.700, p3=0.200
+Final outcomes:
+  z1 = 0+-2+27+-43 = -18 (prob=0.560)
+  z2 = 0+-2+27+5 = 30 (prob=0.240)
+  z3 = 0+-11+6+-43 = -48 (prob=0.040)
+  z4 = 0+-11+6+29 = 24 (prob=0.160)
+  Expected value: -0.960000
+  Main interval IL = [-10.250, 24.000]
+  L1 interval IL1 = [-9.307, 30.000]
+  L2 interval IL2 = [-11.290, 24.000]
+
+============================================================
+Solution 93
+============================================================
+Objective function value: 0.960000
+Timestamp: 2025-10-03 15:30:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -4, b12=  3
+  Stage 2: c21= 12, c22= 23
+  Stage 3: c31=-34, c32= 31, c33= 10, c34=-47
+  Probabilities: p1=0.900, p2=0.600, p3=0.200
+Final outcomes:
+  z1 = 0+-4+12+-34 = -26 (prob=0.540)
+  z2 = 0+-4+12+31 = 39 (prob=0.360)
+  z3 = 0+3+23+10 = 36 (prob=0.020)
+  z4 = 0+3+23+-47 = -21 (prob=0.080)
+  Expected value: -0.960000
+  Main interval IL = [-11.247, 36.000]
+  L1 interval IL1 = [-10.984, 39.000]
+  L2 interval IL2 = [-13.470, 36.000]
+
+============================================================
+Solution 94
+============================================================
+Objective function value: 0.960000
+Timestamp: 2025-10-03 15:30:05
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 10, b12= -3
+  Stage 2: c21=-27, c22=  3
+  Stage 3: c31= 32, c32=-22, c33= 49, c34=-15
+  Probabilities: p1=0.100, p2=0.200, p3=0.300
+Final outcomes:
+  z1 = 0+10+-27+32 = 15 (prob=0.020)
+  z2 = 0+10+-27+-22 = -39 (prob=0.080)
+  z3 = 0+-3+3+49 = 49 (prob=0.270)
+  z4 = 0+-3+3+-15 = -15 (prob=0.630)
+  Expected value: 0.960000
+  Main interval IL = [-9.609, 15.000]
+  L1 interval IL1 = [-31.866, 15.000]
+  L2 interval IL2 = [-3.409, 49.000]
+
+============================================================
+Solution 95
+============================================================
+Objective function value: 0.960000
+Timestamp: 2025-10-03 15:30:13
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-31, b12= 21
+  Stage 2: c21= 34, c22=-12
+  Stage 3: c31= 42, c32=-43, c33=-43, c34= 46
+  Probabilities: p1=0.400, p2=0.100, p3=0.400
+Final outcomes:
+  z1 = 0+-31+34+42 = 45 (prob=0.040)
+  z2 = 0+-31+34+-43 = -40 (prob=0.360)
+  z3 = 0+21+-12+-43 = -34 (prob=0.240)
+  z4 = 0+21+-12+46 = 55 (prob=0.360)
+  Expected value: -0.960000
+  Main interval IL = [-17.602, 45.000]
+  L1 interval IL1 = [-33.214, 45.000]
+  L2 interval IL2 = [-3.282, 55.000]
+
+============================================================
+Solution 96
+============================================================
+Objective function value: 0.979000
+Timestamp: 2025-10-03 15:30:37
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-40, b12= -1
+  Stage 2: c21= 11, c22= -8
+  Stage 3: c31=-41, c32= 45, c33= 43, c34=-17
+  Probabilities: p1=0.100, p2=0.500, p3=0.500
+Final outcomes:
+  z1 = 0+-40+11+-41 = -70 (prob=0.050)
+  z2 = 0+-40+11+45 = 16 (prob=0.050)
+  z3 = 0+-1+-8+43 = 34 (prob=0.450)
+  z4 = 0+-1+-8+-17 = -26 (prob=0.450)
+  Expected value: 0.900000
+  Main interval IL = [-17.440, 16.000]
+  L1 interval IL1 = [-45.520, 16.000]
+  L2 interval IL2 = [-8.921, 34.000]
+
+============================================================
+Solution 97
+============================================================
+Objective function value: 0.980000
+Timestamp: 2025-10-03 15:30:11
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 39, b12=  8
+  Stage 2: c21=-29, c22= -7
+  Stage 3: c31=-22, c32= 40, c33=-49, c34= 24
+  Probabilities: p1=0.700, p2=0.800, p3=0.400
+Final outcomes:
+  z1 = 0+39+-29+-22 = -12 (prob=0.560)
+  z2 = 0+39+-29+40 = 50 (prob=0.140)
+  z3 = 0+8+-7+-49 = -48 (prob=0.120)
+  z4 = 0+8+-7+24 = 25 (prob=0.180)
+  Expected value: -0.980000
+  Main interval IL = [-9.556, 25.000]
+  L1 interval IL1 = [-3.809, 50.000]
+  L2 interval IL2 = [-22.804, 25.000]
+
+============================================================
+Solution 98
+============================================================
+Objective function value: 0.980000
+Timestamp: 2025-10-03 15:30:34
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 13, b12= 14
+  Stage 2: c21=  8, c22= 14
+  Stage 3: c31= 20, c32=-43, c33=-44, c34= 37
+  Probabilities: p1=0.800, p2=0.400, p3=0.900
+Final outcomes:
+  z1 = 0+13+8+20 = 41 (prob=0.320)
+  z2 = 0+13+8+-43 = -22 (prob=0.480)
+  z3 = 0+14+14+-44 = -16 (prob=0.180)
+  z4 = 0+14+14+37 = 65 (prob=0.020)
+  Expected value: 0.980000
+  Main interval IL = [-7.374, 41.000]
+  L1 interval IL1 = [-7.446, 41.000]
+  L2 interval IL2 = [-9.533, 65.000]
+
+============================================================
+Solution 99
+============================================================
+Objective function value: 0.990000
+Timestamp: 2025-10-03 15:30:25
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-24, b12=  9
+  Stage 2: c21=  1, c22=-11
+  Stage 3: c31= 47, c32=-42, c33= 40, c34=-31
+  Probabilities: p1=0.700, p2=0.700, p3=0.600
+Final outcomes:
+  z1 = 0+-24+1+47 = 24 (prob=0.490)
+  z2 = 0+-24+1+-42 = -65 (prob=0.210)
+  z3 = 0+9+-11+40 = 38 (prob=0.180)
+  z4 = 0+9+-11+-31 = -33 (prob=0.120)
+  Expected value: 0.990000
+  Main interval IL = [-21.062, 24.000]
+  L1 interval IL1 = [-27.867, 24.000]
+  L2 interval IL2 = [-8.495, 38.000]
+
+============================================================
+Solution 100
+============================================================
+Objective function value: 1.000000
+Timestamp: 2025-10-03 15:30:07
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -3, b12=  1
+  Stage 2: c21=  0, c22=  9
+  Stage 3: c31=-50, c32=  4, c33= 33, c34=-47
+  Probabilities: p1=0.400, p2=0.500, p3=0.700
+Final outcomes:
+  z1 = 0+-3+0+-50 = -53 (prob=0.200)
+  z2 = 0+-3+0+4 = 1 (prob=0.200)
+  z3 = 0+1+9+33 = 43 (prob=0.420)
+  z4 = 0+1+9+-47 = -37 (prob=0.180)
+  Expected value: 1.000000
+  Main interval IL = [-21.052, 1.000]
+  L1 interval IL1 = [-37.629, 1.000]
+  L2 interval IL2 = [-3.622, 43.000]
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4   E[Z]  Violation
+   1   27    4  -12   11  -25   47  -33    5 0.600 0.800 0.700 -10  62 -18  20 -0.000      0.000
+   2   -9   36   -3  -29   50  -27   47  -36 0.900 0.500 0.400  38 -39  54 -29 -0.030      0.030
+   3   15  -27   15   -2   15  -49  -48   36 0.600 0.400 0.200  45 -19 -77   7  0.040      0.040
+   4   -3  -19   14    2   33  -37  -31   36 0.800 0.400 0.400  44 -26 -48  19  0.040      0.040
+   5  -26   25  -16  -15   49  -24  -43   20 0.200 0.300 0.300   7 -66 -33  30  0.060      0.060
+   6    7    2   -6  -20  -46    8  -47   24 0.700 0.100 0.200 -45   9 -65   6  0.060      0.060
+   7   -2   18    3   14  -23   17  -46   27 0.100 0.600 0.800 -22  18 -14  59 -0.060      0.060
+   8   -2   26    3  -22    1   -6   24  -42 0.900 0.700 0.600   2  -5  28 -38  0.070      0.070
+   9   17  -10  -23    1  -24   28   32  -38 0.800 0.300 0.300 -30  22  23 -47 -0.080      0.080
+  10   17    6   -1    8  -43   28  -39    3 0.200 0.400 0.500 -27  44 -25  17 -0.080      0.080
+  11   17   38  -19  -12  -42   44  -39   26 0.100 0.500 0.800 -44  42 -13  52 -0.100      0.100
+  12   -2  -12    4    6  -48    4  -47   20 0.900 0.100 0.300 -46   6 -53  14  0.110      0.110
+  13   -6   11   -5   20   -5   31  -50   17 0.100 0.800 0.700 -16  20 -19  48  0.110      0.110
+  14  -20   -6  -10    4  -20   33   48  -42 0.300 0.900 0.700 -50   3  46 -44 -0.110      0.110
+  15    6   19   10  -17   26  -25  -32   31 0.300 0.100 0.500  42  -9 -30  33 -0.120      0.120
+  16   30    0  -12   13  -48   32  -27   40 0.800 0.600 0.900 -30  50 -14  53  0.140      0.140
+  17    7   -1   -8   34   17  -31  -43   38 0.500 0.700 0.900  16 -32 -10  71 -0.150      0.150
+  18   15    6  -12  -14  -37   46  -42   42 0.900 0.600 0.300 -34  49 -50  34  0.160      0.160
+  19   13   43   -5  -30  -35    9  -47   32 0.700 0.600 0.300 -27  17 -34  45 -0.190      0.190
+  20   25  -18  -10    3   11  -37  -16   41 0.800 0.500 0.600  26 -22 -31  26 -0.040      0.208
+  21   40   13  -17  -18  -45   17  -34   48 0.100 0.900 0.500 -22  40 -39  43  0.220      0.220
+  22   21  -14  -33   17  -28   44   27  -36 0.800 0.400 0.300 -40  32  30 -33 -0.260      0.260
+  23   -7   18   -5  -16   20  -37  -24   34 0.200 0.800 0.600   8 -49 -22  36  0.280      0.280
+  24   32  -10  -13   12   19  -43   29  -30 0.900 0.400 0.300  38 -24  31 -28 -0.310      0.310
+  25    2   -2    3   -7  -19   25   23   -8 0.600 0.600 0.400 -14  30  14 -17  0.320      0.320
+  26   -3   38    6  -13   47  -33   40  -48 0.600 0.500 0.100  50 -30  65 -23  0.320      0.320
+  27   17   20  -10   14   18  -43  -45   15 0.400 0.700 0.900  25 -36 -11  49 -0.320      0.320
+  28   40   41  -19   -5  -37   30   42  -50 0.500 0.700 0.100 -16  51  78 -14 -0.350      0.350
+  29   13  -15   -4   16   24  -50   21  -44 0.100 0.200 0.700  33 -41  22 -43 -0.370      0.370
+  30   -1  -20    8  -11  -40   19   45  -40 0.600 0.300 0.700 -33  26  14 -71  0.380      0.380
+  31  -21    7    6   -5  -22   16  -11    9 0.300 0.300 0.300 -37   1  -9  11  0.380      0.380
+  32   17   15  -19   -5   27  -19  -32   35 0.700 0.400 0.600  25 -21 -22  45 -0.380      0.380
+  33  -11   20   -4   -4   22  -22  -27   15 0.100 0.600 0.700   7 -37 -11  31  0.380      0.380
+  34   -3    8  -31    1  -41   36   12  -45 0.300 0.300 0.800 -75   2  21 -36  0.390      0.390
+  35   23   -3   -7   21  -28   34   38  -50 0.400 0.900 0.400 -12  50  56 -32 -0.400      0.400
+  36    8    1    0   -5  -43   25   32  -44 0.800 0.400 0.300 -35  33  28 -48 -0.400      0.400
+  37   42   24  -31   -1   31  -38  -32   13 0.700 0.400 0.800  42 -27  -9  36  0.420      0.420
+  38   32   41  -17  -19  -43   47   49  -30 0.400 0.700 0.100 -28  62  71  -8 -0.460      0.460
+  39  -22   18    7  -21   33  -21  -29   46 0.300 0.400 0.500  18 -36 -32  43 -0.470      0.470
+  40   33   16  -38   -3  -39   47  -29   29 0.600 0.400 0.900 -44  42 -16  42  0.480      0.480
+  41   32   22    4   -5   33  -49   35  -42 0.500 0.100 0.400  69 -13  52 -25  0.500      0.500
+  42    3  -13   29   28   21  -49   24  -41 0.400 0.400 0.300  53 -17  39 -26  0.500      0.500
+  43    0    1    3  -32   22  -37  -44   48 0.700 0.800 0.500  25 -34 -75  17  0.540      0.540
+  44   -4   17    7   10   22  -42  -36    7 0.500 0.700 0.900  25 -39  -9  34  0.550      0.550
+  45    3   33   29  -33   15  -43  -34   46 0.700 0.100 0.400  47 -11 -34  46  0.560      0.560
+  46   13   -1  -28    9  -42   30  -39    2 0.600 0.200 0.300 -57  15 -31  10 -0.560      0.560
+  47   31   -3  -19  -11   32  -33  -30   17 0.900 0.400 0.900  44 -21 -44   3  0.570      0.570
+  48   15    0   -8   -3  -18   13   16  -10 0.700 0.600 0.300 -11  20  13 -13 -0.580      0.580
+  49   48    0  -30  -26   46  -47  -28   45 0.600 0.500 0.600  64 -29 -54  19  0.580      0.580
+  50   39   30  -23   -4   25  -47   26  -37 0.200 0.300 0.200  41 -31  52 -11 -0.600      0.600
+  51  -13   -2  -26    9  -48   40    4  -35 0.200 0.300 0.900 -87   1  11 -28  0.600      0.600
+  52   23   10  -14    0  -26   23   19  -33 0.800 0.600 0.300 -17  32  29 -23  0.600      0.600
+  53   30   28  -32    7  -30   43    4  -50 0.300 0.800 0.400 -32  41  39 -15 -0.600      0.600
+  54   15    4  -27   -3  -34   43  -31   38 0.900 0.400 0.500 -46  31 -30  39  0.630      0.630
+  55    8  -14  -11   -5  -45   42  -26   45 0.600 0.200 0.800 -48  39 -45  26  0.640      0.640
+  56    9  -26  -15    5   44  -34  -49   35 0.800 0.700 0.900  38 -40 -70  14 -0.640      0.640
+  57   22   -9  -32    8  -34   35  -26   50 0.100 0.900 0.600 -44  25 -27  49 -0.650      0.650
+  58   -8   -4   18   12  -41   49   40  -16 0.300 0.600 0.100 -31  59  48  -8 -0.180      0.651
+  59   45    8  -28  -17  -39   28  -17   18 0.800 0.600 0.900 -22  45 -26   9 -0.660      0.660
+  60   15   23   -9  -10   32  -24  -19   38 0.400 0.300 0.900  38 -18  -6  51 -0.660      0.660
+  61   13   -2   -9   34  -37   44  -42   31 0.200 0.500 0.900 -33  48 -10  63 -0.660      0.660
+  62   10  -26   -3   12    5  -17  -32   39 0.800 0.600 0.500  12 -10 -46  25  0.460      0.670
+  63    7   -8   -6    5   12  -30  -44   36 0.500 0.700 0.400  13 -29 -47  33  0.700      0.700
+  64   43    1  -42   -8  -33   50   37  -42 0.700 0.700 0.800 -32  51  30 -49 -0.710      0.710
+  65    6    7   11  -10   15  -48  -19   22 0.900 0.500 0.400  32 -31 -22  19  0.710      0.710
+  66   30   14  -21  -25  -28   30   41   -3 0.500 0.500 0.100 -19  39  30 -14  0.200      0.713
+  67    1   27    0   -8  -31   15   12  -50 0.300 0.400 0.500 -30  16  31 -31 -0.720      0.720
+  68   17  -39    7   27  -47   36   12  -49 0.900 0.700 0.600 -23  60   0 -61 -0.730      0.730
+  69  -11   15   15  -24   36  -31   -8   49 0.900 0.400 0.800  40 -27 -17  40 -0.740      0.740
+  70    4   37   -1  -37  -10   10   50  -22 0.600 0.700 0.300  -7  13  50 -22 -0.760      0.760
+  71   30    4  -31   20   33   -7  -35   28 0.600 0.100 0.700  32  -8 -11  52  0.760      0.760
+  72   43   37  -39  -45  -49   43  -46   45 0.400 0.500 0.400 -45  47 -54  37  0.760      0.760
+  73    2   -4    6    3  -47   31  -19   48 0.200 0.800 0.600 -39  39 -20  47  0.760      0.760
+  74  -16   22   -8   13  -33   45    7  -43 0.100 0.400 0.200 -57  21  42  -8  0.780      0.780
+  75   32   45  -38   -7   48  -21   13  -50 0.200 0.300 0.200  42 -27  51 -12 -0.780      0.780
+  76   19   37  -26  -19  -48   37  -30   47 0.400 0.300 0.900 -55  30 -12  65 -0.780      0.780
+  77   32   -1  -20   35  -34   33  -46    6 0.800 0.700 0.700 -22  45 -12  40 -0.800      0.800
+  78   21   -8    1   -3  -33    4   19  -12 0.800 0.700 0.600 -11  26   8 -23 -0.800      0.800
+  79   16   26    0  -16  -35    6   26  -28 0.800 0.600 0.600 -19  22  36 -18  0.800      0.800
+  80    6   -2  -37   19   48  -35  -41   48 0.100 0.600 0.700  17 -66 -24  65  0.810      0.810
+  81    6    7  -11    3   38  -38  -37   49 0.100 0.600 0.700  33 -43 -27  59 -0.820      0.820
+  82   -2   46  -14  -32  -37   36  -35   40 0.300 0.600 0.600 -53  20 -21  54 -0.840      0.840
+  83   -2  -15   10   14  -49   36  -37    5 0.600 0.500 0.200 -41  44 -38   4 -0.860      0.860
+  84    9   11   12  -11  -43   31  -12   40 0.800 0.700 0.700 -22  52 -12  40  0.880      0.880
+  85   17    9  -28   26   43  -37   16  -50 0.500 0.600 0.200  32 -48  51 -15 -0.900      0.900
+  86   32   11   -4   -2  -45   44  -31    6 0.400 0.900 0.300 -17  72 -22  15 -0.900      0.900
+  87   -5    5   15   17   21  -46   28  -31 0.300 0.600 0.100  31 -36  50  -9 -0.910      0.910
+  88   19   27  -15    0  -41   43  -38   50 0.200 0.400 0.900 -37  47 -11  77  0.920      0.920
+  89    6   34  -20  -25  -23   43   35  -24 0.400 0.600 0.400 -37  29  44 -15  0.920      0.920
+  90   33   15  -22    9  -27   31  -50   13 0.400 0.500 0.700 -16  42 -26  37  0.940      0.940
+  91  -13    2   -1   31  -33   41    2  -48 0.200 0.700 0.400 -47  27  35 -15 -0.960      0.960
+  92   -2  -11   27    6  -43    5  -43   29 0.800 0.700 0.200 -18  30 -48  24 -0.960      0.960
+  93   -4    3   12   23  -34   31   10  -47 0.900 0.600 0.200 -26  39  36 -21 -0.960      0.960
+  94   10   -3  -27    3   32  -22   49  -15 0.100 0.200 0.300  15 -39  49 -15  0.960      0.960
+  95  -31   21   34  -12   42  -43  -43   46 0.400 0.100 0.400  45 -40 -34  55 -0.960      0.960
+  96  -40   -1   11   -8  -41   45   43  -17 0.100 0.500 0.500 -70  16  34 -26  0.900      0.979
+  97   39    8  -29   -7  -22   40  -49   24 0.700 0.800 0.400 -12  50 -48  25 -0.980      0.980
+  98   13   14    8   14   20  -43  -44   37 0.800 0.400 0.900  41 -22 -16  65  0.980      0.980
+  99  -24    9    1  -11   47  -42   40  -31 0.700 0.700 0.600  24 -65  38 -33  0.990      0.990
+ 100   -3    1    0    9  -50    4   33  -47 0.400 0.500 0.700 -53   1  43 -37  1.000      1.000
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 100
+Unique lottery combinations: 100
+Unique probability combinations: 85
+Mean pairwise distance: 103.326
+Distance range: [20.523, 200.216]
+Distance standard deviation: 34.654
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 45.39 seconds
+Total evaluations: 31,018
+Solutions found: 100
+Evaluation speed: 683 evals/s
+Best violation value: 0.000000
+Average violation value: 0.546407
+Worst violation value: 1.000000

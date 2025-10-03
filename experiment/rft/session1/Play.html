@@ -1,0 +1,1042 @@
+{{ block content }}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+
+  <meta name="author" content="University of St. Gallen">
+
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Valuation Task</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+
+  <!-- Bootstrap core CSS -->
+
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+
+  <link href="jumbotron.css" rel="stylesheet">
+
+  
+
+<style>
+
+.otree-body{
+
+        max-width: 1480px;
+
+    }
+
+      /* container */
+
+    .two-columns-grid {
+
+        display: grid;
+
+        grid-template-columns: 2fr 1fr;
+
+    }
+
+    /* columns */
+
+    .two-columns-grid > * {
+
+        padding:1rem;
+
+    }
+
+    #lottery-visualization { display: flex; justify-content: center; }
+
+    #lottery-visualization svg { display: block; margin: 0 auto; }
+
+    .lottery-container {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        margin: 30px 0;
+
+        width: 100%;
+
+        position: relative;
+
+        min-height: 510px; /* Increased minimum height */
+
+    }
+
+    
+
+    .period-column {
+
+        display: flex;
+
+        flex-direction: column;
+
+        width: 22%;
+
+        position: relative;
+
+        z-index: 1;
+
+    }
+
+    
+
+    .period-header {
+
+        text-align: center;
+
+        font-weight: bold;
+
+        margin-bottom: 10px;
+
+        padding: 5px;
+
+        background-color: #f0f0f0;
+
+        border-radius: 4px;
+
+    }
+
+    
+
+    .grid-container {
+
+        display: grid;
+
+        gap: 8px;
+
+        height: 100%;
+
+    }
+
+    
+
+    .outcome {
+
+        border: 1px solid #333;
+
+        border-radius: 6px;
+
+        text-align: center;
+
+        padding: 8px 5px;
+
+        position: relative;
+
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        font-size: 14px;
+
+        min-height: 35px; /* Ensure minimum height */
+
+    }
+
+    
+
+    /* Hide probability labels */
+
+    .probability-label {
+
+        display: none;
+
+    }
+
+    
+
+    .arrow {
+
+        position: absolute;
+
+        height: 4px;
+
+        background-color: #666;
+
+        z-index: 0;
+
+    }
+
+    
+
+    .arrow:after {
+
+        content: '';
+
+        position: absolute;
+
+        right: 0;
+
+        top: -4px;
+
+        width: 0;
+
+        height: 0;
+
+        border-top: 5px solid transparent;
+
+        border-bottom: 5px solid transparent;
+
+        border-left: 8px solid #666;
+
+    }
+
+    
+
+    .arrow-label {
+
+        position: absolute;
+
+        background-color: white;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        padding: 0 4px;
+
+        font-size: 0.7em;
+
+        white-space: nowrap;
+
+        z-index: 2;
+
+    }
+
+    /* CSS for the framework */
+
+    body {
+
+      font-family: 'Arial', sans-serif;
+
+      background-color: #f5f5f5;
+
+    }
+
+    .jumbotron {
+
+      background-color: #e8e3d9;
+
+      color: #333;
+
+      padding: 2rem;
+
+      margin-bottom: 0;
+
+      border-radius: 0;
+
+    }
+
+    .display-3 {
+
+      font-weight: 500;
+
+      margin-bottom: 1.5rem;
+
+    }
+
+    .main-container {
+
+      background-color: white;
+
+      padding: 2rem 0;
+
+    }
+
+    .content-wrapper {
+
+      max-width: 900px;
+
+      margin: 0 auto;
+
+      padding: 0 40px;
+
+    }
+
+    .btn-primary {
+
+      background-color: #007095;
+
+      border-color: #007095;
+
+    }
+
+    .btn-primary:hover {
+
+      background-color: #005a79;
+
+      border-color: #005a79;
+
+    }
+
+    .university-title {
+
+      font-size: 3rem;
+
+      font-weight: 300;
+
+      margin-bottom: 0.5rem;
+
+    }
+
+    .footer {
+
+      padding: 2rem 0;
+
+      background-color: #f5f5f5;
+
+      border-top: 1px solid #e7e7e7;
+
+      margin-top: 2rem;
+
+    }
+
+    h2 {
+
+      font-weight: 500;
+
+      color: #333;
+
+      margin-top: 2rem;
+
+    }
+
+    .content-image {
+
+      width: 100%;
+
+      height: auto;
+
+      margin-top: 1rem;
+
+    }
+
+    .feature-box {
+
+      margin-bottom: 2rem;
+
+    }
+
+    p {
+
+      font-size: 17px;
+
+      line-height: 1.6;
+
+      margin-bottom: 1.5rem;
+
+    }
+
+    
+
+    p {
+
+        margin-bottom: 1em;
+
+    }
+
+    
+
+    /* Definition term styling */
+
+    .definition-term {
+
+        position: relative;
+
+        display: inline-block;
+
+        background-color: #e8e3d9; /* Light yellow background */
+
+        padding: 0 4px;
+
+        border-bottom: 1px dotted #ffc107;
+
+        cursor: help;
+
+    }
+
+    
+
+    /* Question mark indicator */
+
+    .definition-term::after {
+
+        content: "?";
+
+        display: inline-block;
+
+        font-size: 0.7em;
+
+        width: 12px;
+
+        height: 12px;
+
+        line-height: 10px;
+
+        text-align: center;
+
+        border-radius: 50%;
+
+        background-color: #ffc107;
+
+        color: white;
+
+        margin-left: 0px;
+
+        position: relative;
+
+        top: -1px;
+
+    }
+
+    
+
+    /* Tooltip styling */
+
+    .tooltip {
+
+        position: absolute;
+
+        visibility: hidden;
+
+        width: 250px;
+
+        background-color: #fff;
+
+        color: #333;
+
+        text-align: left;
+
+        padding: 10px;
+
+        border-radius: 6px;
+
+        border: 1px solid #ddd;
+
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+        font-size: 0.9em;
+
+        z-index: 1;
+
+        bottom: 125%;
+
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        opacity: 0;
+
+        transition: opacity 0.3s;
+
+    }
+
+    
+
+    /* Arrow for tooltip */
+
+    .tooltip::after {
+
+        content: "";
+
+        position: absolute;
+
+        top: 100%;
+
+        left: 50%;
+
+        margin-left: -8px;
+
+        border-width: 8px;
+
+        border-style: solid;
+
+        border-color: #fff transparent transparent transparent;
+
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+
+    }
+
+    
+
+    /* Show tooltip on hover and click */
+
+    .definition-term:hover .tooltip {
+
+        visibility: visible;
+
+        opacity: 1;
+
+    }
+
+    
+
+    .tooltip-active {
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+    }
+
+    .lotto { font-family: system-ui, Arial, sans-serif; }
+
+    .col { fill:#f5f5f7; stroke:#ddd; }
+
+    .title { font-weight:700; font-size:14px; }
+
+    .payout { font-size:13px; }
+
+    .prob { font-size:12px; fill:#2a8f2a; }
+
+    .link { stroke:#888; stroke-width:2; marker-end:url(#ah); }
+
+    .ring { fill:none; stroke:#f0a500; stroke-width:8; }
+
+</style>
+
+ <!-- Main jumbotron for primary marketing message -->
+
+ <div class="jumbotron">
+
+  <div class="container">
+
+    <div class="row">
+
+        <h1 class="university-title">Lottery Valuation Task (1/15)</h1>
+
+        <h3>Please provide your valuation to this lottery.</h3>
+
+        <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="main-lottery-compound">
+
+  <div class="card mb-4">
+
+    <div class="card-body">
+
+      <h4>Your Compound Lottery</h4>
+
+      <p>This is a <strong>compound lottery</strong>: the outcome is determined by a sequence of random draws over time. Each wheel below represents a stage in the process. The path from the first wheel to the last determines your final outcome.</p>
+
+      <div class="compound-wheel-stack" style="display: flex; flex-direction: row; align-items: center; gap: 15px;">
+
+        <div id="lottery-visualization"></div>
+
+      </div>
+
+      <div class="alert alert-info mt-3">
+
+        <p class="mb-0">
+
+          <strong>Note:</strong> The final outcome is determined by the path through all four wheels. Probabilities shown represent the chance at each step.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card mt-4">
+
+    <div class="card-body">
+
+      <h4>Your Decision</h4>
+
+      <p>
+
+        Please consider the following. We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
+
+      </p>
+
+      <table class="table">
+
+        <thead style="background-color: #2E7D32; color: white; text-align: center">
+
+          <tr>
+
+            <th style="text-align: center">Accept the Payment</th>
+
+            <th style="text-align: center">Our Offers</th>
+
+            <th style="text-align: center">Play the Lottery</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody style="background-color: #E8F5E9; text-align: center">
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_1.0 }}</td>
+
+            <td style="text-align: center">CHF 1</td>
+
+            <td style="text-align: center">{{ form.chf_1.1 }}</td>
+
+          </tr>
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_2.0 }}</td>
+
+            <td style="text-align: center">CHF 2</td>
+
+            <td style="text-align: center">{{ form.chf_2.1 }}</td>
+
+          </tr>
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_3.0 }}</td>
+
+            <td style="text-align: center">CHF 3</td>
+
+            <td style="text-align: center">{{ form.chf_3.1 }}</td>
+
+          </tr>
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_4.0 }}</td>
+
+            <td style="text-align: center">CHF 4</td>
+
+            <td style="text-align: center">{{ form.chf_4.1 }}</td>
+
+          </tr>
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_5.0 }}</td>
+
+            <td style="text-align: center">CHF 5</td>
+
+            <td style="text-align: center">{{ form.chf_5.1 }}</td>
+
+          </tr>
+
+          <tr>
+
+            <td style="text-align: center">{{ form.chf_6.0 }}</td>
+
+            <td style="text-align: center">CHF 6</td>
+
+            <td style="text-align: center">{{ form.chf_6.1 }}</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <p style="text-align:right;">
+
+        <button class="otree-btn-next btn btn-primary">Submit &raquo;</button>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- JavaScript for setting up grid rows and drawing arrows -->
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Django injects a JSON string; parse it
+
+  const lottery = JSON.parse('{{ lottery|safe }}');
+
+  // ---- layout constants ----
+
+  const H = 680;
+
+  const colW = 350, colGap = 22, leftPad = 16, topPad = 16;
+
+  const wheelR = 40;
+
+  const wheelCxOffset = colW / 2;
+
+  const groupTopPad = 48, groupGap = 28, outcomeGap = colW;
+
+  // period titles
+
+  const prettyTitle = i => (i === 0 ? 'Now' : i === 1 ? 'In 1 step' : i === 2 ? 'In 2 steps' : `In ${i} steps`);
+
+  // ---- build normalized periods array (0..max sorted) ----
+
+  const keys = Object.keys(lottery.periods)
+
+    .map(k => +k)
+
+    .sort((a, b) => a - b);
+
+  const periods = keys.map(k => lottery.periods[k]);
+
+  const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
+
+  // ---- helpers ----
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  const mk = (tag, attrs = {}, text = null) => {
+
+    const el = document.createElementNS(svgNS, tag);
+
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+
+    if (text != null) el.textContent = text;
+
+    return el;
+
+  };
+
+  const num = v => {
+
+    const n = typeof v === 'number' ? v : Number(v);
+
+    return Number.isFinite(n) ? n : 0;
+
+  };
+
+  const fmtProb = p => {
+
+    const pct = num(p) * 100;
+
+    const decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
+
+    return pct.toFixed(decimals) + '%';
+
+  };
+
+  const palette = ['#9f9ffe', '#b0b0ff', '#cfcfff', '#e0e0ff', '#ddd', '#e8e3d9', '#f0f0f0'];
+
+  const pick = i => palette[i % palette.length];
+
+  function drawWheel(g, cx, cy, r, slices) {
+
+    g.appendChild(mk('circle', { cx, cy, r: r + 6, class: 'ring' }));
+
+    let tot = slices.reduce((sum, s) => sum + num(s.probability), 0);
+
+    if (!tot) tot = 1;
+
+    let a0 = -Math.PI / 2;
+
+    slices.forEach((s, i) => {
+
+      const raw = num(s.probability);
+
+      const p = raw / tot;
+
+      const a1 = a0 + p * 2 * Math.PI;
+
+      const large = (a1 - a0) > Math.PI ? 1 : 0;
+
+      const x1 = cx + r * Math.cos(a0), y1 = cy + r * Math.sin(a0);
+
+      const x2 = cx + r * Math.cos(a1), y2 = cy + r * Math.sin(a1);
+
+      const path = `M ${cx},${cy} L ${x1},${y1} A ${r},${r} 0 ${large},1 ${x2},${y2} Z`;
+
+      g.appendChild(mk('path', { d: path, fill: pick(i), stroke: '#333', 'stroke-width': 1.5 }));
+
+      if (p > 0.07) {
+
+        const mid = (a0 + a1) / 2;
+
+        const lx = cx + (r * 0.55) * Math.cos(mid);
+
+        const ly = cy + (r * 0.55) * Math.sin(mid);
+
+        g.appendChild(mk('text', {
+
+          x: lx,
+
+          y: ly,
+
+          'text-anchor': 'middle',
+
+          'dominant-baseline': 'middle',
+
+          'font-size': 11
+
+        }, fmtProb(p)));
+
+      }
+
+      a0 = a1;
+
+    });
+
+    const tri = `M ${cx},${cy - (r + 14)} l 8,12 l -16,0 z`;
+
+    g.appendChild(mk('path', { d: tri, fill: '#333' }));
+
+  }
+
+  function groupByParent(nodes) {
+
+    const res = new Map();
+
+    nodes.forEach(node => {
+
+      const parent = node.from || 'Start';
+
+      if (!res.has(parent)) res.set(parent, []);
+
+      res.get(parent).push(node);
+
+    });
+
+    return Array.from(res.entries());
+
+  }
+
+  function buildLinks(periodIdx) {
+
+    const cur = periods[periodIdx];
+
+    const nxt = periods[periodIdx + 1];
+
+    if (!cur || !nxt) return [];
+
+    const validParents = new Set(cur.map(n => n.label));
+
+    return nxt
+
+      .filter(child => validParents.has(child.from))
+
+      .map(child => ({
+
+        parent: child.from,
+
+        label: child.label,
+
+        prob: num(child.probability)
+
+      }));
+
+  }
+
+  const columnLayouts = periods.map(nodes => {
+    const groups = [];
+    const nodeAnchors = new Map();
+    const blockHeights = [];
+    let cursorY = topPad + groupTopPad;
+    groupByParent(nodes).forEach(([parent, children]) => {
+      const wheelCy = cursorY + wheelR;
+      const outcomes = children.map((node, idx) => {
+        const y = wheelCy + idx * outcomeGap;
+        nodeAnchors.set(node.label, { y });
+        return { node, y };
+      });
+      const blockHeight = wheelR * 2 + 30 + children.length * outcomeGap;
+      blockHeights.push(blockHeight);
+      groups.push({ parent, wheelCy, outcomes });
+      cursorY += blockHeight + groupGap;
+    });
+    const innerHeight = H - 2 * topPad;
+    const totalGap = Math.max(blockHeights.length - 1, 0) * groupGap;
+    const usedHeight = blockHeights.reduce((sum, h) => sum + h, 0) + totalGap;
+    const offsetY = usedHeight < innerHeight ? (innerHeight - usedHeight) / 2 : 0;
+    if (offsetY) {
+      groups.forEach(group => {
+        group.wheelCy += offsetY;
+        group.outcomes.forEach(outcome => {
+          outcome.y += offsetY;
+          const anchor = nodeAnchors.get(outcome.node.label);
+          if (anchor) anchor.y = outcome.y;
+        });
+      });
+    }
+    return { groups, nodeAnchors };
+  });
+
+  // ---- draw ----
+
+  const svg = mk('svg', { width: W, height: H, class: 'lotto' });
+
+  const defs = mk('defs');
+
+  const marker = mk('marker', { id: 'ah', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: 'auto' });
+
+  marker.appendChild(mk('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#888' }));
+
+  defs.appendChild(marker);
+
+  svg.appendChild(defs);
+
+  columnLayouts.forEach((layout, i) => {
+
+    const x = leftPad + i * (colW + colGap);
+
+    layout.colX = x;
+
+    layout.lineStartX = x + colW - 16;
+
+    layout.lineEndX = x + 16;
+
+    // column box
+
+    svg.appendChild(mk('rect', { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: 'col' }));
+
+    // title
+
+    svg.appendChild(mk('text', { x: x + 10, y: topPad + 18, class: 'title' }, prettyTitle(i)));
+
+    const wheelCx = x + wheelCxOffset;
+
+    layout.groups.forEach(group => {
+
+      const labelY = group.wheelCy - wheelR - 14;
+
+      const labelText = group.parent === 'Start' ? 'Start draw' : `From ${group.parent}`;
+
+      svg.appendChild(mk('text', { x: wheelCx, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
+
+      drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes.map(o => o.node));
+
+      group.outcomes.forEach(({ node, y }) => {
+
+        const labelX = wheelCx + colW / 4;
+
+        const probX = labelX + 30;
+
+        const tagY = group.wheelCy;
+
+        svg.appendChild(mk('text', {
+
+          x: labelX,
+
+          y : y,
+
+          class: 'payout',
+
+          'text-anchor': 'end',
+
+          'dominant-baseline': 'top'
+
+        }, node.label));
+
+        svg.appendChild(mk('text', {
+
+          x: probX,
+
+          y : y,
+
+          class: 'payout',
+
+          'text-anchor': 'end',
+
+          'dominant-baseline': 'top'
+
+        }, fmtProb(node.probability)));
+
+        layout.nodeAnchors.set(node.label, {
+
+          y : y,
+
+          inX: probX,
+
+          outX: probX + 10
+
+        });
+
+      });
+
+    });
+
+  });
+
+  for (let i = 0; i < periods.length - 1; i++) {
+
+    const links = buildLinks(i);
+
+    const current = columnLayouts[i];
+
+    const next = columnLayouts[i + 1];
+
+    links.forEach(link => {
+
+      const fromAnchor = current.nodeAnchors.get(link.parent);
+
+      const toAnchor = next.nodeAnchors.get(link.label);
+
+      if (!fromAnchor || !toAnchor) return;
+
+      const fromX = fromAnchor.outX != null ? fromAnchor.outX : current.lineStartX;
+
+      const toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
+
+      svg.appendChild(mk('line', {
+
+        x1: fromX,
+
+        y1: fromAnchor.y,
+
+        x2: toX,
+
+        y2: toAnchor.y,
+
+        class: 'link',
+
+        'marker-end': 'url(#ah)'
+
+      }));
+
+      const midX = (fromX + toX) / 2;
+
+      const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
+
+      svg.appendChild(mk('text', { x: midX, y: midY, class: 'prob', 'text-anchor': 'middle' }, fmtProb(link.prob)));
+
+    });
+
+  }
+
+  const mount = document.getElementById('lottery-visualization');
+
+  mount.innerHTML = '';
+
+  mount.appendChild(svg);
+
+});
+
+</script>
+
+{{ endblock }}
+

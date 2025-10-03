@@ -704,7 +704,7 @@ class OptimizedLotteryOptimizer:
         """Save solutions to text file for 6 outcomes"""
         if filename is None:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            filename = os.path.join(self.config.output_dir, f"lottery_6outcomes_{timestamp}.txt")
+            filename = os.path.join(self.config.output_dir, f"lottery_6outcomes_{timestamp}_hi.txt")
         
         try:
             with open(filename, 'w', encoding='utf-8') as f:
@@ -982,8 +982,8 @@ def main():
         lambda_=2.25,
         gamma=0.61,
         num_attempts=10000000,
-        lottery_min=-100,
-        lottery_max=100,
+        lottery_min=-500,
+        lottery_max=500,
         lottery_min_bound=-1000,
         lottery_max_bound=1000,
         violation_threshold=1.0,

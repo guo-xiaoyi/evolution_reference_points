@@ -1,0 +1,217 @@
+================================================================================
+High-Performance Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2025-10-03 14:56:06
+Solutions found: 3
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-500, 500]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 10,921
+  - Parameter space: 11 lottery values + 5 probabilities = 16 parameters
+  - Outcomes: 6 (z1, z2, z3, z4, z5, z6)
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.250000
+Timestamp: 2025-10-03 14:53:30
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=585, b12=850
+  Stage 2: c21=-525, c22=-655, c23=-585
+  Stage 3: c31=-535, c32=805, c33=785
+           c34=-590, c35=905, c36=-845
+  Probabilities: p1=0.500, p2=0.700, p3=0.200
+                 p4=0.200, p5=0.400
+
+Final outcomes (6 outcomes):
+  z1 = 0+585+-525+-535 = -475 (prob=0.350)
+  z2 = 0+585+-525+805 = 865 (prob=0.150)
+  z3 = 0+850+-655+785 = 980 (prob=0.020)
+  z4 = 0+850+-655+-590 = -395 (prob=0.080)
+  z5 = 0+850+-585+905 = 1170 (prob=0.160)
+  z6 = 0+850+-585+-845 = -580 (prob=0.240)
+  Expected value: -0.500000
+  Probability sum: 1.000000 (should be 1.0)
+
+
+Sub-lottery expected values:
+  E(L1) = -73.000 (upper lottery)
+  E(L2) = -120.000 (lower first sub-lottery)
+  E(L3) = 120.000 (lower second sub-lottery)
+  E(L4) = 72.000 (lower compound lottery)
+
+  4. Main interval IL = [-186.563, 865.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-232.312, 865.000]
+     ✓ b11 = 585.000 ∈ IL1
+     ✓ b11+c21 = 60.000 ∈ IL1
+     ✓ E(L1) = -73.000 ∈ IL1
+     ✓ E(L) = -0.500 ∈ IL1
+  6. L2 interval IL2 = [-213.354, 980.000]
+     ✓ b12 = 850.000 ∈ IL2
+     ✓ b12+c22 = 195.000 ∈ IL2
+     ✓ E(L2) = -120.000 ∈ IL2
+     ✓ E(L4) = 72.000 ∈ IL2
+  7. L3 interval IL3 = [-175.719, 1170.000]
+     ✓ b12 = 850.000 ∈ IL3
+     ✓ b12+c23 = 265.000 ∈ IL3
+     ✓ E(L3) = 120.000 ∈ IL3
+     ✓ E(L4) = 72.000 ∈ IL3
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 0.250000
+Timestamp: 2025-10-03 14:55:12
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=755, b12=730
+  Stage 2: c21=-760, c22=-655, c23=-675
+  Stage 3: c31=-755, c32=765, c33=875
+           c34=-760, c35=-810, c36=705
+  Probabilities: p1=0.300, p2=0.700, p3=0.400
+                 p4=0.200, p5=0.200
+
+Final outcomes (6 outcomes):
+  z1 = 0+755+-760+-755 = -760 (prob=0.210)
+  z2 = 0+755+-760+765 = 760 (prob=0.090)
+  z3 = 0+730+-655+875 = 950 (prob=0.056)
+  z4 = 0+730+-655+-760 = -685 (prob=0.224)
+  z5 = 0+730+-675+-810 = -755 (prob=0.084)
+  z6 = 0+730+-675+705 = 760 (prob=0.336)
+  Expected value: 0.500000
+  Probability sum: 1.000000 (should be 1.0)
+
+
+Sub-lottery expected values:
+  E(L1) = -304.000 (upper lottery)
+  E(L2) = -358.000 (lower first sub-lottery)
+  E(L3) = 457.000 (lower second sub-lottery)
+  E(L4) = 131.000 (lower compound lottery)
+
+  4. Main interval IL = [-324.478, 760.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-484.712, 760.000]
+     ✓ b11 = 755.000 ∈ IL1
+     ✓ b11+c21 = -5.000 ∈ IL1
+     ✓ E(L1) = -304.000 ∈ IL1
+     ✓ E(L) = 0.500 ∈ IL1
+  6. L2 interval IL2 = [-469.007, 950.000]
+     ✓ b12 = 730.000 ∈ IL2
+     ✓ b12+c22 = 75.000 ∈ IL2
+     ✓ E(L2) = -358.000 ∈ IL2
+     ✓ E(L4) = 131.000 ∈ IL2
+  7. L3 interval IL3 = [17.437, 760.000]
+     ✓ b12 = 730.000 ∈ IL3
+     ✓ b12+c23 = 55.000 ∈ IL3
+     ✓ E(L3) = 457.000 ∈ IL3
+     ✓ E(L4) = 131.000 ∈ IL3
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 0.810000
+Timestamp: 2025-10-03 14:54:50
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=615, b12=620
+  Stage 2: c21=-505, c22=-750, c23=-805
+  Stage 3: c31=-655, c32=610, c33=-795
+           c34=770, c35=-605, c36=960
+  Probabilities: p1=0.600, p2=0.500, p3=0.900
+                 p4=0.500, p5=0.500
+
+Final outcomes (6 outcomes):
+  z1 = 0+615+-505+-655 = -545 (prob=0.300)
+  z2 = 0+615+-505+610 = 720 (prob=0.300)
+  z3 = 0+620+-750+-795 = -925 (prob=0.180)
+  z4 = 0+620+-750+770 = 640 (prob=0.180)
+  z5 = 0+620+-805+-605 = -790 (prob=0.020)
+  z6 = 0+620+-805+960 = 775 (prob=0.020)
+  Expected value: 0.900000
+  Probability sum: 1.000000 (should be 1.0)
+
+
+Sub-lottery expected values:
+  E(L1) = 87.500 (upper lottery)
+  E(L2) = -142.500 (lower first sub-lottery)
+  E(L3) = -7.500 (lower second sub-lottery)
+  E(L4) = -129.000 (lower compound lottery)
+
+  4. Main interval IL = [-314.303, 640.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-184.918, 720.000]
+     ✓ b11 = 615.000 ∈ IL1
+     ✓ b11+c21 = 110.000 ∈ IL1
+     ✓ E(L1) = 87.500 ∈ IL1
+     ✓ E(L) = 0.900 ∈ IL1
+  6. L2 interval IL2 = [-479.523, 640.000]
+     ✓ b12 = 620.000 ∈ IL2
+     ✓ b12+c22 = -130.000 ∈ IL2
+     ✓ E(L2) = -142.500 ∈ IL2
+     ✓ E(L4) = -129.000 ∈ IL2
+  7. L3 interval IL3 = [-344.523, 775.000]
+     ✓ b12 = 620.000 ∈ IL3
+     ✓ b12+c23 = -185.000 ∈ IL3
+     ✓ E(L3) = -7.500 ∈ IL3
+     ✓ E(L4) = -129.000 ∈ IL3
+
+================================================================================
+Solution Summary Table (6 Outcomes)
+================================================================================
+ Sol  b11  b12  c21  c22  c23  c31  c32  c33  c34  c35  c36    p1    p2    p3    p4    p5   z1  z2   z3   z4   z5   z6   E[Z]  Violation
+   1  585  850 -525 -655 -585 -535  805  785 -590  905 -845 0.500 0.700 0.200 0.200 0.400 -475 865  980 -395 1170 -580 -0.500      0.250
+   2  755  730 -760 -655 -675 -755  765  875 -760 -810  705 0.300 0.700 0.400 0.200 0.200 -760 760  950 -685 -755  760  0.500      0.250
+   3  615  620 -505 -750 -805 -655  610 -795  770 -605  960 0.600 0.500 0.900 0.500 0.500 -545 720 -925  640 -790  775  0.900      0.810
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 3
+Unique lottery combinations: 3
+Unique probability combinations: 3
+Mean pairwise distance: 2615.147
+Distance range: [2322.397, 3169.886]
+Distance standard deviation: 392.461
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 265.04 seconds
+Total evaluations: 10,921
+Solutions found: 3
+Success rate: 0.027%
+Prefilter rejections: 9,989,079
+Evaluation speed: 41 evals/s
+Best violation value: 0.250000
+Average violation value: 0.436667
+Worst violation value: 0.810000
+Search space coverage: 8.09e-25%
+
+================================================================================
+Lottery Structure Explanation (6 Outcomes)
+================================================================================
+Decision tree structure:
+  Initial choice (prob p1):
+    ├─ Upper branch (prob p1): Gets b11
+    │   └─ Sub-choice (prob p2):
+    │       ├─ Get c21+c31 → Final: z1 = b11+c21+c31
+    │       └─ Get c21+c32 → Final: z2 = b11+c21+c32
+    └─ Lower branch (prob 1-p1): Gets b12
+        └─ Sub-choice (prob p3):
+            ├─ First sub-lottery (prob p3): Gets c22
+            │   └─ Final choice (prob p4):
+            │       ├─ Get c33 → Final: z3 = b12+c22+c33
+            │       └─ Get c34 → Final: z4 = b12+c22+c34
+            └─ Second sub-lottery (prob 1-p3): Gets c23
+                └─ Final choice (prob p5):
+                    ├─ Get c35 → Final: z5 = b12+c23+c35
+                    └─ Get c36 → Final: z6 = b12+c23+c36
+
+File saved on: 2025-10-03 14:56:06
+================================================================================
