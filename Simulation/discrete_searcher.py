@@ -35,6 +35,13 @@ import argparse
 random.seed(9000)
 warnings.filterwarnings('ignore')
 
+# Manually specify alternate CPT parameter sets here (alpha, lambda, gamma)
+# Example: ALT_PARAMS = ["0.88,2.25,0.61", "0.80,2.00,0.70"]
+alpha_candidates = np.linspace(0.75, 0.95, 5)
+lambda_candidates = np.linspace(1.5, 2.5, 5)
+gamma_candidates = np.linspace(0.58, 0.70, 5)
+ALT_PARAMS: Optional[List[str]] = [f"{alpha},{lambda_},{gamma}" for alpha in alpha_candidates for lambda_ in lambda_candidates for gamma in gamma_candidates]
+
 
 # Try to import numba, fallback to regular functions if unavailable
 try:
@@ -109,6 +116,7 @@ class OptimizedConfig:
     # Output settings
     output_dir: str = "lottery_results"
     save_progress_enabled: bool = True
+    alt_params: Optional[List[str]] = None  # list of "alpha,lambda,gamma" strings
 
     def __post_init__(self):
         if self.prob_choices is None:
@@ -120,6 +128,9 @@ class OptimizedConfig:
         if self.outcomes == 6:
             self.output_dir = "lottery_results_6outcomes"
         os.makedirs(self.output_dir, exist_ok=True)
+        # If not provided via CLI, use ALT_PARAMS constant
+        if self.alt_params is None and 'ALT_PARAMS' in globals():
+            self.alt_params = ALT_PARAMS
 
 
 class CompleteSolution:
@@ -234,15 +245,104 @@ class UnifiedLotteryOptimizer:
         denominator = (p ** self.gamma + (1 - p) ** self.gamma) ** (1 / self.gamma)
         return numerator / denominator
 
+    # Alternate-parameter versions used for sanity checks
+    def _probability_weighting_params(self, p, gamma):
+        p = np.clip(p, 1e-10, 1 - 1e-10)
+        numerator = p ** gamma
+        denominator = (p ** gamma + (1 - p) ** gamma) ** (1 / gamma)
+        return numerator / denominator
+
     def _compute_Y(self, Z, p, R):
-        if NUMBA_AVAILABLE:
-            return float(fast_compute_Y(Z, p, R, self.alpha, self.lambda_, self.gamma))
+        # Cumulative Prospect Theory decision weighting
         diff = Z - R
-        v = np.where(diff >= 0,
-                     np.power(np.abs(diff) + 1e-12, self.alpha),
-                     -self.lambda_ * np.power(np.abs(diff) + 1e-12, self.alpha))
-        w = np.array([self._probability_weighting(prob) for prob in p])
-        return float(np.sum(v * w))
+        values = np.where(diff >= 0,
+                          np.power(np.abs(diff) + 1e-12, self.alpha),
+                          -self.lambda_ * np.power(np.abs(diff) + 1e-12, self.alpha))
+
+        # Gains (Z >= R): sort descending by outcome
+        gain_idx = np.where(diff >= 0)[0]
+        loss_idx = np.where(diff < 0)[0]
+
+        total = 0.0
+
+        if gain_idx.size > 0:
+            gains_Z = Z[gain_idx]
+            gains_p = p[gain_idx]
+            gains_v = values[gain_idx]
+            order = np.argsort(-gains_Z)  # descending
+            gains_p_sorted = gains_p[order]
+            gains_v_sorted = gains_v[order]
+            cum = 0.0
+            prev_w = 0.0
+            for j in range(gains_p_sorted.size):
+                cum += float(gains_p_sorted[j])
+                w_cum = self._probability_weighting(cum)
+                dw = w_cum - prev_w
+                total += gains_v_sorted[j] * dw
+                prev_w = w_cum
+
+        if loss_idx.size > 0:
+            losses_Z = Z[loss_idx]
+            losses_p = p[loss_idx]
+            losses_v = values[loss_idx]
+            order = np.argsort(losses_Z)  # ascending (more negative first)
+            losses_p_sorted = losses_p[order]
+            losses_v_sorted = losses_v[order]
+            cum = 0.0
+            prev_w = 0.0
+            for j in range(losses_p_sorted.size):
+                cum += float(losses_p_sorted[j])
+                w_cum = self._probability_weighting(cum)
+                dw = w_cum - prev_w
+                total += losses_v_sorted[j] * dw
+                prev_w = w_cum
+
+        return float(total)
+
+    def _compute_Y_params(self, Z, p, R, alpha, lambda_, gamma):
+        # CPT with provided parameters
+        diff = Z - R
+        values = np.where(diff >= 0,
+                          np.power(np.abs(diff) + 1e-12, alpha),
+                          -lambda_ * np.power(np.abs(diff) + 1e-12, alpha))
+
+        gain_idx = np.where(diff >= 0)[0]
+        loss_idx = np.where(diff < 0)[0]
+        total = 0.0
+
+        if gain_idx.size > 0:
+            gains_Z = Z[gain_idx]
+            gains_p = p[gain_idx]
+            gains_v = values[gain_idx]
+            order = np.argsort(-gains_Z)
+            gains_p_sorted = gains_p[order]
+            gains_v_sorted = gains_v[order]
+            cum = 0.0
+            prev_w = 0.0
+            for j in range(gains_p_sorted.size):
+                cum += float(gains_p_sorted[j])
+                w_cum = self._probability_weighting_params(cum, gamma)
+                dw = w_cum - prev_w
+                total += gains_v_sorted[j] * dw
+                prev_w = w_cum
+
+        if loss_idx.size > 0:
+            losses_Z = Z[loss_idx]
+            losses_p = p[loss_idx]
+            losses_v = values[loss_idx]
+            order = np.argsort(losses_Z)
+            losses_p_sorted = losses_p[order]
+            losses_v_sorted = losses_v[order]
+            cum = 0.0
+            prev_w = 0.0
+            for j in range(losses_p_sorted.size):
+                cum += float(losses_p_sorted[j])
+                w_cum = self._probability_weighting_params(cum, gamma)
+                dw = w_cum - prev_w
+                total += losses_v_sorted[j] * dw
+                prev_w = w_cum
+
+        return float(total)
 
     def find_R_where_Y_equals_zero(self, Z, p):
         def equation(R):
@@ -256,9 +356,43 @@ class UnifiedLotteryOptimizer:
                 continue
         return None
 
+    def find_R_where_Y_equals_zero_params(self, Z, p, alpha, lambda_, gamma):
+        def equation(R):
+            return self._compute_Y_params(Z, p, R, alpha, lambda_, gamma)
+        for start_R in [0.0, float(np.mean(Z)), float(np.median(Z))]:
+            try:
+                R_solution = fsolve(equation, start_R, xtol=1e-6)[0]
+                if abs(equation(R_solution)) < 1e-4:
+                    return float(R_solution)
+            except Exception:
+                continue
+        return None
+
     def find_monotonic_interval(self, Z, p):
         try:
             R_zero = self.find_R_where_Y_equals_zero(Z, p)
+            if R_zero is None:
+                return None, None
+            larger_outcomes = Z[Z > R_zero]
+            if len(larger_outcomes) == 0:
+                next_reference = float(np.max(Z))
+            else:
+                differences = larger_outcomes - R_zero
+                min_diff_idx = int(np.argmin(differences))
+                next_reference = float(larger_outcomes[min_diff_idx])
+            if next_reference <= R_zero:
+                sorted_outcomes = np.sort(Z)
+                if len(sorted_outcomes) >= 2:
+                    next_reference = float(sorted_outcomes[-2])
+                else:
+                    next_reference = R_zero + 1.0
+            return R_zero, next_reference
+        except Exception:
+            return None, None
+
+    def find_monotonic_interval_params(self, Z, p, alpha, lambda_, gamma):
+        try:
+            R_zero = self.find_R_where_Y_equals_zero_params(Z, p, alpha, lambda_, gamma)
             if R_zero is None:
                 return None, None
             larger_outcomes = Z[Z > R_zero]
@@ -422,6 +556,104 @@ class UnifiedLotteryOptimizer:
         except Exception as e:
             return {'total': 10000, 'error': str(e)}, False
 
+    def check_constraints_with_params(self, params, alpha, lambda_, gamma):
+        try:
+            Z, p = self.create_lottery_structure(params)
+            total_violations = 0.0
+            expected_value = np.sum(Z * p)
+            # Use a moderate weighting for EV under alt params
+            total_violations += float(abs(expected_value))
+
+            # Main interval
+            IL_lower, IL_upper = self.find_monotonic_interval_params(Z, p, alpha, lambda_, gamma)
+            if IL_lower is None or IL_upper is None or IL_lower >= IL_upper:
+                total_violations += 1000
+                return {'total': total_violations, 'empty_interval': 1000}, False
+
+            # 0 in IL
+            if 0 < IL_lower:
+                total_violations += (IL_lower - 0)
+            elif 0 > IL_upper:
+                total_violations += (0 - IL_upper)
+
+            if self.outcomes == 4:
+                z1, z2, z3, z4 = Z
+                _, _, _, _, _, _, _, _, p1, p2, p3 = params
+                Z_L1 = np.array([z1, z2]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([z3, z4]); p_L2 = np.array([p3, 1 - p3])
+                E_L1 = np.sum(Z_L1 * p_L1)
+                E_L2 = np.sum(Z_L2 * p_L2)
+                b11, b12, c21, c22 = params[:4]
+
+                lo1, up1 = self.find_monotonic_interval_params(Z_L1, p_L1, alpha, lambda_, gamma)
+                if lo1 is None or up1 is None or lo1 >= up1:
+                    total_violations += 100
+                else:
+                    for value in [b11, b11 + c21, E_L1, expected_value]:
+                        if value < lo1:
+                            total_violations += (lo1 - value)
+                        elif value > up1:
+                            total_violations += (value - up1)
+
+                lo2, up2 = self.find_monotonic_interval_params(Z_L2, p_L2, alpha, lambda_, gamma)
+                if lo2 is None or up2 is None or lo2 >= up2:
+                    total_violations += 100
+                else:
+                    for value in [b12, b12 + c22, E_L2, expected_value]:
+                        if value < lo2:
+                            total_violations += (lo2 - value)
+                        elif value > up2:
+                            total_violations += (value - up2)
+            else:
+                z1, z2, z3, z4, z5, z6 = Z
+                _, _, _, _, _, _, _, _, _, _, _, p1, p2, p3, p4, p5 = params
+                Z_L1 = np.array([z1, z2]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([z3, z4]); p_L2 = np.array([p4, 1 - p4])
+                Z_L3 = np.array([z5, z6]); p_L3 = np.array([p5, 1 - p5])
+                Z_L4 = np.array([z3, z4, z5, z6])
+                p_L4 = np.array([p3 * p4, p3 * (1 - p4), (1 - p3) * p5, (1 - p3) * (1 - p5)])
+                E_L2 = np.sum(Z_L2 * p_L2)
+                E_L3 = np.sum(Z_L3 * p_L3)
+                E_L4 = p3 * E_L2 + (1 - p3) * E_L3
+                b11, b12, c21, c22, c23 = params[:5]
+
+                for (Z_sub, p_sub, values) in [
+                    (Z_L1, p_L1, [b11, b11 + c21, np.sum(Z_L1 * p_L1), expected_value]),
+                    (Z_L2, p_L2, [b12, b12 + c22, E_L2, E_L4]),
+                    (Z_L3, p_L3, [b12, b12 + c23, E_L3, E_L4]),
+                ]:
+                    lo, up = self.find_monotonic_interval_params(Z_sub, p_sub, alpha, lambda_, gamma)
+                    if lo is None or up is None or lo >= up:
+                        total_violations += 100
+                    else:
+                        for value in values:
+                            if value < lo:
+                                total_violations += (lo - value)
+                            elif value > up:
+                                total_violations += (value - up)
+
+                lo4, up4 = self.find_monotonic_interval_params(Z_L4, p_L4, alpha, lambda_, gamma)
+                if lo4 is None or up4 is None or lo4 >= up4:
+                    total_violations += 100
+                else:
+                    for value in [b12, E_L4, expected_value]:
+                        if value < lo4:
+                            total_violations += (lo4 - value)
+                        elif value > up4:
+                            total_violations += (value - up4)
+
+            # Probability bounds soft check
+            prob_bound_violations = 0.0
+            for prob in (params[8:] if self.outcomes == 4 else params[11:]):
+                if prob < 0:
+                    prob_bound_violations += (-prob)
+                if prob > 1:
+                    prob_bound_violations += (prob - 1)
+            total_violations += prob_bound_violations
+            return {'total': float(total_violations)}, True
+        except Exception as e:
+            return {'total': 10000, 'error': str(e)}, False
+
     # ---------- Generation ----------
     def generate_batch_params(self, batch_size: int) -> np.ndarray:
         if self.outcomes == 4:
@@ -463,14 +695,34 @@ class UnifiedLotteryOptimizer:
             filtered_params = self.fast_prefilter(params_batch)
             for params in filtered_params:
                 violations, valid = self.check_full_constraints(params)
-                if valid and violations['total'] < self.config.violation_threshold:
-                    sol = CompleteSolution(self.outcomes, params, violations['total'])
-                    solutions.append(sol)
-                    self.stats['solutions_found'] += 1
-                    if len(solutions) >= self.config.early_termination_solutions:
-                        pbar.close()
-                        self.stats['end_time'] = time.time()
-                        return solutions
+                if not (valid and violations['total'] < self.config.violation_threshold):
+                    continue
+
+                # If alternate parameter sets are provided, enforce they also pass
+                if self.config.alt_params:
+                    alt_fail = False
+                    for param_str in self.config.alt_params:
+                        try:
+                            a_str, l_str, g_str = [x.strip() for x in param_str.split(',')]
+                            a_alt = float(a_str); l_alt = float(l_str); g_alt = float(g_str)
+                        except Exception:
+                            # malformed alt param -> treat as fail to be safe
+                            alt_fail = True
+                            break
+                        alt_viol, alt_ok = self.check_constraints_with_params(params, a_alt, l_alt, g_alt)
+                        if (not alt_ok) or (alt_viol.get('total', float('inf')) >= self.config.violation_threshold):
+                            alt_fail = True
+                            break
+                    if alt_fail:
+                        continue  # drop this candidate
+
+                sol = CompleteSolution(self.outcomes, params, violations['total'])
+                solutions.append(sol)
+                self.stats['solutions_found'] += 1
+                if len(solutions) >= self.config.early_termination_solutions:
+                    pbar.close()
+                    self.stats['end_time'] = time.time()
+                    return solutions
             attempts_made += current_batch_size
             pbar.update(current_batch_size)
             pbar.set_postfix({
@@ -486,6 +738,7 @@ class UnifiedLotteryOptimizer:
         print(f"Starting lottery parameter optimization...")
         print(f"Mode: outcomes={self.outcomes}, stake={self.stake}")
         print(f"Numba acceleration: {'Enabled' if NUMBA_AVAILABLE else 'Disabled'}")
+        print(f"Alternate parameter set numbers: {len(self.config.alt_params)}")
         print(f"Prospect theory parameters: alpha={self.alpha}, lambda={self.lambda_}, gamma={self.gamma}")
         solutions = self.batch_optimize()
         solutions.sort(key=lambda s: s.violation)
@@ -688,6 +941,20 @@ class UnifiedLotteryOptimizer:
                                 in_interval = (IL4_lower <= value <= IL4_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {names_L4[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL4\n")
 
+                    # Alternate parameter sanity checks
+                    if self.config.alt_params:
+                        f.write("\nAlternate-parameter sanity checks:\n")
+                        for s_idx, param_str in enumerate(self.config.alt_params):
+                            try:
+                                a_str, l_str, g_str = [x.strip() for x in param_str.split(',')]
+                                a_alt = float(a_str); l_alt = float(l_str); g_alt = float(g_str)
+                            except Exception:
+                                f.write(f"  {s_idx+1}) Invalid alt params: {param_str}\n")
+                                continue
+                            alt_viol, alt_ok = self.check_constraints_with_params(solution.params, a_alt, l_alt, g_alt)
+                            ok_flag = (alt_ok and alt_viol.get('total', 1e9) < self.config.violation_threshold)
+                            #f.write(f"  {s_idx+1}) alpha={a_alt}, lambda={l_alt}, gamma={g_alt} -> total violation={alt_viol.get('total', 1e9):.6f} {'✓' if ok_flag else '✗'}\n")
+
                 # Summary table
                 f.write(f"\n{'='*80}\n")
                 f.write("Solution Summary Table\n")
@@ -821,6 +1088,7 @@ def main():
     parser.add_argument("--min_bound", type=int, default=None)
     parser.add_argument("--max_bound", type=int, default=None)
     parser.add_argument("--save_progress", action="store_true")
+    parser.add_argument("--alt_params", nargs='*', default=None, help="Alternate parameter sets as 'alpha,lambda,gamma' (space-separated for multiple)")
     args = parser.parse_args()
 
     config = build_preset_config(args.outcomes, args.stake)
@@ -842,6 +1110,8 @@ def main():
         config.lottery_max_bound = args.max_bound
     if args.save_progress:
         config.save_progress_enabled = True
+    if args.alt_params:
+        config.alt_params = args.alt_params
 
     # Create optimizer
     optimizer = UnifiedLotteryOptimizer(config)

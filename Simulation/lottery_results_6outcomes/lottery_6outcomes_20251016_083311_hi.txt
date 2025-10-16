@@ -1,0 +1,84 @@
+================================================================================
+Unified Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2025-10-16 08:33:11
+Mode: outcomes=6, stake=hi
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-1000, -500] and [500, 1000]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 10,875
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.270400
+Timestamp: 2025-10-16 08:33:07
+
+Lottery structure (6 outcomes):
+  Stage 1: b11=515, b12=760
+  Stage 2: c21=-535, c22=-605, c23=-905
+  Stage 3: c31=595, c32=-865, c33=950, c34=-965, c35=960, c36=-855
+  Probabilities: p1=0.200, p2=0.300, p3=0.400, p4=0.500, p5=0.600
+Final outcomes (6 outcomes):
+  z1 = 0+515+-535+595 = 575 (prob=0.060)
+  z2 = 0+515+-535+-865 = -885 (prob=0.140)
+  z3 = 0+760+-605+950 = 1105 (prob=0.160)
+  z4 = 0+760+-605+-965 = -810 (prob=0.160)
+  z5 = 0+760+-905+960 = 815 (prob=0.288)
+  z6 = 0+760+-905+-855 = -1000 (prob=0.192)
+  Expected value: 0.520000
+  Probability sum: 1.000000
+
+Constraint verification:
+  1. Expected value constraint: 0.520000 ≈ 0 ✗
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-391.824, 575.000]
+     0 ∈ IL: True
+  5. L1 interval IL1 = [-620.579, 575.000]
+     ✓ b11 = 515.000 ∈ IL1
+     ✓ b11+c21 = -20.000 ∈ IL1
+     ✓ E(L1) = -447.000 ∈ IL1
+     ✓ E(L) = 0.520 ∈ IL1
+  6. L2 interval IL2 = [-264.895, 1105.000]
+     ✓ b12 = 760.000 ∈ IL2
+     ✓ b12+c22 = 155.000 ∈ IL2
+     ✓ E(L2) = 147.500 ∈ IL2
+     ✓ E(L4) = 112.400 ∈ IL2
+  7. L3 interval IL3 = [-373.562, 815.000]
+     ✓ b12 = 760.000 ∈ IL3
+     ✓ b12+c23 = -145.000 ∈ IL3
+     ✓ E(L3) = 89.000 ∈ IL3
+     ✓ E(L4) = 112.400 ∈ IL3
+  8. L4 interval IL4 = [-330.873, 815.000]
+     ✓ b12 = 760.000 ∈ IL4
+     ✓ E(L4) = 112.400 ∈ IL4
+     ✓ E(L) = 0.520 ∈ IL4
+
+Alternate-parameter sanity checks:
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c23  c31  c32  c33  c34  c35  c36    p1    p2    p3    p4    p5  z1   z2   z3   z4  z5    z6  E[Z]  Violation
+   1  515  760 -535 -605 -905  595 -865  950 -965  960 -855 0.200 0.300 0.400 0.500 0.600 575 -885 1105 -810 815 -1000 0.520      0.270
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 403.22 seconds
+Total evaluations: 10,875
+Solutions found: 1
+Evaluation speed: 27 evals/s
+Best violation value: 0.270400
+Average violation value: 0.270400
+Worst violation value: 0.270400

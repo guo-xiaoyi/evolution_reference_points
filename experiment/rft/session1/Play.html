@@ -212,7 +212,7 @@
 
         padding: 0 4px;
 
-        font-size: 0.7em;
+        font-size: 12px;
 
         white-space: nowrap;
 
@@ -224,7 +224,7 @@
 
     body {
 
-      font-family: 'Arial', sans-serif;
+      font-family: 'Roboto', sans-serif;
 
       background-color: #f5f5f5;
 
@@ -496,20 +496,104 @@
 
     }
 
-    .lotto { font-family: system-ui, Arial, sans-serif; }
+    .lotto { font-family:  Roboto, sans-serif; }
 
     .col { fill:#f5f5f7; stroke:#ddd; }
 
-    .title { font-weight:700; font-size:14px; }
+    .title {font-weight:800px; font-size:16px; }
 
-    .payout { font-size:13px; }
+    .payout { font-size:16px; }
 
-    .prob { font-size:12px; fill:#2a8f2a; }
+    .prob { font-size:16px; fill:#2a8f2a; }
 
-    .link { stroke:#888; stroke-width:2; marker-end:url(#ah); }
+    .link { stroke:#888; stroke-width:2;}
 
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
 
+    /* Selection table styles */
+    .cut-table th, .cut-table td { text-align: center; vertical-align: middle; }
+    .cut-left.shaded { background-color: #e7f7ec; }
+    .cut-right.shaded { background-color: #ffe9e9; }
+
+    :root {
+      --sidebar-width: 650px; /* increase this value to make the sidebar wider */
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
+
+    /* When the sidebar has the "open" class it will use the wider width */
+    .sidebar.open {
+      width: var(--sidebar-width);
+    }
+
+    /* Shift main when sidebar is open (works if #main follows .sidebar in DOM) */
+    .sidebar.open + #main,
+    #main.shifted {
+      margin-left: var(--sidebar-width);
+      transition: margin-left .5s;
+    }
+
+    .sidebar a {
+      padding: 8px 8px 8px 50px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #f1f1f1;
+    }
+
+    .sidebar .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+
+    .openbtn {
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #111;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+    }
+
+    .openbtn:hover {
+      background-color: #444;
+    }
+
+    #main {
+      transition: margin-left .5s;
+      padding: 50px;
+    }
+
+    .content-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    .lottery-holder {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
 </style>
 
  <!-- Main jumbotron for primary marketing message -->
@@ -520,11 +604,19 @@
 
     <div class="row">
 
-        <h1 class="university-title">Lottery Valuation Task (1/15)</h1>
+        <h1 class="university-title">Lottery Valuation Task ({{player.round_number}}/15)</h1>
 
         <h3>Please provide your valuation to this lottery.</h3>
 
         <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
+        <p>After you have observed the lottery carefully, you can click the "Start evaluation" button on the right, which will open the sidebar with evaluation table. You can open or close the sidebar and check the whole lottery anytime.</p>
+
+
+              <p style="text-align:right;">
+
+        <button type="button" id="open-sidebar-btn" class="btn btn-primary">Start evaluation &raquo;</button>
+
+      </p>
 
       </div>
 
@@ -534,145 +626,109 @@
 
 </div>
 
-<div class="main-lottery-compound">
+
+
+<div class="main-container">
 
   <div class="card mb-4">
 
+    <div class="content-wrapper">
+
+      <br>
+
+
+    </div>
+
     <div class="card-body">
 
-      <h4>Your Compound Lottery</h4>
 
-      <p>This is a <strong>compound lottery</strong>: the outcome is determined by a sequence of random draws over time. Each wheel below represents a stage in the process. The path from the first wheel to the last determines your final outcome.</p>
-
-      <div class="compound-wheel-stack" style="display: flex; flex-direction: row; align-items: center; gap: 15px;">
+      <div class="lottery-holder" style="display: flex; flex-direction: row; align-items: center; gap: 15px;">
 
         <div id="lottery-visualization"></div>
 
       </div>
 
-      <div class="alert alert-info mt-3">
-
-        <p class="mb-0">
-
-          <strong>Note:</strong> The final outcome is determined by the path through all four wheels. Probabilities shown represent the chance at each step.
-
-        </p>
-
-      </div>
-
     </div>
 
-  </div>
 
-  <div class="card mt-4">
 
-    <div class="card-body">
 
-      <h4>Your Decision</h4>
+  <div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+ 
 
-      <p>
 
-        Please consider the following. We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
+
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please use the following table to indicate your evaluation to this lottery.</h4>
+
+      <p style="color: white; margin-left: 2em; margin-right: 2em;">
+
+        We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
 
       </p>
 
-      <table class="table">
-
-        <thead style="background-color: #2E7D32; color: white; text-align: center">
-
+      <table id="choice-table" class="table cut-table">
+        <thead style="background-color: #181818; color: white; text-align: center;">
           <tr>
-
-            <th style="text-align: center">Accept the Payment</th>
-
-            <th style="text-align: center">Our Offers</th>
-
-            <th style="text-align: center">Play the Lottery</th>
-
+            <th style="text-align: center">Safe option</th>
+            <th style="text-align: center; width: 30%;">&darr;</th>
+            <th style="text-align: center; width: 30%;">Risky option</th>
           </tr>
-
         </thead>
-
-        <tbody style="background-color: #E8F5E9; text-align: center">
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_1.0 }}</td>
-
-            <td style="text-align: center">CHF 1</td>
-
-            <td style="text-align: center">{{ form.chf_1.1 }}</td>
-
+        <tbody style="background-color: #d3d3d3; text-align: center">
+          {{ for row in choice_rows }}
+          <tr data-index="{{ row.index }}" data-field="{{ row.field_name }}">
+            {{if row.amount < 0}}
+            <td class="cut-left">You pay us ${{ row.abs_amount }} and leave</td>
+            {{ elif row.amount == 0 }}
+            <td class="cut-left">You neither pay nor receive anything and leave</td>
+            {{else}}
+            <td class="cut-left">You receive ${{ row.abs_amount }} and leave</td>
+            {{ endif }}
+            <td><input type="radio" name="cutoff" value="{{ row.index }}"></td>
+            <td class="cut-right">Stay</td>
           </tr>
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_2.0 }}</td>
-
-            <td style="text-align: center">CHF 2</td>
-
-            <td style="text-align: center">{{ form.chf_2.1 }}</td>
-
-          </tr>
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_3.0 }}</td>
-
-            <td style="text-align: center">CHF 3</td>
-
-            <td style="text-align: center">{{ form.chf_3.1 }}</td>
-
-          </tr>
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_4.0 }}</td>
-
-            <td style="text-align: center">CHF 4</td>
-
-            <td style="text-align: center">{{ form.chf_4.1 }}</td>
-
-          </tr>
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_5.0 }}</td>
-
-            <td style="text-align: center">CHF 5</td>
-
-            <td style="text-align: center">{{ form.chf_5.1 }}</td>
-
-          </tr>
-
-          <tr>
-
-            <td style="text-align: center">{{ form.chf_6.0 }}</td>
-
-            <td style="text-align: center">CHF 6</td>
-
-            <td style="text-align: center">{{ form.chf_6.1 }}</td>
-
-          </tr>
-
+          {{ endfor }}
         </tbody>
-
       </table>
+
+      <div id="choice-hidden-inputs" style="display:none;">
+        {{ for row in choice_rows }}
+          <input type="hidden" name="{{ row.field_name }}" value="">
+        {{ endfor }}
+        <input type="hidden" name="cutoff_index" value="">
+      </div>
 
       <p style="text-align:right;">
 
-        <button class="otree-btn-next btn btn-primary">Submit &raquo;</button>
+        <button class="otree-btn-next btn btn-primary" style="margin-right: 2em;">Submit &raquo;</button>
 
       </p>
 
-    </div>
-
-  </div>
-
 </div>
+
+</div> <!-- end main -->
+
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzEzXC9hc3NldHNcLzU0XC82MjA5XC9mZWU3ZTY4NmY5NmU4OTc1OGI2ZjEyZDY1MDRlMjk4Mi0xNjI1MDc4NzQ2LnBuZyJ9:unisg:fHwFjCnusCPTOHN3vBp9s0I-varvLhe40RmgsvP0Fms?width=2400" alt="University of St. Gallen Logo" style="height: 50px;">
+          <p class="mt-3 text-muted">&copy; 2025 University of St. Gallen. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
 
 <!-- JavaScript for setting up grid rows and drawing arrows -->
 
 <script>
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -682,15 +738,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ---- layout constants ----
 
-  const H = 680;
+  const H = 750;
 
-  const colW = 350, colGap = 22, leftPad = 16, topPad = 16;
+  const colW = 300, colGap = 22, leftPad = 16, topPad = 16;
 
-  const wheelR = 40;
+  const wheelR = 35;
 
   const wheelCxOffset = colW / 2;
 
-  const groupTopPad = 48, groupGap = 28, outcomeGap = colW;
+  const groupTopPad = 48, groupGap = 28, outcomeGap = 120;
 
   // period titles
 
@@ -742,79 +798,98 @@ document.addEventListener('DOMContentLoaded', function () {
 
   };
 
-  const palette = ['#9f9ffe', '#b0b0ff', '#cfcfff', '#e0e0ff', '#ddd', '#e8e3d9', '#f0f0f0'];
+  const normalizeAngle = angle => {
+    let a = angle;
+    while (a <= -Math.PI) a += 2 * Math.PI;
+    while (a > Math.PI) a -= 2 * Math.PI;
+    return a;
+  };
+
+  const palette = ['#73A5AF', '#e1d7c3', '#cfcfff', '#e0e0ff', '#ddd', '#e8e3d9', '#f0f0f0']; // light blues and grays
 
   const pick = i => palette[i % palette.length];
 
+
+
+  // Draw a wheel at (cx,cy) with radius r and slices [{ node, y, targetAngle }]
   function drawWheel(g, cx, cy, r, slices) {
 
-    g.appendChild(mk('circle', { cx, cy, r: r + 6, class: 'ring' }));
+    g.appendChild(mk('circle', { cx, cy, r: r + 4, class: 'ring' }));
 
-    let tot = slices.reduce((sum, s) => sum + num(s.probability), 0);
-
+    let tot = slices.reduce((sum, s) => sum + num(s.node.probability), 0);
     if (!tot) tot = 1;
 
-    let a0 = -Math.PI / 2;
-
-    slices.forEach((s, i) => {
-
-      const raw = num(s.probability);
-
+    const segments = slices.map(s => {
+      const raw = num(s.node.probability);
       const p = raw / tot;
+      return { slice: s, p, size: p * 2 * Math.PI };
+    });
 
-      const a1 = a0 + p * 2 * Math.PI;
+    let cursor = -Math.PI / 2;
+    segments.forEach(seg => {
+      seg.start = cursor;
+      seg.end = cursor + seg.size;
+      seg.mid = (seg.start + seg.end) / 2;
+      cursor = seg.end;
+    });
 
-      const large = (a1 - a0) > Math.PI ? 1 : 0;
+    const totalSize = segments.reduce((sum, seg) => sum + seg.size, 0) || 1;
+    let offset = 0;
+    if (segments.length) {
+      const weighted = segments.reduce((acc, seg) => {
+        const target = typeof seg.slice.targetAngle === 'number' ? seg.slice.targetAngle : seg.mid;
+        const diff = normalizeAngle(target - seg.mid);
+        return acc + diff * seg.size;
+      }, 0);
+      offset = weighted / totalSize;
+    }
 
-      const x1 = cx + r * Math.cos(a0), y1 = cy + r * Math.sin(a0);
-
-      const x2 = cx + r * Math.cos(a1), y2 = cy + r * Math.sin(a1);
-
+    segments.forEach((seg, idx) => {
+      const start = seg.start + offset;
+      const end = seg.end + offset;
+      const mid = (start + end) / 2;
+      const large = (end - start) > Math.PI ? 1 : 0;
+      const x1 = cx + r * Math.cos(start), y1 = cy + r * Math.sin(start);
+      const x2 = cx + r * Math.cos(end), y2 = cy + r * Math.sin(end);
       const path = `M ${cx},${cy} L ${x1},${y1} A ${r},${r} 0 ${large},1 ${x2},${y2} Z`;
+      g.appendChild(mk('path', { d: path, fill: pick(idx), stroke: '#333', 'stroke-width': 1.5 }));
 
-      g.appendChild(mk('path', { d: path, fill: pick(i), stroke: '#333', 'stroke-width': 1.5 }));
-
-      if (p > 0.07) {
-
-        const mid = (a0 + a1) / 2;
-
+      if (seg.p > 0.07) {
         const lx = cx + (r * 0.55) * Math.cos(mid);
-
         const ly = cy + (r * 0.55) * Math.sin(mid);
-
         g.appendChild(mk('text', {
-
           x: lx,
-
           y: ly,
-
           'text-anchor': 'middle',
-
           'dominant-baseline': 'middle',
-
-          'font-size': 11
-
-        }, fmtProb(p)));
-
+          'font-size': 12,
+        }, fmtProb(seg.p)));
       }
-
-      a0 = a1;
-
     });
 
     const tri = `M ${cx},${cy - (r + 14)} l 8,12 l -16,0 z`;
-
     g.appendChild(mk('path', { d: tri, fill: '#333' }));
-
   }
 
+  // Determine if a wheel is deterministic (i.e., one outcome with ~100% probability)
+  function isDeterministic(slices) {
+    const probs = slices.map(s => num(s.probability));
+    const total = probs.reduce((a, b) => a + b, 0);
+    if (total <= 0) return false;
+    const positive = probs.filter(p => p > 0);
+    if (positive.length !== 1) return false;
+    // Treat >= 99.9999% as effectively certain to be robust to rounding
+    return (positive[0] / total) >= 0.999999;
+  }
+
+  // Group nodes by their parent label
   function groupByParent(nodes) {
 
     const res = new Map();
 
     nodes.forEach(node => {
 
-      const parent = node.from || 'Start';
+      const parent = node.from || 'Start'; // Use 'Start' for the initial period
 
       if (!res.has(parent)) res.set(parent, []);
 
@@ -825,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return Array.from(res.entries());
 
   }
-
+// Build links between nodes in consecutive periods
   function buildLinks(periodIdx) {
 
     const cur = periods[periodIdx];
@@ -852,37 +927,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
+  // ---- layout ----
+  // Evenly distribute nodes vertically within each column and center horizontally
   const columnLayouts = periods.map(nodes => {
     const groups = [];
     const nodeAnchors = new Map();
-    const blockHeights = [];
-    let cursorY = topPad + groupTopPad;
-    groupByParent(nodes).forEach(([parent, children]) => {
-      const wheelCy = cursorY + wheelR;
-      const outcomes = children.map((node, idx) => {
-        const y = wheelCy + idx * outcomeGap;
-        nodeAnchors.set(node.label, { y });
-        return { node, y };
-      });
-      const blockHeight = wheelR * 2 + 30 + children.length * outcomeGap;
-      blockHeights.push(blockHeight);
-      groups.push({ parent, wheelCy, outcomes });
-      cursorY += blockHeight + groupGap;
+
+    const innerTop = topPad + 60; // leave space for column title
+    const innerBottom = H - topPad - 40; // bottom padding
+    const count = Math.max(nodes.length, 1);
+    const span =  (innerBottom - innerTop);
+
+    // Assign evenly spaced y-positions to each node in this period
+    nodes.forEach((node, idx) => {
+      const y = innerTop + (idx + 0.5) * (span / count);
+      nodeAnchors.set(node.label, { y });
     });
-    const innerHeight = H - 2 * topPad;
-    const totalGap = Math.max(blockHeights.length - 1, 0) * groupGap;
-    const usedHeight = blockHeights.reduce((sum, h) => sum + h, 0) + totalGap;
-    const offsetY = usedHeight < innerHeight ? (innerHeight - usedHeight) / 2 : 0;
-    if (offsetY) {
-      groups.forEach(group => {
-        group.wheelCy += offsetY;
-        group.outcomes.forEach(outcome => {
-          outcome.y += offsetY;
-          const anchor = nodeAnchors.get(outcome.node.label);
-          if (anchor) anchor.y = outcome.y;
-        });
+
+    // Build groups and set wheel at the average outcome position for that group
+    groupByParent(nodes).forEach(([parent, children]) => {
+      const outcomes = children.map(child => {
+        const anchor = nodeAnchors.get(child.label);
+        const y = anchor ? anchor.y : innerTop;
+        return { node: child, y };
       });
-    }
+      outcomes.sort((a, b) => a.y - b.y);
+      if (outcomes.length) {
+        const minY = outcomes[0].y;
+        const maxY = outcomes[outcomes.length - 1].y;
+        outcomes.forEach((o, idx) => {
+          let fraction;
+          if (maxY === minY) {
+            fraction = outcomes.length === 1 ? 0.5 : idx / Math.max(outcomes.length - 1, 1);
+          } else {
+            fraction = (o.y - minY) / (maxY - minY);
+          }
+          const angleRange = Math.PI; // distribute across top-to-bottom semicircle
+          o.targetAngle = -Math.PI / 2 + fraction * angleRange;
+        });
+      }
+      const wheelCy = outcomes.length
+        ? outcomes.reduce((s, o) => s + o.y, 0) / outcomes.length
+        : (innerTop + innerBottom) / 2;
+      groups.push({ parent, wheelCy, outcomes });
+    });
+
     return { groups, nodeAnchors };
   });
 
@@ -900,15 +989,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   svg.appendChild(defs);
 
+  // Collect overlay blocks to draw on top
+  const overlays = [];
+
   columnLayouts.forEach((layout, i) => {
 
     const x = leftPad + i * (colW + colGap);
 
-    layout.colX = x;
+    layout.colX = x; // left edge of column
 
-    layout.lineStartX = x + colW - 16;
+    layout.lineStartX = x + colW - 16; // right edge minus padding
 
-    layout.lineEndX = x + 16;
+    layout.lineEndX = x + 16; // left edge plus padding
 
     // column box
 
@@ -916,72 +1008,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // title
 
-    svg.appendChild(mk('text', { x: x + 10, y: topPad + 18, class: 'title' }, prettyTitle(i)));
+    svg.appendChild(mk('text', { x: leftPad + x, y: topPad + 18, class: 'title' }, prettyTitle(i)));
 
     const wheelCx = x + wheelCxOffset;
-
     layout.groups.forEach(group => {
+      const nodes = group.outcomes.map(o => o.node);
+      if (!isDeterministic(nodes)) {
+        const labelY = group.wheelCy;
+        const labelText = group.parent === 'Start' ? 'From 0:' : `From ${group.parent}:`;
+        // Show label and draw wheel only when the transition is not deterministic
+        svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
+        drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
+      }
 
-      const labelY = group.wheelCy - wheelR - 14;
+      group.outcomes.forEach(outcome => {
+        const { node, y } = outcome;
+        const centerX = x + colW / 2;
 
-      const labelText = group.parent === 'Start' ? 'Start draw' : `From ${group.parent}`;
-
-      svg.appendChild(mk('text', { x: wheelCx, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
-
-      drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes.map(o => o.node));
-
-      group.outcomes.forEach(({ node, y }) => {
-
-        const labelX = wheelCx + colW / 4;
-
-        const probX = labelX + 30;
-
-        const tagY = group.wheelCy;
-
-        svg.appendChild(mk('text', {
-
-          x: labelX,
-
-          y : y,
-
-          class: 'payout',
-
-          'text-anchor': 'end',
-
-          'dominant-baseline': 'top'
-
-        }, node.label));
-
-        svg.appendChild(mk('text', {
-
-          x: probX,
-
-          y : y,
-
-          class: 'payout',
-
-          'text-anchor': 'end',
-
-          'dominant-baseline': 'top'
-
-        }, fmtProb(node.probability)));
-
-        layout.nodeAnchors.set(node.label, {
-
-          y : y,
-
-          inX: probX,
-
-          outX: probX + 10
-
+        // Reserve an overlay panel (to be drawn after links)
+        overlays.push({
+          xLeft: centerX - 45,
+          xRight: centerX + 45,
+          y: y,
+          labelX: centerX,
+          probX: centerX + 30,
+          label: node.label,
+          prob: fmtProb(node.probability)
         });
 
+        // Update anchors to be centered horizontally
+        layout.nodeAnchors.set(node.label, {
+          y: y,
+          inX: centerX,
+          outX: centerX
+        });
       });
 
     });
 
   });
 
+  // draw links
   for (let i = 0; i < periods.length - 1; i++) {
 
     const links = buildLinks(i);
@@ -1014,8 +1081,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         class: 'link',
 
-        'marker-end': 'url(#ah)'
-
       }));
 
       const midX = (fromX + toX) / 2;
@@ -1028,15 +1093,121 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
+  // Draw overlays on top of links: shaded rounded rect + texts
+  const padX = 2, padY = 6, rectH = 25;
+  overlays.forEach(o => {
+    const rectX = Math.min(o.xLeft, o.xRight); // ensure rect covers both label and prob
+    const rectW = Math.abs(o.xRight - o.xLeft); // width to cover both label and prob
+    const rectY = o.y - rectH + padY; // position so text baseline sits nicely
+    svg.appendChild(mk('rect', {
+      x: rectX,
+      y: rectY,
+      width: rectW,
+      height: rectH,
+      rx: 8,
+      fill: '#ffffff',
+      opacity: 0.95,
+      stroke: '#dddddd'
+    }));
+
+    // Label text
+    svg.appendChild(mk('text', {
+      x: o.labelX,
+      y: o.y,
+      class: 'payout',
+      'text-anchor': 'middle',
+      'dominant-baseline': 'top'
+    }, o.label));
+
+    // Probability text
+  });
+
   const mount = document.getElementById('lottery-visualization');
 
   mount.innerHTML = '';
 
   mount.appendChild(svg);
 
+  // ----- selection table shading and mapping -----
+  const table = document.getElementById('choice-table');
+  if (table) {
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    const radios = Array.from(table.querySelectorAll('input[name="cutoff"]'));
+    const hiddenInputs = new Map();
+    document.querySelectorAll('#choice-hidden-inputs input[type="hidden"]').forEach(input => {
+      hiddenInputs.set(input.name, input);
+    });
+    const cutoffField = hiddenInputs.get('cutoff_index');
+    const acceptLabel = {{ accept_label|json }};
+    const playLabel = {{ play_label|json }};
+
+    function applyCutoff(idx) {
+      if (!Number.isInteger(idx)) return;
+
+      rows.forEach((tr, i) => {
+        // Shade left/right cells based on cutoff
+        const left = tr.querySelector('.cut-left');
+        const right = tr.querySelector('.cut-right');
+        if (left) left.classList.toggle('shaded', i >= idx);
+        if (right) right.classList.toggle('shaded', i < idx);
+
+        const fieldName = tr.dataset.field;
+        const hidden = hiddenInputs.get(fieldName);
+        if (hidden) {
+          if (i >= idx) hidden.value = acceptLabel;
+          else hidden.value = playLabel;
+        }
+      });
+
+      if (cutoffField) {
+        cutoffField.value = idx;
+      }
+    }
+
+    radios.forEach(r => {
+      r.addEventListener('change', () => {
+        const idx = Number(r.value);
+        if (Number.isInteger(idx)) {
+          applyCutoff(idx);
+        }
+      });
+    });
+
+    const preselected = radios.find(r => r.checked);
+    if (preselected) {
+      const idx = Number(preselected.value);
+      if (Number.isInteger(idx)) {
+        applyCutoff(idx);
+      }
+    }
+  }
+
+  const openBtn = document.getElementById('open-sidebar-btn');
+  if (openBtn) {
+    openBtn.addEventListener('click', event => {
+      event.preventDefault();
+      openNav();
+    });
+  }
+
 });
 
+
+
+function openNav() {
+  const sb = document.getElementById('mySidebar');
+  const main = document.getElementById('main');
+  if (sb) sb.classList.add('open');
+  if (main) main.classList.add('shifted');
+
+}
+
+function closeNav() {
+  const sb = document.getElementById('mySidebar');
+  const main = document.getElementById('main');
+  if (sb) sb.classList.remove('open');
+  if (main) main.classList.remove('shifted');
+}
 </script>
 
 {{ endblock }}
-

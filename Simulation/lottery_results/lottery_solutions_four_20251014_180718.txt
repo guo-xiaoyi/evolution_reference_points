@@ -1,14 +1,15 @@
 ================================================================================
-High-Performance Discrete Lottery Optimizer - Results Report
+Unified Discrete Lottery Optimizer - Results Report
 ================================================================================
-Generated on: 2025-09-30 10:40:43
+Generated on: 2025-10-14 18:07:18
+Mode: outcomes=4, stake=hi
 Solutions found: 0
 Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
 Search configuration:
-  - Lottery range: [-50, 50]
+  - Lottery range: [-1000, -100] and [100, 1000]
   - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-  - Violation threshold: 1
-  - Total evaluations: 37
+  - Violation threshold: 1.0
+  - Total evaluations: 1,902
   - Numba acceleration: Enabled
 
 No solutions found!
