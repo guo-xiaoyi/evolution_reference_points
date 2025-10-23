@@ -499,6 +499,15 @@
     .lotto { font-family:  sans-serif; }
 
     .col { fill:#f5f5f7; stroke:#ddd; }
+    .col.highlight-col { fill:#fff1b8; stroke:#f0b429; stroke-width:2; }
+    .col.relevant-col { fill:#fff5c7; stroke:#f0d27c; }
+    .col.dim-col { fill:#f5f5f7; stroke:#ddd; opacity:0.25; }
+    .payout.highlight-node { fill:#b56600; font-weight:600; }
+    .prob.highlight-node { fill:#b56600; font-weight:600; }
+    .payout.relevant-node { fill:#a06600; }
+    .prob.relevant-node { fill:#c27f00; }
+    .payout.dim-node { fill:#777; }
+    .prob.dim-node { fill:#999; }
 
     .title {font-weight:800px; font-size:16px; }
 
@@ -507,6 +516,9 @@
     .prob { font-size:16px; fill:#2a8f2a; }
 
     .link { stroke:#888; stroke-width:2;}
+    .link-highlight { stroke:#f0b429; stroke-width:3; }
+    .link-relevant { stroke:#d8aa3e; stroke-width:2.4; }
+    .link-dim { stroke:#c8c8c8; stroke-width:1.6; opacity:0.35; }
 
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
 
@@ -735,6 +747,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // Django injects a JSON string; parse it
 
   const lottery = JSON.parse('{{ display_lottery|safe }}');
+  const continuationStage = {{ continuation_stage|json }};
+  const realizedPeriod1 = {{ realized_period1|json }};
+  const realizedPeriod2 = {{ realized_period2|json }};
+  const realizedNodes = {};
+  if (realizedPeriod1) {
+    realizedNodes[1] = realizedPeriod1;
+  }
+  if (realizedPeriod2) {
+    realizedNodes[2] = realizedPeriod2;
+  }
+  const highlightPeriod = Number.isFinite(continuationStage) ? continuationStage : null;
 
   // ---- layout constants ----
 
@@ -761,6 +784,50 @@ document.addEventListener('DOMContentLoaded', function () {
     .sort((a, b) => a - b);
 
   const periods = keys.map(k => lottery.periods[k]);
+  const periodsByKey = new Map();
+  keys.forEach((key, idx) => periodsByKey.set(key, periods[idx]));
+
+  const realizedLabels = new Map();
+  if (realizedPeriod1 && realizedPeriod1.label) {
+    realizedLabels.set(1, new Set([realizedPeriod1.label]));
+  }
+  if (realizedPeriod2 && realizedPeriod2.label) {
+    realizedLabels.set(2, new Set([realizedPeriod2.label]));
+  }
+
+  const relevantByPeriod = new Map();
+  keys.forEach((key, idx) => {
+    const nodes = periodsByKey.get(key) || [];
+    if (idx === 0) {
+      relevantByPeriod.set(key, new Set(nodes.map(n => n.label)));
+      return;
+    }
+    const prevKey = keys[idx - 1];
+    const prevRelevant = relevantByPeriod.get(prevKey) || new Set();
+    const prevRelevantHasEntries = prevRelevant.size > 0;
+    const realizedSet = realizedLabels.get(key);
+    const relevantSet = new Set();
+    nodes.forEach(node => {
+      const parent = node.from || 'Start';
+      const parentRelevant = !prevRelevantHasEntries || prevRelevant.has(parent);
+      if (!parentRelevant) {
+        return;
+      }
+      if (realizedSet && !realizedSet.has(node.label)) {
+        return;
+      }
+      relevantSet.add(node.label);
+    });
+    if (!realizedSet) {
+      nodes.forEach(node => {
+        const parent = node.from || 'Start';
+        if (!prevRelevantHasEntries || prevRelevant.has(parent)) {
+          relevantSet.add(node.label);
+        }
+      });
+    }
+    relevantByPeriod.set(key, relevantSet);
+  });
 
   const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
 
@@ -995,6 +1062,14 @@ document.addEventListener('DOMContentLoaded', function () {
   columnLayouts.forEach((layout, i) => {
 
     const x = leftPad + i * (colW + colGap);
+    const periodKey = keys[i];
+    const realizedNode = realizedNodes[periodKey];
+    const realizedSetForPeriod = realizedLabels.get(periodKey);
+    const relevantSet = relevantByPeriod.get(periodKey) || new Set();
+    const columnHasRealized = realizedSetForPeriod && realizedSetForPeriod.size > 0;
+    const columnHasRelevant = relevantSet.size > 0;
+    const isHighlightColumn = highlightPeriod != null && periodKey === highlightPeriod;
+    const columnClass = isHighlightColumn ? 'col highlight-col' : columnHasRelevant ? 'col relevant-col' : 'col dim-col';
 
     layout.colX = x; // left edge of column
 
@@ -1003,8 +1078,9 @@ document.addEventListener('DOMContentLoaded', function () {
     layout.lineEndX = x + 16; // left edge plus padding
 
     // column box
+    const columnRectAttrs = { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: columnClass };
 
-    svg.appendChild(mk('rect', { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: 'col' }));
+    svg.appendChild(mk('rect', columnRectAttrs));
 
     // title
 
@@ -1024,6 +1100,11 @@ document.addEventListener('DOMContentLoaded', function () {
       group.outcomes.forEach(outcome => {
         const { node, y } = outcome;
         const centerX = x + colW / 2;
+        const nodeLabel = node.label;
+        const realizedSet = realizedLabels.get(periodKey);
+        const isRealized = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
+        const isRelevant = relevantSet.has(nodeLabel);
+        const state = isRealized ? 'highlight' : (isRelevant ? 'relevant' : 'dim');
 
         // Reserve an overlay panel (to be drawn after links)
         overlays.push({
@@ -1033,7 +1114,8 @@ document.addEventListener('DOMContentLoaded', function () {
           labelX: centerX,
           probX: centerX + 30,
           label: node.label,
-          prob: fmtProb(node.probability)
+          prob: fmtProb(node.probability),
+          state: state
         });
 
         // Update anchors to be centered horizontally
@@ -1054,8 +1136,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const links = buildLinks(i);
 
     const current = columnLayouts[i];
-
     const next = columnLayouts[i + 1];
+
+    const currentKey = keys[i];
+    const nextKey = keys[i + 1];
+    const currentRelevantSet = relevantByPeriod.get(currentKey) || new Set();
+    const currentRealizedSet = realizedLabels.get(currentKey) || new Set();
+    const nextRelevantSet = relevantByPeriod.get(nextKey) || new Set();
+    const nextRealizedSet = realizedLabels.get(nextKey) || new Set();
 
     links.forEach(link => {
 
@@ -1069,6 +1157,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
 
+      const isParentRealized = currentRealizedSet.has(link.parent);
+      const isChildRealized = nextRealizedSet.has(link.label);
+      const isParentRelevant = currentRelevantSet.has(link.parent);
+      const isChildRelevant = nextRelevantSet.has(link.label);
+
+      let linkState;
+      if (isParentRealized && isChildRealized) {
+        linkState = 'highlight';
+      } else if (isParentRelevant && isChildRelevant) {
+        linkState = 'relevant';
+      } else {
+        linkState = 'dim';
+      }
+
+      const lineClasses = ['link'];
+      if (linkState === 'highlight') lineClasses.push('link-highlight');
+      else if (linkState === 'relevant') lineClasses.push('link-relevant');
+      else lineClasses.push('link-dim');
+
       svg.appendChild(mk('line', {
 
         x1: fromX,
@@ -1079,7 +1186,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         y2: toAnchor.y,
 
-        class: 'link',
+        class: lineClasses.join(' '),
 
       }));
 
@@ -1087,7 +1194,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
 
-      svg.appendChild(mk('text', { x: midX, y: midY, class: 'prob', 'text-anchor': 'middle' }, fmtProb(link.prob)));
+      const probClasses = ['prob'];
+      if (linkState === 'highlight') probClasses.push('highlight-node');
+      else if (linkState === 'relevant') probClasses.push('relevant-node');
+      else probClasses.push('dim-node');
+
+      svg.appendChild(mk('text', { x: midX, y: midY, class: probClasses.join(' '), 'text-anchor': 'middle' }, fmtProb(link.prob)));
 
     });
 
@@ -1099,25 +1211,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const rectX = Math.min(o.xLeft, o.xRight); // ensure rect covers both label and prob
     const rectW = Math.abs(o.xRight - o.xLeft); // width to cover both label and prob
     const rectY = o.y - rectH + padY; // position so text baseline sits nicely
-    svg.appendChild(mk('rect', {
+    const state = o.state || 'relevant';
+    const rectAttrs = {
       x: rectX,
       y: rectY,
       width: rectW,
       height: rectH,
       rx: 8,
-      fill: '#ffffff',
-      opacity: 0.95,
-      stroke: '#dddddd'
-    }));
+      fill: state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
+      opacity: state === 'dim' ? 0.35 : 0.95,
+      stroke: state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
+    };
+    if (state === 'highlight') {
+      rectAttrs['stroke-width'] = 2;
+    }
+    svg.appendChild(mk('rect', rectAttrs));
 
     // Label text
-    svg.appendChild(mk('text', {
+    const labelClasses = ['payout'];
+    if (state === 'highlight') {
+      labelClasses.push('highlight-node');
+    } else if (state === 'relevant') {
+      labelClasses.push('relevant-node');
+    } else if (state === 'dim') {
+      labelClasses.push('dim-node');
+    }
+    const labelAttrs = {
       x: o.labelX,
       y: o.y,
-      class: 'payout',
+      class: labelClasses.join(' '),
       'text-anchor': 'middle',
       'dominant-baseline': 'top'
-    }, o.label));
+    };
+    svg.appendChild(mk('text', labelAttrs, o.label));
 
     // Probability text
   });
