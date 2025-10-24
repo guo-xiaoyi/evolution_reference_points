@@ -1,6 +1,6 @@
 {{ block content }}
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,7 +21,7 @@
         max-width: 1280px;
     }
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: sans-serif;
       background-color: #f5f5f5;
     }
     .jumbotron {
@@ -69,6 +69,148 @@
     .feature-box {
       margin-bottom: 2rem;
     }
+    .lottery-draw {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.92);
+      border-radius: 12px;
+      border: 1px solid #d8cec1;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+    }
+    .draw-status {
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #007095;
+    }
+    .draw-card {
+      margin: 1rem auto 0;
+      padding: 1rem 1.5rem;
+      max-width: 420px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #007095, #00a0c6);
+      border-radius: 10px;
+      transition: transform 0.6s ease-out, box-shadow 0.6s ease-out;
+      display: block;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      outline: none;
+    }
+    .draw-card:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 4px;
+    }
+    .draw-card[disabled] {
+      cursor: default;
+    }
+    .draw-card.spinning {
+      animation: drawPulse 0.8s ease-in-out infinite alternate;
+    }
+    .draw-card.final {
+      background: linear-gradient(135deg, #0b8457, #20b873);
+      box-shadow: 0 12px 24px rgba(11, 132, 87, 0.35);
+    }
+    .draw-summary {
+      margin-top: 1.5rem;
+      color: #333;
+      line-height: 1.6;
+    }
+    .draw-summary p {
+      margin-bottom: 0.5rem;
+    }
+    .draw-timeline {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .draw-timeline li {
+      flex: 1 1 160px;
+      background-color: #f1f7fa;
+      border: 1px solid #dceaf1;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      min-width: 160px;
+    }
+    .timeline-label {
+      display: block;
+      font-weight: 600;
+      color: #005a79;
+    }
+    .timeline-detail {
+      display: block;
+      margin-top: 0.25rem;
+      color: #333;
+      font-size: 0.95rem;
+    }
+    .draw-noscript {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #333;
+    }
+    .lottery-preview {
+      margin-top: 2.5rem;
+      padding: 1.75rem;
+      background-color: rgba(255, 255, 255, 0.96);
+      border-radius: 12px;
+      border: 1px solid #d4e4eb;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+    .preview-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #005a79;
+      margin-bottom: 0.75rem;
+    }
+    #lottery-visualization {
+      margin-top: 1.25rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    #lottery-visualization svg {
+      width: 100%;
+      height: auto;
+      min-width: 540px;
+    }
+
+    .col { fill: #f5f5f7; stroke: #d5d5d5; }
+    .title { font-size: 15px; font-weight: 600; fill: #333; }
+    .payout { font-size: 15px; fill: #1c3b4d; }
+    .prob { font-size: 12px; fill: #2a8f2a; }
+    .link { stroke: #8a8a8a; stroke-width: 2; }
+    .ring { fill: none; stroke: #f0a500; stroke-width: 8; }
+    @keyframes drawPulse {
+      from {
+        transform: scale(0.98);
+        box-shadow: 0 0 0 rgba(0, 112, 149, 0.2);
+      }
+      to {
+        transform: scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 112, 149, 0.35);
+      }
+    }
+    @media (max-width: 860px) {
+      .lottery-draw {
+        margin-top: 1rem;
+      }
+      .draw-card {
+        font-size: 1.25rem;
+      }
+      .lottery-preview {
+        margin-top: 1.75rem;
+        padding: 1.3rem;
+      }
+      #lottery-visualization svg {
+        min-width: 750px;
+      }
+    }
   </style>
 </head>
 
@@ -79,9 +221,21 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h1 class="university-title">This is the End of Session 1</h1>
+            <h1 class="university-title">
+              {{ if is_revision }}
+              Review your previously selected lottery.
+              {{ else }}
+              Draw your lottery
+              {{ endif }}
+            </h1>
+            <p>
+              {{ if is_revision }}
+              The lottery below was drawn at the end of Session&nbsp;1 and carries over to the continuation sessions. Please review it before you proceed.
+              {{ else }}
+              Thank you for providing your evaluations. Now we pick your risky prospect that you will evaluate in the subsequent two sessions. Please click the following card to draw one from your previously evaluated 15 risky prospects.
+              {{ endif }}
+            </p>
 
-            <p> Thank you for participating the game.</p>
           </div>
           <div class="col-md-6">
             <!-- This div will be filled with the background image via CSS -->
@@ -96,21 +250,99 @@
     <div class="main-container">
       <div class="container">
         <!-- Information columns -->
-        <div class="row">
-          <div class="col-md-4 feature-box">
-            <h2>How to play</h2>
-            <p>Follow the instructions provided in each section. Make sure to read carefully and complete each task to the best of your ability. If you have any questions, feel free to ask the experimenter using the Prolific chatting window. Work as if this is your real money. It is important for us to elicit your true preferences even though you do not really earn or lose money from the depicted situations you see later.</p>
-          </div>
-          <div class="col-md-4 feature-box">
-            <h2>Who are we</h2>
-            <p>We are researchers from the University of St. Gallen, Switzerland. We cordially invite you to take part in our lottery evaluation tasks. This experiment is part of our project "Evolution of Reference Points over Time". We are: Xiaoyi Guo, Matthias Weber, Enrico de Giorgi, Andrija Lukovic.</p>
-          </div>
-          <div class="col-md-4 feature-box">
-            <h2>What to expect</h2>
-            <p>You will be presented with various lottery scenarios and asked to make valuations. Your responses will
-              help us understand decision-making processes under uncertainty. We will incentivize you by paying you a show-up fee for three times, and a bonus if you attend all three sessions.</p>
-          </div>
-        </div>
+                     <div class="lottery-draw" id="lottery-draw">
+              <p class="draw-status" id="draw-status">
+                {{ if is_revision }}
+                Lottery already selected - review below.
+                {{ else }}
+                Click the card to start the draw.
+                {{ endif }}
+              </p>
+              {{ if is_revision }}
+              <button type="button" class="draw-card final" id="draw-card" disabled aria-disabled="true" aria-live="polite">
+                {{ if lottery_name }}
+                {{ lottery_name }}
+                {{ else }}
+                Lottery selected
+                {{ endif }}
+              </button>
+              {{ else }}
+              <button type="button" class="draw-card" id="draw-card" aria-live="polite">Click to draw</button>
+              {{ endif }}
+              <div class="draw-summary" id="draw-summary" {{ if is_revision }}{{ else }}hidden{{ endif }}>
+                <p>Your lottery for the continuation sessions is <strong>{{ lottery_name }}</strong>.</p>
+                {{ if selected_round }}
+                <p>It was drawn from round <strong>{{ selected_round }}</strong>{{ if selected_choice }} based on choice <strong>#{{ selected_choice }}</strong>{{ if selected_option }} ({{ selected_option }}){{ endif }}{{ endif }}{{ if selected_amount }} with a recorded amount of <strong>{{ selected_amount }}</strong>{{ endif }}.</p>
+                {{ endif }}
+                {{ if is_revision }}
+                <p>This is a revision screen only. No new draw takes place; the same lottery applies for the continuation rounds.</p>
+                <p>You are currently in <strong>Session {{ current_session_number }}</strong>. The continuation tasks will use this lottery.</p>
+                {{ if realized_summary }}
+                <p>You have realized the following stages so far:</p>
+                <ul>
+                  {{ for item in realized_summary }}
+                  <li>Period {{ item.period }}: {{ item.label }}{{ if item.probability_text }} ({{ item.probability_text }}){{ endif }}</li>
+                  {{ endfor }}
+                </ul>
+                {{ endif }}
+                {{ if final_payoff_text }}
+                <p>You have accumulated a payoff of <strong>{{ final_payoff_text }}</strong> so far.</p>
+                {{ endif }}
+                {{ endif }}
+                              
+              </div>
+              {{ if continuation_rounds }}
+              <ul class="draw-timeline" id="draw-timeline" {{ if is_revision }}{{ else }}hidden{{ endif }}>
+                <li>
+                  <span class="timeline-label">Session 2</span>
+                  <span class="timeline-detail">
+                    {{ if is_revision }}
+                      {{ if current_session_number == 2 }}
+                      This session &mdash; Play2 (round {{ continuation_rounds.0 }})
+                      {{ else }}
+                      Completed Play2 (round {{ continuation_rounds.0 }})
+                      {{ endif }}
+                    {{ else }}
+                    Upcoming Play2 (round {{ continuation_rounds.0 }})
+                    {{ endif }}
+                  </span>
+                </li>
+                <li>
+                  <span class="timeline-label">Session 3</span>
+                  <span class="timeline-detail">
+                    {{ if is_revision }}
+                      {{ if current_session_number == 3 }}
+                      This session &mdash; Play3 (round {{ continuation_rounds.1 }})
+                      {{ else }}
+                      Upcoming Play3 (round {{ continuation_rounds.1 }})
+                      {{ endif }}
+                    {{ else }}
+                    Upcoming Play3 (round {{ continuation_rounds.1 }})
+                    {{ endif }}
+                  </span>
+                </li>
+              </ul>
+              {{ endif }}
+              <div class="lottery-preview" id="lottery-preview" {{ if is_revision }}{{ else }}hidden{{ endif }}>
+                <h3 class="preview-title">Lottery preview</h3>
+                <div id="lottery-visualization" aria-live="polite"></div>
+                 {{if is_revision }}
+                 <p style="text-align:right;">
+              <button class="otree-btn-next btn btn-primary">Yes, I recalled! &raquo;</button>
+            </p>
+            {{ else}}
+            <p style="text-align:right;">
+              <button class="otree-btn-next btn btn-primary">To fortune wheel &raquo;</button>
+            </p>
+            {{ endif }}
+              </div>
+              <noscript>
+                <p class="draw-noscript">Your lottery for the continuation sessions is <strong>{{ lottery_name }}</strong>.</p>
+              </noscript>
+              <br>
+
+            </div>
+
       </div>
     </div>
   </main>
@@ -136,6 +368,468 @@
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
   <script src="../../assets/js/vendor/popper.min.js"></script>
   <script src="../../dist/js/bootstrap.min.js"></script>
+  <script>
+    (function () {
+      var card = document.getElementById('draw-card');
+      var status = document.getElementById('draw-status');
+      if (!card || !status) {
+        return;
+      }
+      var summary = document.getElementById('draw-summary');
+      var timeline = document.getElementById('draw-timeline');
+      var preview = document.getElementById('lottery-preview');
+      var mount = document.getElementById('lottery-visualization');
+      var isRevision = {{ is_revision|json }};
+      var lotteries = {{ Constants.lotteries|json }};
+      var finalName = {{ lottery_name|json }};
+      var selectedLotteryId = {{ lottery_id|json }};
+      var selectedLottery = null;
+      try {
+        selectedLottery = JSON.parse('{{ selected_lottery|safe }}');
+      } catch (err) {
+        selectedLottery = null;
+      }
+
+      var lotteriesByName = {};
+      var names = [];
+      if (lotteries && typeof lotteries === 'object') {
+        Object.keys(lotteries).forEach(function (key) {
+          var item = lotteries[key];
+          if (!item) {
+            return;
+          }
+          if (item.name) {
+            lotteriesByName[item.name] = item;
+            if (names.indexOf(item.name) === -1) {
+              names.push(item.name);
+            }
+          }
+          if (!selectedLottery && selectedLotteryId && key === selectedLotteryId) {
+            selectedLottery = item;
+          }
+        });
+      }
+      if (selectedLottery && selectedLottery.name && names.indexOf(selectedLottery.name) === -1) {
+        names.push(selectedLottery.name);
+        lotteriesByName[selectedLottery.name] = selectedLottery;
+      }
+      if (!selectedLottery && finalName && lotteriesByName[finalName]) {
+        selectedLottery = lotteriesByName[finalName];
+      }
+      if (finalName && names.indexOf(finalName) === -1) {
+        names.push(finalName);
+      }
+      names = names.filter(function (name) {
+        return typeof name === 'string' && name.trim().length > 0;
+      });
+
+      function renderLotteryPreview(lotteryData) {
+        if (!mount) {
+          return;
+        }
+        if (!lotteryData) {
+          mount.innerHTML = '<p style="margin:0;color:#555;">Lottery structure is not available.</p>';
+          return;
+        }
+        var lottery = JSON.parse(JSON.stringify(lotteryData));
+        var periodsByIdx = lottery.periods || {};
+        var keys = Object.keys(periodsByIdx).map(function (k) {
+          return Number(k);
+        }).filter(function (n) {
+          return !Number.isNaN(n);
+        }).sort(function (a, b) {
+          return a - b;
+        });
+        if (!keys.length) {
+          mount.innerHTML = '<p style="margin:0;color:#555;">Lottery structure is not available.</p>';
+          return;
+        }
+        var periods = keys.map(function (idx) {
+          var nodes = periodsByIdx[idx];
+          if (!Array.isArray(nodes)) {
+            return [];
+          }
+          return nodes.map(function (node) {
+            return Object.assign({}, node);
+          });
+        });
+        var H = 640;
+        var colW = 260;
+        var colGap = 10;
+        var leftPad = 20;
+        var topPad = 24;
+        var wheelR = 36;
+        var wheelCxOffset = colW / 2;
+        var W = periods.length * colW + Math.max(0, periods.length - 1) * colGap + leftPad * 2;
+        var svgNS = 'http://www.w3.org/2000/svg';
+        var mk = function (tag, attrs, text) {
+          var el = document.createElementNS(svgNS, tag);
+          attrs = attrs || {};
+          Object.keys(attrs).forEach(function (k) {
+            if (attrs[k] != null) {
+              el.setAttribute(k, attrs[k]);
+            }
+          });
+          if (text != null) {
+            el.textContent = text;
+          }
+          return el;
+        };
+        var num = function (v) {
+          var n = typeof v === 'number' ? v : Number(v);
+          return Number.isFinite(n) ? n : 0;
+        };
+        var fmtProb = function (p) {
+          var pct = num(p) * 100;
+          var decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
+          return pct.toFixed(decimals) + '%';
+        };
+        var normalizeAngle = function (angle) {
+          var a = angle;
+          while (a <= -Math.PI) a += 2 * Math.PI;
+          while (a > Math.PI) a -= 2 * Math.PI;
+          return a;
+        };
+        var palette = ['#73A5AF', '#e1d7c3', '#cfcfff', '#e0e0ff', '#ddd', '#e8e3d9', '#f0f0f0'];
+        var pick = function (i) {
+          return palette[i % palette.length];
+        };
+        var groupByParent = function (nodes) {
+          var res = new Map();
+          nodes.forEach(function (node) {
+            var parent = node.from || 'Start';
+            if (!res.has(parent)) {
+              res.set(parent, []);
+            }
+            res.get(parent).push(node);
+          });
+          return Array.from(res.entries());
+        };
+        var isDeterministic = function (slices) {
+          var probs = slices.map(function (s) {
+            return num(s.probability);
+          });
+          var total = probs.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          if (total <= 0) {
+            return false;
+          }
+          var positive = probs.filter(function (p) {
+            return p > 0;
+          });
+          if (positive.length !== 1) {
+            return false;
+          }
+          return positive[0] / total >= 0.999999;
+        };
+        var svg = mk('svg', { width: W, height: H, class: 'lotto' });
+        var defs = mk('defs');
+        var marker = mk('marker', { id: 'ah', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: 'auto' });
+        marker.appendChild(mk('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#888' }));
+        defs.appendChild(marker);
+        svg.appendChild(defs);
+        var overlays = [];
+        var columnLayouts = periods.map(function (nodes) {
+          var layout = { groups: [], nodeAnchors: new Map() };
+          var innerTop = topPad + 60;
+          var innerBottom = H - topPad - 40;
+          var count = Math.max(nodes.length, 1);
+          var span = innerBottom - innerTop;
+          nodes.forEach(function (node, idx) {
+            var y = innerTop + (idx + 0.5) * (span / count);
+            layout.nodeAnchors.set(node.label, { y: y });
+          });
+          groupByParent(nodes).forEach(function (entry) {
+            var parent = entry[0];
+            var children = entry[1];
+            var outcomes = children.map(function (child) {
+              var anchor = layout.nodeAnchors.get(child.label);
+              var y = anchor ? anchor.y : innerTop;
+              return { node: child, y: y };
+            });
+            outcomes.sort(function (a, b) {
+              return a.y - b.y;
+            });
+            if (outcomes.length) {
+              var minY = outcomes[0].y;
+              var maxY = outcomes[outcomes.length - 1].y;
+              outcomes.forEach(function (o, idx) {
+                var fraction;
+                if (maxY === minY) {
+                  fraction = outcomes.length === 1 ? 0.5 : idx / Math.max(outcomes.length - 1, 1);
+                } else {
+                  fraction = (o.y - minY) / (maxY - minY);
+                }
+                var angleRange = Math.PI;
+                o.targetAngle = -Math.PI / 2 + fraction * angleRange;
+              });
+            }
+            var wheelCy = outcomes.length
+              ? outcomes.reduce(function (sum, o) {
+                  return sum + o.y;
+                }, 0) / outcomes.length
+              : (innerTop + innerBottom) / 2;
+            layout.groups.push({ parent: parent, wheelCy: wheelCy, outcomes: outcomes });
+          });
+          return layout;
+        });
+        columnLayouts.forEach(function (layout, i) {
+          var x = leftPad + i * (colW + colGap);
+          layout.colX = x;
+          layout.lineStartX = x + colW - 16;
+          layout.lineEndX = x + 16;
+          svg.appendChild(mk('rect', { x: x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: 'col' }));
+          var titleLabel;
+          if (i === 0) {
+            titleLabel = 'Current session';
+          } else if (i === 1) {
+            titleLabel = 'Session 2';
+          } else if (i === 2) {
+            titleLabel = 'Session 3';
+          } else {
+            titleLabel = 'Period ' + i;
+          }
+          svg.appendChild(mk('text', { x: x + colW / 2, y: topPad + 18, class: 'title', 'text-anchor': 'middle' }, titleLabel));
+          var wheelCx = x + wheelCxOffset;
+          layout.groups.forEach(function (group) {
+            var nodes = group.outcomes.map(function (o) {
+              return o.node;
+            });
+            if (!isDeterministic(nodes)) {
+              var labelY = group.wheelCy;
+              var labelText = group.parent === 'Start' ? 'From start:' : 'From ' + group.parent + ':';
+              svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
+              drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
+            }
+            group.outcomes.forEach(function (outcome) {
+              var node = outcome.node;
+              var y = outcome.y;
+              var centerX = x + colW / 2;
+              overlays.push({
+                xLeft: centerX - 50,
+                xRight: centerX + 50,
+                y: y,
+                labelX: centerX,
+                probX: centerX + 30,
+                label: node.label,
+                prob: fmtProb(node.probability)
+              });
+              layout.nodeAnchors.set(node.label, {
+                y: y,
+                inX: centerX,
+                outX: centerX
+              });
+            });
+          });
+        });
+        function drawWheel(target, cx, cy, r, slices) {
+          var ring = mk('circle', { cx: cx, cy: cy, r: r + 4, class: 'ring' });
+          target.appendChild(ring);
+          var tot = slices.reduce(function (sum, s) {
+            return sum + num(s.node.probability);
+          }, 0);
+          if (!tot) {
+            tot = 1;
+          }
+          var segments = slices.map(function (s) {
+            var raw = num(s.node.probability);
+            var p = tot ? raw / tot : 0;
+            return { slice: s, p: p, size: p * 2 * Math.PI };
+          });
+          var cursor = -Math.PI / 2;
+          segments.forEach(function (seg) {
+            seg.start = cursor;
+            seg.end = cursor + seg.size;
+            seg.mid = (seg.start + seg.end) / 2;
+            cursor = seg.end;
+          });
+          var totalSize = segments.reduce(function (sum, seg) {
+            return sum + seg.size;
+          }, 0) || 1;
+          var offset = 0;
+          if (segments.length) {
+            var weighted = segments.reduce(function (acc, seg) {
+              var targetAngle = typeof seg.slice.targetAngle === 'number' ? seg.slice.targetAngle : seg.mid;
+              var diff = normalizeAngle(targetAngle - seg.mid);
+              return acc + diff * seg.size;
+            }, 0);
+            offset = weighted / totalSize;
+          }
+          segments.forEach(function (seg, idx) {
+            var start = seg.start + offset;
+            var end = seg.end + offset;
+            var mid = (start + end) / 2;
+            var large = (end - start) > Math.PI ? 1 : 0;
+            var x1 = cx + r * Math.cos(start);
+            var y1 = cy + r * Math.sin(start);
+            var x2 = cx + r * Math.cos(end);
+            var y2 = cy + r * Math.sin(end);
+            var path = 'M ' + cx + ',' + cy + ' L ' + x1 + ',' + y1 + ' A ' + r + ',' + r + ' 0 ' + large + ',1 ' + x2 + ',' + y2 + ' Z';
+            target.appendChild(mk('path', { d: path, fill: pick(idx), stroke: '#333', 'stroke-width': 1.5 }));
+            if (seg.p > 0.07) {
+              var lx = cx + (r * 0.55) * Math.cos(mid);
+              var ly = cy + (r * 0.55) * Math.sin(mid);
+              target.appendChild(mk('text', {
+                x: lx,
+                y: ly,
+                'text-anchor': 'middle',
+                'dominant-baseline': 'middle',
+                'font-size': 12
+              }, fmtProb(seg.p)));
+            }
+          });
+          var tri = 'M ' + cx + ',' + (cy - (r + 14)) + ' l 8,12 l -16,0 z';
+          target.appendChild(mk('path', { d: tri, fill: '#333' }));
+        }
+        var linkLayer = mk('g');
+        svg.appendChild(linkLayer);
+        var buildLinks = function (periodIdx) {
+          var current = periods[periodIdx] || [];
+          var next = periods[periodIdx + 1] || [];
+          if (!current.length || !next.length) {
+            return [];
+          }
+          var validParents = new Set(current.map(function (n) {
+            return n.label;
+          }));
+          return next.filter(function (child) {
+            return validParents.has(child.from);
+          }).map(function (child) {
+            return {
+              parent: child.from,
+              label: child.label,
+              prob: num(child.probability)
+            };
+          });
+        };
+        for (var i = 0; i < periods.length - 1; i++) {
+          var links = buildLinks(i);
+          var current = columnLayouts[i];
+          var next = columnLayouts[i + 1];
+          links.forEach(function (link) {
+            var fromAnchor = current.nodeAnchors.get(link.parent);
+            var toAnchor = next.nodeAnchors.get(link.label);
+            if (!fromAnchor || !toAnchor) {
+              return;
+            }
+            var fromX = fromAnchor.outX != null ? fromAnchor.outX : current.lineStartX;
+            var toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
+            linkLayer.appendChild(mk('line', {
+              x1: fromX,
+              y1: fromAnchor.y,
+              x2: toX,
+              y2: toAnchor.y,
+              class: 'link'
+            }));
+            var midX = (fromX + toX) / 2;
+            var midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
+            linkLayer.appendChild(mk('text', { x: midX, y: midY, class: 'prob', 'text-anchor': 'middle' }, fmtProb(link.prob)));
+          });
+        }
+        overlays.forEach(function (o) {
+          var rectX = Math.min(o.xLeft, o.xRight);
+          var rectW = Math.abs(o.xRight - o.xLeft);
+          var rectY = o.y - 25 + 6;
+          svg.appendChild(mk('rect', {
+            x: rectX,
+            y: rectY,
+            width: rectW,
+            height: 25,
+            rx: 8,
+            fill: '#ffffff',
+            opacity: 0.95,
+            stroke: '#dddddd'
+          }));
+          svg.appendChild(mk('text', {
+            x: o.labelX,
+            y: o.y,
+            class: 'payout',
+            'text-anchor': 'middle',
+            'dominant-baseline': 'top'
+          }, o.label));
+
+        });
+        mount.innerHTML = '';
+        mount.appendChild(svg);
+      }
+
+      var revealed = false;
+      var drawStarted = false;
+
+      function revealFinal() {
+        if (revealed) {
+          return;
+        }
+        revealed = true;
+        var displayName = finalName || (selectedLottery && selectedLottery.name) || (names.length ? names[names.length - 1] : 'Lottery selected');
+        card.textContent = displayName || 'Lottery selected';
+        card.classList.remove('spinning');
+        card.classList.add('final');
+        card.disabled = true;
+        card.setAttribute('aria-disabled', 'true');
+        status.textContent = isRevision ? 'Lottery already selected - review below.' : 'Lottery selected!';
+        if (summary) {
+          summary.removeAttribute('hidden');
+        }
+        if (timeline) {
+          timeline.removeAttribute('hidden');
+        }
+        if (preview) {
+          preview.removeAttribute('hidden');
+        }
+        var data = selectedLottery;
+        if (!data && displayName && lotteriesByName[displayName]) {
+          data = lotteriesByName[displayName];
+        }
+        renderLotteryPreview(data);
+      }
+
+      function startDraw() {
+        if (drawStarted || revealed) {
+          return;
+        }
+        drawStarted = true;
+        card.disabled = true;
+        card.setAttribute('aria-disabled', 'true');
+        card.classList.remove('final');
+        card.textContent = 'Drawing...';
+        status.textContent = 'Drawing now...';
+        card.classList.add('spinning');
+        window.setTimeout(showNext, 400);
+      }
+
+      if (!names.length && !isRevision) {
+        revealFinal();
+        return;
+      }
+
+      var iteration = 0;
+      var totalCycles = Math.max(names.length * 4, 18);
+      var delay = 140;
+
+      function showNext() {
+        card.textContent = names[iteration % names.length];
+        iteration += 1;
+        delay = Math.min(delay + 35, 420);
+        if (iteration < totalCycles) {
+          window.setTimeout(showNext, delay);
+        } else {
+          window.setTimeout(revealFinal, 600);
+        }
+      }
+
+      if (isRevision) {
+        revealFinal();
+        return;
+      }
+
+      status.textContent = 'Click the card to start the draw.';
+      card.disabled = false;
+      card.removeAttribute('aria-disabled');
+      card.addEventListener('click', startDraw);
+    })();
+  </script>
 </body>
 </html>
 {{ endblock }}

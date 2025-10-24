@@ -1,0 +1,778 @@
+{{ block content }}
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Uni St.Gallen - Fortune Wheel</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="jumbotron.css" rel="stylesheet">
+
+  <style>
+    .otree-body {
+      max-width: 1280px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .main-container {
+      background-color: #ffffff;
+      padding: 2rem 0 3rem;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .wheel-section {
+      margin-top: 1.5rem;
+    }
+    .wheel-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+    }
+    .wheel-column {
+      flex: 1 1 360px;
+      max-width: 420px;
+    }
+    .wheel-context {
+      flex: 1 1 360px;
+      min-width: 320px;
+    }
+    .wheel-frame {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 28px solid #d1495b;
+      z-index: 3;
+    }
+    .wheel-pointer::after {
+      content: "";
+      position: absolute;
+      top: 26px;
+      left: -6px;
+      width: 12px;
+      height: 36px;
+      background: linear-gradient(180deg, #d1495b, #a13040);
+      border-radius: 6px;
+    }
+    .wheel-rotator {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+      background: #fff;
+      transform: rotate(0deg);
+      transition: transform 5.4s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .wheel-rotator svg {
+      width: 92%;
+      height: 92%;
+    }
+    .wheel-centre {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 38%;
+      height: 38%;
+      background: radial-gradient(circle at 30% 30%, #007095, #003f59);
+      border-radius: 50%;
+      box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+    .wheel-centre::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.38);
+    }
+    .wheel-actions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .wheel-actions button {
+      background-color: #007095;
+      border: none;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.9rem 2.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+    .wheel-actions button:hover:not([disabled]) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 112, 149, 0.25);
+      background-color: #005a79;
+    }
+    .wheel-actions button[disabled] {
+      background-color: #9cbac5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+    .wheel-status {
+      margin-top: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #007095;
+    }
+    .wheel-summary,
+    .wheel-outcomes,
+    .spin-summary {
+      background: rgba(245, 248, 250, 0.9);
+      border: 1px solid #d6e0e7;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 12px 28px rgba(14, 30, 37, 0.06);
+    }
+    .wheel-summary h3,
+    .wheel-outcomes h3,
+    .spin-summary h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #0f3c56;
+    }
+    .wheel-summary dl {
+      margin: 0;
+    }
+    .wheel-summary dt {
+      font-weight: 600;
+      color: #0f3c56;
+    }
+    .wheel-summary dd {
+      margin: 0 0 0.75rem;
+      color: #37474f;
+    }
+    .wheel-realized-list {
+      margin: 0.2rem 0 0 1.1rem;
+      color: #37474f;
+    }
+    .wheel-realized-list li {
+      margin-bottom: 0.35rem;
+    }
+    .wheel-outcomes-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .wheel-outcomes-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #dbe5eb;
+      font-size: 0.98rem;
+      color: #37474f;
+    }
+    .wheel-outcomes-list li:last-child {
+      border-bottom: none;
+    }
+    .wheel-outcomes-list .outcome-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .wheel-outcomes-list .outcome-label {
+      flex: 1;
+      font-weight: 500;
+    }
+    .wheel-outcomes-list .outcome-prob {
+      font-variant-numeric: tabular-nums;
+      color: #0f3c56;
+      font-weight: 600;
+    }
+    .spin-summary {
+      display: none;
+    }
+    .spin-summary.visible {
+      display: block;
+    }
+    .spin-summary .result-line {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #0c5c3c;
+    }
+    .spin-summary .next-step {
+      margin-top: 0.5rem;
+      color: #37474f;
+    }
+    .segment-slice {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .segment-winning {
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 6px rgba(11, 132, 87, 0.65));
+    }
+    @media (max-width: 960px) {
+      .wheel-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .wheel-column,
+      .wheel-context {
+        width: 100%;
+        max-width: 540px;
+      }
+      .wheel-frame {
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 576px) {
+      .wheel-summary,
+      .wheel-outcomes,
+      .spin-summary {
+        padding: 1rem 1.2rem;
+      }
+      .wheel-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-7">
+            <h1 class="university-title">
+              {{ if wheel_title }}
+              {{ wheel_title }}
+              {{ else }}
+              Spin the wheel for this session
+              {{ endif }}
+            </h1>
+            <p>
+              {{ if wheel_description }}
+              {{ wheel_description }}
+              {{ else }}
+              We now realize the next stage of your lottery. The result of this wheel will determine the branch you face in the following task.
+              {{ endif }}
+            </p>
+          </div>
+          <div class="col-lg-5">
+            <div class="content-image">
+              <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80" alt="Fortune wheel illustration" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="container wheel-section">
+        <div class="wheel-layout">
+          <div class="wheel-column">
+            <div class="wheel-frame" aria-live="polite">
+              <div class="wheel-pointer" id="wheel-pointer" aria-hidden="true"></div>
+              <div class="wheel-rotator" id="wheel-rotator">
+                <svg id="wheel-svg" viewBox="-250 -250 500 500" aria-hidden="true"></svg>
+              </div>
+              <div class="wheel-centre"></div>
+            </div>
+            <div class="wheel-actions">
+              <button type="button" id="spin-button">
+                {{ if wheel_spin_button }}
+                {{ wheel_spin_button }}
+                {{ else }}
+                Spin the wheel
+                {{ endif }}
+              </button>
+              <p class="wheel-status" id="wheel-status">
+                {{ if wheel_status_text }}
+                {{ wheel_status_text }}
+                {{ else }}
+                Click the button to reveal the outcome for this session.
+                {{ endif }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wheel-context">
+            <div class="wheel-summary">
+              <h3>Session context</h3>
+              <dl>
+                <dt>Lottery</dt>
+                <dd>
+                  {{ if lottery_name }}
+                  {{ lottery_name }}
+                  {{ else }}
+                  Selected lottery
+                  {{ endif }}
+                </dd>
+
+                {{ if wheel_stage_label }}
+                <dt>Current stage</dt>
+                <dd>{{ wheel_stage_label }}</dd>
+                {{ endif }}
+
+              </dl>
+
+              <div id="realized-summary" hidden>
+                <h4 style="font-size:1.05rem; font-weight:600; color:#0f3c56; margin-top:1rem;">Realized so far</h4>
+                <ul class="wheel-realized-list" id="realized-list"></ul>
+              </div>
+            </div>
+
+            <div class="wheel-outcomes">
+              <h3>Possible outcomes</h3>
+              <ul class="wheel-outcomes-list" id="wheel-outcomes-list">
+                <li>No lottery data provided.</li>
+              </ul>
+            </div>
+
+            <div class="spin-summary" id="spin-summary">
+              <h3>Result</h3>
+              <p class="result-line">
+                Outcome: <strong id="spin-result">Pending spin</strong>
+                {{next_button}}
+              </p>
+              {{ if wheel_next_step }}
+              <p class="next-step" id="next-step">{{ wheel_next_step }}</p>
+              {{ else }}
+              <p class="next-step" id="next-step" hidden></p>
+              {{ endif }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <p class="mt-3 text-muted">&copy; 2025 University of St. Gallen. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div style="display:none;">
+    {{ formfields }}
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src=\"../../assets/js/vendor/jquery-slim.min.js\"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+
+  <script>
+    (function () {
+      var svgNS = 'http://www.w3.org/2000/svg';
+      var segments = {{ if wheel_segments }}{{ wheel_segments|json }}{{ else }}[]{{ endif }};
+      var realizedPeriod1 = {{ if realized_period1 }}{{ realized_period1|json }}{{ else }}null{{ endif }};
+      var realizedPeriod2 = {{ if realized_period2 }}{{ realized_period2|json }}{{ else }}null{{ endif }};
+      var realizedPeriod3 = {{ if realized_period3 }}{{ realized_period3|json }}{{ else }}null{{ endif }};
+      var predeterminedLabel = {{ if wheel_result_label }}{{ wheel_result_label|json }}{{ else }}null{{ endif }};
+      var predeterminedId = {{ if wheel_result_id }}{{ wheel_result_id|json }}{{ else }}null{{ endif }};
+      var predeterminedValue = {{ if wheel_result_value }}{{ wheel_result_value|json }}{{ else }}null{{ endif }};
+      var autoSpin = {{ if auto_spin }}{{ auto_spin|json }}{{ else }}false{{ endif }};
+      var autoSubmit = {{ if auto_submit }}{{ auto_submit|json }}{{ else }}false{{ endif }};
+      var autoSubmitDelay = {{ if auto_submit_delay }}{{ auto_submit_delay }}{{ else }}0{{ endif }};
+      var resultFieldName = {{ if wheel_result_field }}{{ wheel_result_field|json }}{{ else }}null{{ endif }};
+      var resultJsonFieldName = {{ if wheel_result_json_field }}{{ wheel_result_json_field|json }}{{ else }}null{{ endif }};
+      var allowRespin = {{ if allow_respin }}{{ allow_respin|json }}{{ else }}false{{ endif }};
+      var wheelRotator = document.getElementById('wheel-rotator');
+      var wheelSvg = document.getElementById('wheel-svg');
+      var spinButton = document.getElementById('spin-button');
+      var statusEl = document.getElementById('wheel-status');
+      var outcomesListEl = document.getElementById('wheel-outcomes-list');
+      var summaryPanel = document.getElementById('spin-summary');
+      var summaryResultEl = document.getElementById('spin-result');
+      var nextStepEl = document.getElementById('next-step');
+      var realizedSummaryBox = document.getElementById('realized-summary');
+      var realizedList = document.getElementById('realized-list');
+      var formEl = document.querySelector('form');
+      var hasSpun = false;
+      var latestOutcome = null;
+      var palette = ['#007095', '#0096c7', '#48bfe3', '#64dfdf', '#80ffdb', '#56cfe1', '#5e60ce', '#6930c3', '#ff9f1c', '#ff4d6d', '#d1495b'];
+
+      function formatProb(value) {
+        var n = Number(value);
+        if (!Number.isFinite(n)) {
+          return '';
+        }
+        var pct = n * 100;
+        if (!Number.isFinite(pct)) {
+          return '';
+        }
+        var decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
+        return pct.toFixed(decimals) + '%';
+      }
+
+      function ensureSegments(data) {
+        if (!Array.isArray(data)) {
+          return [];
+        }
+        var anyProb = data.some(function (seg) {
+          return Number.isFinite(Number(seg && seg.probability));
+        });
+        var totalProb = 0;
+        var sanitized = data.map(function (seg, idx) {
+          var probability = Number(seg && seg.probability);
+          if (!Number.isFinite(probability) || probability <= 0) {
+            probability = anyProb ? 0 : 1;
+          }
+          totalProb += probability;
+          return {
+            id: seg && seg.id != null ? seg.id : null,
+            label: seg && seg.label ? String(seg.label) : 'Outcome ' + (idx + 1),
+            probability: probability,
+            color: seg && seg.color ? String(seg.color) : palette[idx % palette.length],
+            value: seg && seg.value != null ? seg.value : (seg && seg.id != null ? seg.id : (seg && seg.label ? seg.label : idx)),
+            raw: seg || {}
+          };
+        });
+        if (totalProb <= 0) {
+          totalProb = sanitized.length;
+          sanitized.forEach(function (seg) {
+            seg.probability = 1;
+          });
+        }
+        sanitized.forEach(function (seg) {
+          seg.normalized = seg.probability / totalProb;
+        });
+        return sanitized;
+      }
+
+      function addRealizedSummary() {
+        var collected = [];
+        function pushPeriod(periodNo, node) {
+          if (!node) return;
+          var label = node.label || ('Result ' + periodNo);
+          var prob = Number(node.probability);
+          var display = label;
+          if (Number.isFinite(prob)) {
+            var textProb = formatProb(prob);
+            if (textProb) {
+              display += ' (' + textProb + ')';
+            }
+          }
+          collected.push('Period ' + periodNo + ': ' + display);
+        }
+        pushPeriod(1, realizedPeriod1);
+        pushPeriod(2, realizedPeriod2);
+        pushPeriod(3, realizedPeriod3);
+        if (!collected.length || !realizedSummaryBox || !realizedList) {
+          return;
+        }
+        realizedList.innerHTML = '';
+        collected.forEach(function (text) {
+          var li = document.createElement('li');
+          li.textContent = text;
+          realizedList.appendChild(li);
+        });
+        realizedSummaryBox.hidden = false;
+      }
+
+      function describeSlice(radius, startDeg, endDeg) {
+        var start = (startDeg + 360) % 360;
+        var end = (endDeg + 360) % 360;
+        var sweep = endDeg - startDeg;
+        if (sweep <= 0) {
+          sweep += 360;
+        }
+        var largeArcFlag = sweep > 180 ? 1 : 0;
+        var startRad = startDeg * Math.PI / 180;
+        var endRad = (startDeg + sweep) * Math.PI / 180;
+        var x1 = radius * Math.cos(startRad);
+        var y1 = radius * Math.sin(startRad);
+        var x2 = radius * Math.cos(endRad);
+        var y2 = radius * Math.sin(endRad);
+        var path = [
+          'M 0 0',
+          'L ' + x1.toFixed(4) + ' ' + y1.toFixed(4),
+          'A ' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' 1 ' + x2.toFixed(4) + ' ' + y2.toFixed(4),
+          'Z'
+        ];
+        return path.join(' ');
+      }
+
+      function renderWheel(slices) {
+        if (!wheelSvg) return;
+        wheelSvg.innerHTML = '';
+        var radius = 240;
+        var labelRadius = radius * 0.66;
+        slices.forEach(function (seg, idx) {
+          var path = document.createElementNS(svgNS, 'path');
+          path.setAttribute('d', describeSlice(radius, seg.startDeg, seg.endDeg));
+          path.setAttribute('fill', seg.color);
+          path.setAttribute('class', 'segment-slice');
+          path.dataset.index = idx;
+          wheelSvg.appendChild(path);
+
+          var midRad = (seg.midDeg) * Math.PI / 180;
+          var text = document.createElementNS(svgNS, 'text');
+          text.setAttribute('x', (labelRadius * Math.cos(midRad)).toFixed(2));
+          text.setAttribute('y', (labelRadius * Math.sin(midRad)).toFixed(2));
+          text.setAttribute('fill', '#0f3c56');
+          text.setAttribute('font-size', '22');
+          text.setAttribute('font-weight', '600');
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('alignment-baseline', 'middle');
+          text.textContent = seg.label;
+          wheelSvg.appendChild(text);
+
+          var probText = document.createElementNS(svgNS, 'text');
+          probText.setAttribute('x', (labelRadius * 0.72 * Math.cos(midRad)).toFixed(2));
+          probText.setAttribute('y', (labelRadius * 0.72 * Math.sin(midRad)).toFixed(2));
+          probText.setAttribute('fill', '#37474f');
+          probText.setAttribute('font-size', '18');
+          probText.setAttribute('text-anchor', 'middle');
+          probText.setAttribute('alignment-baseline', 'middle');
+          var probLabel = formatProb(seg.normalized);
+          probText.textContent = probLabel || '';
+          wheelSvg.appendChild(probText);
+
+          seg.pathEl = path;
+        });
+      }
+
+      function renderOutcomesList(slices) {
+        if (!outcomesListEl) return;
+        outcomesListEl.innerHTML = '';
+        if (!slices.length) {
+          var fallback = document.createElement('li');
+          fallback.textContent = 'No lottery data provided.';
+          outcomesListEl.appendChild(fallback);
+          return;
+        }
+        slices.forEach(function (seg) {
+          var li = document.createElement('li');
+          var color = document.createElement('span');
+          color.className = 'outcome-color';
+          color.style.backgroundColor = seg.color;
+          var label = document.createElement('span');
+          label.className = 'outcome-label';
+          label.textContent = seg.label;
+          var prob = document.createElement('span');
+          prob.className = 'outcome-prob';
+          prob.textContent = formatProb(seg.normalized);
+          li.appendChild(color);
+          li.appendChild(label);
+          li.appendChild(prob);
+          outcomesListEl.appendChild(li);
+        });
+      }
+
+      function prepareSlices(data) {
+        var sanitized = ensureSegments(data);
+        if (!sanitized.length) {
+          return [];
+        }
+        var startDeg = -90;
+        sanitized.forEach(function (seg) {
+          var sweep = seg.normalized * 360;
+          seg.startDeg = startDeg;
+          seg.endDeg = startDeg + sweep;
+          seg.midDeg = seg.startDeg + sweep / 2;
+          startDeg = seg.endDeg;
+        });
+        // ensure last segment ends exactly at 270 to avoid precision issues
+        sanitized[sanitized.length - 1].endDeg = sanitized[sanitized.length - 1].midDeg * 2 - sanitized[sanitized.length - 1].startDeg;
+        return sanitized;
+      }
+
+      function findSegmentForOutcome(slices) {
+        if (!slices.length) {
+          return null;
+        }
+        var match = null;
+        if (predeterminedId != null) {
+          match = slices.find(function (seg) {
+            return seg.id === predeterminedId;
+          });
+        }
+        if (!match && predeterminedLabel != null) {
+          match = slices.find(function (seg) {
+            return seg.label === predeterminedLabel;
+          });
+        }
+        if (match) {
+          return match;
+        }
+        var draw = Math.random();
+        var cumulative = 0;
+        for (var i = 0; i < slices.length; i += 1) {
+          cumulative += slices[i].normalized;
+          if (draw <= cumulative || i === slices.length - 1) {
+            return slices[i];
+          }
+        }
+        return slices[slices.length - 1];
+      }
+
+      function setStatus(message) {
+        if (statusEl) {
+          statusEl.textContent = message;
+        }
+      }
+
+      function highlightSegment(seg) {
+        if (!seg) return;
+        wheelSvg.querySelectorAll('.segment-slice').forEach(function (slice) {
+          slice.classList.remove('segment-winning');
+        });
+        if (seg.pathEl) {
+          seg.pathEl.classList.add('segment-winning');
+        }
+      }
+
+      function updateHiddenFields(outcome) {
+        if (!outcome) return;
+        var value = predeterminedValue != null ? predeterminedValue : (outcome.value != null ? outcome.value : outcome.label);
+        if (resultFieldName) {
+          var field = document.querySelector('[name=\"' + resultFieldName + '\"]');
+          if (field) {
+            field.value = value;
+          }
+        }
+        if (resultJsonFieldName) {
+          var jsonField = document.querySelector('[name=\"' + resultJsonFieldName + '\"]');
+          if (jsonField) {
+            jsonField.value = JSON.stringify({
+              id: outcome.id,
+              label: outcome.label,
+              value: value,
+              probability: outcome.normalized
+            });
+          }
+        }
+        var dataField = document.querySelector('[data-wheel-result]');
+        if (dataField) {
+          dataField.value = value;
+        }
+      }
+
+      function completeSpin(outcome, finalRotation) {
+        latestOutcome = outcome;
+        highlightSegment(outcome);
+        var displayLabel = outcome ? outcome.label : 'Outcome';
+        if (summaryResultEl) {
+          summaryResultEl.textContent = displayLabel;
+        }
+        if (summaryPanel) {
+          summaryPanel.classList.add('visible');
+        }
+        setStatus('Outcome locked in. You may continue.');
+        updateHiddenFields(outcome);
+        if (!allowRespin && spinButton) {
+          spinButton.disabled = true;
+        }
+        if (autoSubmit && formEl) {
+          var delay = Number(autoSubmitDelay);
+          if (!Number.isFinite(delay) || delay < 0) {
+            delay = 800;
+          }
+          window.setTimeout(function () {
+            if (formEl && typeof formEl.submit === 'function') {
+              formEl.submit();
+            }
+          }, delay);
+        }
+      }
+
+      function spinWheel() {
+        if (hasSpun && !allowRespin) {
+          return;
+        }
+        if (!segmentsPrepared.length) {
+          setStatus('No lottery data available for spinning.');
+          return;
+        }
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+        hasSpun = true;
+        wheelRotator.style.transition = 'none';
+        wheelRotator.style.transform = 'rotate(0deg)';
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            var outcome = findSegmentForOutcome(segmentsPrepared);
+            if (!outcome) {
+              setStatus('Unable to resolve outcome. Please contact the experimenter.');
+              return;
+            }
+            var turns = 4 + Math.floor(Math.random() * 2); // 4 or 5 full spins
+            var finalRotation = (turns * 360) + (-90 - outcome.midDeg);
+            wheelRotator.style.transition = 'transform 5.4s cubic-bezier(0.22, 1, 0.36, 1)';
+            wheelRotator.style.transform = 'rotate(' + finalRotation + 'deg)';
+            setStatus('Spinning...');
+            var onEnd = function () {
+              wheelRotator.removeEventListener('transitionend', onEnd);
+              completeSpin(outcome, finalRotation);
+            };
+            wheelRotator.addEventListener('transitionend', onEnd);
+          });
+        });
+      }
+
+      addRealizedSummary();
+
+      var segmentsPrepared = prepareSlices(segments);
+      renderWheel(segmentsPrepared);
+      renderOutcomesList(segmentsPrepared);
+
+      if (!segmentsPrepared.length) {
+        setStatus('Lottery data missing. Please inform the experimenter.');
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+        return;
+      }
+
+      if (spinButton) {
+        spinButton.addEventListener('click', spinWheel);
+      }
+
+      if (autoSpin) {
+        window.setTimeout(spinWheel, 600);
+      }
+    })();
+  </script>
+</body>
+</html>
+{{ endblock }}

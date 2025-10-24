@@ -33,7 +33,7 @@ class Constants(BaseConstants):
     # Dictionary of lottery structures
     lotteries = {
         'lottery_1': {
-            'name': 'Four-Outcome Three-Period Lottery 0',
+            'name': 'Apple',
             'outcome_number': 4,
             'max_payoff': 40,
             'min_payoff': -12,
@@ -57,7 +57,7 @@ class Constants(BaseConstants):
             }
         },
         'lottery_2': {
-            'name': 'Six-Outcome Three-Period Lottery 0',
+            'name': 'Banana',
             'outcome_number': 6,
             'max_payoff': 825,
             'min_payoff': -1245,
@@ -128,7 +128,7 @@ class Player(BasePlayer):
 
 
 # Dynamically add the multiple choice list fields (supports up to long list length)
-for i in range(1, Constants.max_choice_count + 1):
+for i in range(1, Constants.max_choice_count + 1): 
     setattr(
         Player,
         f'chf_{i}',
@@ -456,7 +456,7 @@ class Play(Page):
             schedule_session_start(
                 player,
                 prefix='session2',
-                wait_seconds=6,
+                wait_seconds=86400,
                 future_round=Constants.continuation_rounds[0],
             )
             ensure_payment_lottery_selected(player)
@@ -505,6 +505,98 @@ def build_play_context(player, choice_lottery, display_lottery=None, base_offset
         'display_lottery': json.dumps(display_lottery),
         'choice_lottery': json.dumps(choice_lottery),
         'base_offset': base_offset,
+    }
+
+
+def _wheel_node_identifier(period, node):
+    """Build a stable identifier for a lottery node used in the fortune wheel."""
+    if not isinstance(node, dict):
+        return None
+    label = node.get('label') or f'Outcome_{period}'
+    parent = node.get('from') or 'Start'
+    return f'{period}:{parent}:{label}'
+
+
+def build_wheel_segments(lottery, period, realized_nodes=None):
+    """Return the wheel segments for the specified lottery period."""
+    realized_nodes = realized_nodes or {}
+    periods = (lottery or {}).get('periods', {})
+    nodes = periods.get(period, [])
+    if not isinstance(nodes, list):
+        return []
+
+    if period == 1:
+        parent_labels = {'Start'}
+    else:
+        prev = realized_nodes.get(period - 1) or {}
+        parent_label = prev.get('label')
+        parent_labels = {parent_label} if parent_label else None
+
+    segments = []
+    for idx, node in enumerate(nodes):
+        if not isinstance(node, dict):
+            continue
+        parent = node.get('from') or 'Start'
+        if parent_labels and parent not in parent_labels:
+            continue
+        label = node.get('label') or f'Outcome {idx + 1}'
+        probability = node.get('probability')
+        segment_id = _wheel_node_identifier(period, node) or f'{period}:{idx}'
+        segments.append(
+            {
+                'id': segment_id,
+                'label': label,
+                'probability': probability,
+                'value': label,
+            }
+        )
+    return segments
+
+
+def build_wheel_context(
+    player,
+    *,
+    period,
+    title,
+    description,
+    stage_label,
+    status_text,
+    button_label,
+    next_step,
+    auto_spin=False,
+    auto_submit=False,
+    auto_submit_delay=0,
+):
+    """Assemble template variables for the fortune wheel page."""
+    store = ensure_payment_setup(player)
+    ensure_realized_up_to(player, period, store=store)
+    lottery = get_selected_lottery(player, store=store)
+    realized_nodes = store.get('realized_nodes', {})
+    segments = build_wheel_segments(lottery, period, realized_nodes)
+    predetermined = realized_nodes.get(period) or {}
+
+    return {
+        'wheel_title': title,
+        'wheel_description': description,
+        'wheel_stage_label': stage_label,
+        'wheel_status_text': status_text,
+        'wheel_spin_button': button_label,
+        'wheel_next_step': next_step,
+        'wheel_segments': segments,
+        'wheel_result_label': predetermined.get('label'),
+        'wheel_result_id': _wheel_node_identifier(period, predetermined),
+        'wheel_result_value': predetermined.get('label'),
+        'auto_spin': auto_spin,
+        'auto_submit': auto_submit,
+        'auto_submit_delay': auto_submit_delay,
+        'allow_respin': False,
+        'wheel_result_field': None,
+        'wheel_result_json_field': None,
+        'lottery_name': store.get('lottery_name') or lottery.get('name'),
+        'continuation_rounds': Constants.continuation_rounds,
+        'realized_period1': realized_nodes.get(1),
+        'realized_period2': realized_nodes.get(2),
+        'realized_period3': realized_nodes.get(3),
     }
 
 
@@ -615,13 +707,17 @@ class Draw(Page):
     @staticmethod
     def vars_for_template(player):
         store = ensure_payment_lottery_selected(player)
+        full_lottery = get_selected_lottery(player, store=store)
         return {
             'selected_round': store.get('selected_round'),
             'selected_choice': store.get('selected_choice'),
             'selected_option': store.get('selected_option'),
             'selected_amount': store.get('selected_amount'),
             'lottery_name': store.get('lottery_name'),
+            'lottery_id': store.get('lottery_id'),
+            'selected_lottery': json.dumps(full_lottery),
             'continuation_rounds': Constants.continuation_rounds,
+            'is_revision': False,
         }
 
     @staticmethod
@@ -700,7 +796,7 @@ class Play2(Page):
             schedule_session_start(
                 player,
                 prefix='session3',
-                wait_seconds=6,
+                wait_seconds=86400,
                 future_round=Constants.continuation_rounds[1],
             )
 
@@ -762,6 +858,103 @@ class Play3(Page):
                 store['final_outcome_label'] = final_node.get('label')
             player.participant.vars['session1_final_payoff'] = final_payoff
 
+
+class Revision(Page):
+    # This page is only displayed in the continuation rounds to show the drawn lottery.
+    template_name = 'session1/Draw.html'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number  in (15, 16, 17)
+
+    @staticmethod
+    def vars_for_template(player):
+        store = ensure_payment_lottery_selected(player)
+        full_lottery = get_selected_lottery(player, store=store)
+        realized_nodes = store.get('realized_nodes', {}) or {}
+
+        realized_summary = []
+        for period in sorted(realized_nodes.keys()):
+            node = realized_nodes.get(period) or {}
+            label = node.get('label') or ''
+            probability = node.get('probability')
+            probability_text = None
+            if isinstance(probability, (int, float)):
+                probability_text = f"{probability * 100:.0f}%"
+            realized_summary.append(
+                {
+                    'period': period,
+                    'label': label,
+                    'probability_text': probability_text,
+                }
+            )
+
+        final_payoff = store.get('final_payoff')
+        if final_payoff is not None:
+            final_payoff_text = str(final_payoff)
+        else:
+            final_payoff_text = None
+
+        return {
+            'selected_round': store.get('selected_round'),
+            'selected_choice': store.get('selected_choice'),
+            'selected_option': store.get('selected_option'),
+            'selected_amount': store.get('selected_amount'),
+            'lottery_name': store.get('lottery_name'),
+            'lottery_id': store.get('lottery_id'),
+            'realized_summary': realized_summary,
+            'final_payoff_text': final_payoff_text,
+            'selected_lottery': json.dumps(full_lottery),
+            'continuation_rounds': Constants.continuation_rounds,
+            'is_revision': True,
+            'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+        }
+
+
+
+class WheelSession2(Page):
+    """Fortune wheel to realize the first continuation outcome (for Session 2)."""
+    template_name = 'session1/fortune_wheel.html'
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.initial_evaluation_rounds
+
+    @staticmethod
+    def vars_for_template(player):
+        return build_wheel_context(
+            player,
+            period=1,
+            title='Spin for Session 2',
+            description='We now realize the first period of your lottery. The outcome applies to Session 2 (Play2).',
+            stage_label='Period 1 outcome',
+            status_text='Click the button to reveal the branch you will face in Session 2 (Play2).',
+            button_label='Spin for Session 2',
+            next_step='This outcome determines the branch you will evaluate in Session 2 (Play2).',
+        )
+
+
+class WheelSession3(Page):
+    """Fortune wheel to realize the second continuation outcome (for Session 3)."""
+    template_name = 'session1/fortune_wheel.html'
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.continuation_rounds[0]
+
+    @staticmethod
+    def vars_for_template(player):
+        return build_wheel_context(
+            player,
+            period=2,
+            title='Spin for Session 3',
+            description='We now realize the second period of your lottery. The outcome applies to Session 3 (Play3).',
+            stage_label='Period 2 outcome',
+            status_text='Click the button to reveal the branch you will face in Session 3 (Play3).',
+            button_label='Spin for Session 3',
+            next_step='This outcome determines the branch you will evaluate in Session 3 (Play3).',
+        )
+
+
 class Thankyou(Page):
     @staticmethod
     def is_displayed(player):
@@ -796,10 +989,13 @@ page_sequence = [
     Failed,
     Play,
     Draw,
+    WheelSession2,
     BridgeSession2,
     WelcomeSession2,
     session2,
     Play2,
+    WheelSession3,
+    Revision,
     BridgeSession3,
     WelcomeSession3,
     session3,
