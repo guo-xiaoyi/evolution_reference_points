@@ -415,6 +415,7 @@
       var resultFieldName = {{ if wheel_result_field }}{{ wheel_result_field|json }}{{ else }}null{{ endif }};
       var resultJsonFieldName = {{ if wheel_result_json_field }}{{ wheel_result_json_field|json }}{{ else }}null{{ endif }};
       var allowRespin = {{ if allow_respin }}{{ allow_respin|json }}{{ else }}false{{ endif }};
+      var wheelPeriod = {{ if wheel_period }}{{ wheel_period|json }}{{ else }}null{{ endif }};
       var wheelRotator = document.getElementById('wheel-rotator');
       var wheelSvg = document.getElementById('wheel-svg');
       var spinButton = document.getElementById('spin-button');
@@ -429,6 +430,11 @@
       var hasSpun = false;
       var latestOutcome = null;
       var palette = ['#007095', '#0096c7', '#48bfe3', '#64dfdf', '#80ffdb', '#56cfe1', '#5e60ce', '#6930c3', '#ff9f1c', '#ff4d6d', '#d1495b'];
+      var realizedEntries = [];
+      var realizedMap = new Map();
+      if (realizedPeriod1) realizedMap.set(1, realizedPeriod1);
+      if (realizedPeriod2) realizedMap.set(2, realizedPeriod2);
+      if (realizedPeriod3) realizedMap.set(3, realizedPeriod3);
 
       function formatProb(value) {
         var n = Number(value);
@@ -478,30 +484,54 @@
         return sanitized;
       }
 
-      function addRealizedSummary() {
-        var collected = [];
-        function pushPeriod(periodNo, node) {
+      function buildRealizedEntries(includeCurrentPeriod) {
+        var showAll = wheelPeriod == null;
+        var entries = [];
+        realizedMap.forEach(function (node, period) {
           if (!node) return;
-          var label = node.label || ('Result ' + periodNo);
-          var prob = Number(node.probability);
-          var display = label;
-          if (Number.isFinite(prob)) {
-            var textProb = formatProb(prob);
-            if (textProb) {
-              display += ' (' + textProb + ')';
+          if (!showAll) {
+            if (period > wheelPeriod) {
+              return;
+            }
+            if (period === wheelPeriod && !includeCurrentPeriod) {
+              return;
             }
           }
-          collected.push('Period ' + periodNo + ': ' + display);
-        }
-        pushPeriod(1, realizedPeriod1);
-        pushPeriod(2, realizedPeriod2);
-        pushPeriod(3, realizedPeriod3);
-        if (!collected.length || !realizedSummaryBox || !realizedList) {
+          var label = node.label || ('Outcome ' + period);
+          var probText = '';
+          var prob = Number(node.probability);
+          if (Number.isFinite(prob)) {
+            var formatted = formatProb(prob);
+            if (formatted) {
+              probText = formatted;
+            }
+          }
+          entries.push({
+            period: period,
+            label: label,
+            probabilityText: probText
+          });
+        });
+        entries.sort(function (a, b) { return a.period - b.period; });
+        return entries;
+      }
+
+      function renderRealizedSummary(includeCurrentPeriod) {
+        if (!realizedSummaryBox || !realizedList) {
           return;
         }
+        var entries = buildRealizedEntries(includeCurrentPeriod);
         realizedList.innerHTML = '';
-        collected.forEach(function (text) {
+        if (!entries.length) {
+          realizedSummaryBox.hidden = true;
+          return;
+        }
+        entries.forEach(function (entry) {
           var li = document.createElement('li');
+          var text = 'Period ' + entry.period + ': ' + entry.label;
+          if (entry.probabilityText) {
+            text += ' (' + entry.probabilityText + ')';
+          }
           li.textContent = text;
           realizedList.appendChild(li);
         });
@@ -699,6 +729,7 @@
         }
         setStatus('Outcome locked in. You may continue.');
         updateHiddenFields(outcome);
+        renderRealizedSummary(true);
         if (!allowRespin && spinButton) {
           spinButton.disabled = true;
         }
@@ -750,7 +781,7 @@
         });
       }
 
-      addRealizedSummary();
+      renderRealizedSummary(wheelPeriod == null ? true : false);
 
       var segmentsPrepared = prepareSlices(segments);
       renderWheel(segmentsPrepared);

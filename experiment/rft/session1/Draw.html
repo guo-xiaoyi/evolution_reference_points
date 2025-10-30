@@ -181,6 +181,13 @@
     }
 
     .col { fill: #f5f5f7; stroke: #d5d5d5; }
+    .col.highlight-col { fill: #fff1b8; stroke: #f0b429; stroke-width: 2; }
+    .link.link-highlight { stroke: #f0b429; stroke-width: 3; }
+    .payout.highlight-node,
+    .prob.highlight-node {
+      fill: #b56600;
+      font-weight: 600;
+    }
     .title { font-size: 15px; font-weight: 600; fill: #333; }
     .payout { font-size: 15px; fill: #1c3b4d; }
     .prob { font-size: 12px; fill: #2a8f2a; }
@@ -380,6 +387,13 @@
       var preview = document.getElementById('lottery-preview');
       var mount = document.getElementById('lottery-visualization');
       var isRevision = {{ is_revision|json }};
+      var realizedNodesData = {{ realized_nodes_json|safe }};
+      if (!realizedNodesData || typeof realizedNodesData !== 'object') {
+        realizedNodesData = {};
+      }
+      if (!isRevision) {
+        realizedNodesData = {};
+      }
       var lotteries = {{ Constants.lotteries|json }};
       var finalName = {{ lottery_name|json }};
       var selectedLotteryId = {{ lottery_id|json }};
@@ -453,6 +467,29 @@
             return Object.assign({}, node);
           });
         });
+        var realizedSetByPeriod = new Map();
+        Object.keys(realizedNodesData || {}).forEach(function (key) {
+          var period = Number(key);
+          if (!Number.isFinite(period)) {
+            return;
+          }
+          if (keys.indexOf(period) === -1) {
+            return;
+          }
+          var node = realizedNodesData[key];
+          if (!node || !node.label) {
+            return;
+          }
+          var set = realizedSetByPeriod.get(period);
+          if (!set) {
+            set = new Set();
+            realizedSetByPeriod.set(period, set);
+          }
+          set.add(node.label);
+        });
+        if (realizedSetByPeriod.size && keys.indexOf(0) !== -1 && !realizedSetByPeriod.has(0)) {
+          realizedSetByPeriod.set(0, new Set(['Start']));
+        }
         var H = 640;
         var colW = 260;
         var colGap = 10;
@@ -530,8 +567,11 @@
         defs.appendChild(marker);
         svg.appendChild(defs);
         var overlays = [];
-        var columnLayouts = periods.map(function (nodes) {
+        var columnLayouts = periods.map(function (nodes, idx) {
           var layout = { groups: [], nodeAnchors: new Map() };
+          var periodKey = keys[idx];
+          layout.periodKey = periodKey;
+          layout.realizedSet = realizedSetByPeriod.get(periodKey) || null;
           var innerTop = topPad + 60;
           var innerBottom = H - topPad - 40;
           var count = Math.max(nodes.length, 1);
@@ -579,16 +619,21 @@
           layout.colX = x;
           layout.lineStartX = x + colW - 16;
           layout.lineEndX = x + 16;
-          svg.appendChild(mk('rect', { x: x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: 'col' }));
+          var periodKey = layout.periodKey;
+          var columnClass = 'col';
+          if (layout.realizedSet && layout.realizedSet.size) {
+            columnClass += ' highlight-col';
+          }
+          svg.appendChild(mk('rect', { x: x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: columnClass }));
           var titleLabel;
-          if (i === 0) {
-            titleLabel = 'Current session';
-          } else if (i === 1) {
-            titleLabel = 'Session 2';
-          } else if (i === 2) {
-            titleLabel = 'Session 3';
+          if (periodKey === 0) {
+            titleLabel = 'Start';
+          } else if (periodKey === 1) {
+            titleLabel = 'Period 1 (Session 2)';
+          } else if (periodKey === 2) {
+            titleLabel = 'Period 2 (Session 3)';
           } else {
-            titleLabel = 'Period ' + i;
+            titleLabel = 'Period ' + periodKey;
           }
           svg.appendChild(mk('text', { x: x + colW / 2, y: topPad + 18, class: 'title', 'text-anchor': 'middle' }, titleLabel));
           var wheelCx = x + wheelCxOffset;
@@ -600,12 +645,14 @@
               var labelY = group.wheelCy;
               var labelText = group.parent === 'Start' ? 'From start:' : 'From ' + group.parent + ':';
               svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
-              drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
+              drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes, layout.realizedSet);
             }
+            var realizedSet = layout.realizedSet;
             group.outcomes.forEach(function (outcome) {
               var node = outcome.node;
               var y = outcome.y;
               var centerX = x + colW / 2;
+              var isRealizedNode = realizedSet && realizedSet.has(node.label);
               overlays.push({
                 xLeft: centerX - 50,
                 xRight: centerX + 50,
@@ -613,17 +660,19 @@
                 labelX: centerX,
                 probX: centerX + 30,
                 label: node.label,
-                prob: fmtProb(node.probability)
+                probText: fmtProb(node.probability),
+                state: isRealizedNode ? 'highlight' : 'normal'
               });
               layout.nodeAnchors.set(node.label, {
                 y: y,
                 inX: centerX,
-                outX: centerX
+                outX: centerX,
+                realized: isRealizedNode
               });
             });
           });
         });
-        function drawWheel(target, cx, cy, r, slices) {
+        function drawWheel(target, cx, cy, r, slices, highlightSet) {
           var ring = mk('circle', { cx: cx, cy: cy, r: r + 4, class: 'ring' });
           target.appendChild(ring);
           var tot = slices.reduce(function (sum, s) {
@@ -651,36 +700,40 @@
           if (segments.length) {
             var weighted = segments.reduce(function (acc, seg) {
               var targetAngle = typeof seg.slice.targetAngle === 'number' ? seg.slice.targetAngle : seg.mid;
-              var diff = normalizeAngle(targetAngle - seg.mid);
-              return acc + diff * seg.size;
-            }, 0);
-            offset = weighted / totalSize;
+            var diff = normalizeAngle(targetAngle - seg.mid);
+            return acc + diff * seg.size;
+          }, 0);
+          offset = weighted / totalSize;
+        }
+        segments.forEach(function (seg, idx) {
+          var start = seg.start + offset;
+          var end = seg.end + offset;
+          var mid = (start + end) / 2;
+          var large = (end - start) > Math.PI ? 1 : 0;
+          var x1 = cx + r * Math.cos(start);
+          var y1 = cy + r * Math.sin(start);
+          var x2 = cx + r * Math.cos(end);
+          var y2 = cy + r * Math.sin(end);
+          var path = 'M ' + cx + ',' + cy + ' L ' + x1 + ',' + y1 + ' A ' + r + ',' + r + ' 0 ' + large + ',1 ' + x2 + ',' + y2 + ' Z';
+          var isHighlightedSlice = highlightSet && highlightSet.has(seg.slice.node.label);
+          var sliceFill = isHighlightedSlice ? '#f0b429' : pick(idx);
+          var sliceStroke = isHighlightedSlice ? '#b56600' : '#333';
+          target.appendChild(mk('path', { d: path, fill: sliceFill, stroke: sliceStroke, 'stroke-width': isHighlightedSlice ? 2 : 1.5 }));
+          if (seg.p > 0.07) {
+            var lx = cx + (r * 0.55) * Math.cos(mid);
+            var ly = cy + (r * 0.55) * Math.sin(mid);
+            target.appendChild(mk('text', {
+              x: lx,
+              y: ly,
+              'text-anchor': 'middle',
+              'dominant-baseline': 'middle',
+              'font-size': 12,
+              'fill': isHighlightedSlice ? '#b56600' : '#333'
+            }, fmtProb(seg.p)));
           }
-          segments.forEach(function (seg, idx) {
-            var start = seg.start + offset;
-            var end = seg.end + offset;
-            var mid = (start + end) / 2;
-            var large = (end - start) > Math.PI ? 1 : 0;
-            var x1 = cx + r * Math.cos(start);
-            var y1 = cy + r * Math.sin(start);
-            var x2 = cx + r * Math.cos(end);
-            var y2 = cy + r * Math.sin(end);
-            var path = 'M ' + cx + ',' + cy + ' L ' + x1 + ',' + y1 + ' A ' + r + ',' + r + ' 0 ' + large + ',1 ' + x2 + ',' + y2 + ' Z';
-            target.appendChild(mk('path', { d: path, fill: pick(idx), stroke: '#333', 'stroke-width': 1.5 }));
-            if (seg.p > 0.07) {
-              var lx = cx + (r * 0.55) * Math.cos(mid);
-              var ly = cy + (r * 0.55) * Math.sin(mid);
-              target.appendChild(mk('text', {
-                x: lx,
-                y: ly,
-                'text-anchor': 'middle',
-                'dominant-baseline': 'middle',
-                'font-size': 12
-              }, fmtProb(seg.p)));
-            }
-          });
-          var tri = 'M ' + cx + ',' + (cy - (r + 14)) + ' l 8,12 l -16,0 z';
-          target.appendChild(mk('path', { d: tri, fill: '#333' }));
+        });
+        var tri = 'M ' + cx + ',' + (cy - (r + 14)) + ' l 8,12 l -16,0 z';
+        target.appendChild(mk('path', { d: tri, fill: '#333' }));
         }
         var linkLayer = mk('g');
         svg.appendChild(linkLayer);
@@ -715,40 +768,61 @@
             }
             var fromX = fromAnchor.outX != null ? fromAnchor.outX : current.lineStartX;
             var toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
+            var fromSet = current.realizedSet;
+            var toSet = next.realizedSet;
+            var isHighlightLink = !!(fromSet && fromSet.has(link.parent) && toSet && toSet.has(link.label));
+            var lineClass = 'link';
+            if (isHighlightLink) {
+              lineClass += ' link-highlight';
+            }
             linkLayer.appendChild(mk('line', {
               x1: fromX,
               y1: fromAnchor.y,
               x2: toX,
               y2: toAnchor.y,
-              class: 'link'
+              class: lineClass
             }));
             var midX = (fromX + toX) / 2;
             var midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
-            linkLayer.appendChild(mk('text', { x: midX, y: midY, class: 'prob', 'text-anchor': 'middle' }, fmtProb(link.prob)));
+            var probClass = 'prob';
+            var probFill = '#2a8f2a';
+            if (isHighlightLink) {
+              probClass += ' highlight-node';
+              probFill = '#b56600';
+            }
+            linkLayer.appendChild(mk('text', { x: midX, y: midY, class: probClass, 'text-anchor': 'middle', fill: probFill }, fmtProb(link.prob)));
           });
         }
         overlays.forEach(function (o) {
           var rectX = Math.min(o.xLeft, o.xRight);
           var rectW = Math.abs(o.xRight - o.xLeft);
           var rectY = o.y - 25 + 6;
+          var isHighlight = o.state === 'highlight';
           svg.appendChild(mk('rect', {
             x: rectX,
             y: rectY,
             width: rectW,
             height: 25,
             rx: 8,
-            fill: '#ffffff',
+            fill: isHighlight ? '#fff3c9' : '#ffffff',
             opacity: 0.95,
-            stroke: '#dddddd'
+            stroke: isHighlight ? '#f0b429' : '#dddddd'
           }));
           svg.appendChild(mk('text', {
             x: o.labelX,
             y: o.y,
-            class: 'payout',
+            class: isHighlight ? 'payout highlight-node' : 'payout',
             'text-anchor': 'middle',
-            'dominant-baseline': 'top'
+            'dominant-baseline': 'top',
+            fill: isHighlight ? '#b56600' : '#1c3b4d'
           }, o.label));
-
+          svg.appendChild(mk('text', {
+            x: o.probX,
+            y: o.y + 16,
+            class: isHighlight ? 'prob highlight-node' : 'prob',
+            'text-anchor': 'middle',
+            fill: isHighlight ? '#b56600' : '#37474f'
+          }, o.probText));
         });
         mount.innerHTML = '';
         mount.appendChild(svg);

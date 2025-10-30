@@ -592,12 +592,36 @@ def build_wheel_context(
         'allow_respin': False,
         'wheel_result_field': None,
         'wheel_result_json_field': None,
+        'wheel_period': period,
         'lottery_name': store.get('lottery_name') or lottery.get('name'),
         'continuation_rounds': Constants.continuation_rounds,
         'realized_period1': realized_nodes.get(1),
         'realized_period2': realized_nodes.get(2),
         'realized_period3': realized_nodes.get(3),
     }
+
+
+def build_realized_display(store):
+    """Produce helper structures for realized nodes and payoff text."""
+    realized_nodes = store.get('realized_nodes', {}) or {}
+    summary = []
+    for period in sorted(realized_nodes.keys()):
+        node = realized_nodes.get(period) or {}
+        label = node.get('label') or ''
+        probability = node.get('probability')
+        probability_text = None
+        if isinstance(probability, (int, float)):
+            probability_text = f"{probability * 100:.0f}%"
+        summary.append(
+            {
+                'period': period,
+                'label': label,
+                'probability_text': probability_text,
+            }
+        )
+    final_payoff = store.get('final_payoff')
+    final_payoff_text = str(final_payoff) if final_payoff is not None else None
+    return summary, realized_nodes, final_payoff_text
 
 
 def store_cutoff_choice(player, lottery, base_offset=0):
@@ -708,6 +732,7 @@ class Draw(Page):
     def vars_for_template(player):
         store = ensure_payment_lottery_selected(player)
         full_lottery = get_selected_lottery(player, store=store)
+        realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
         return {
             'selected_round': store.get('selected_round'),
             'selected_choice': store.get('selected_choice'),
@@ -718,6 +743,10 @@ class Draw(Page):
             'selected_lottery': json.dumps(full_lottery),
             'continuation_rounds': Constants.continuation_rounds,
             'is_revision': False,
+            'realized_summary': realized_summary,
+            'realized_nodes_json': json.dumps(realized_nodes),
+            'final_payoff_text': final_payoff_text,
+            'current_session_number': None,
         }
 
     @staticmethod
@@ -859,40 +888,18 @@ class Play3(Page):
             player.participant.vars['session1_final_payoff'] = final_payoff
 
 
-class Revision(Page):
+class Revision_session2(Page):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
     template_name = 'session1/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number  in (15, 16, 17)
+        return player.round_number == Constants.continuation_rounds[0]
 
     @staticmethod
     def vars_for_template(player):
         store = ensure_payment_lottery_selected(player)
         full_lottery = get_selected_lottery(player, store=store)
-        realized_nodes = store.get('realized_nodes', {}) or {}
-
-        realized_summary = []
-        for period in sorted(realized_nodes.keys()):
-            node = realized_nodes.get(period) or {}
-            label = node.get('label') or ''
-            probability = node.get('probability')
-            probability_text = None
-            if isinstance(probability, (int, float)):
-                probability_text = f"{probability * 100:.0f}%"
-            realized_summary.append(
-                {
-                    'period': period,
-                    'label': label,
-                    'probability_text': probability_text,
-                }
-            )
-
-        final_payoff = store.get('final_payoff')
-        if final_payoff is not None:
-            final_payoff_text = str(final_payoff)
-        else:
-            final_payoff_text = None
+        realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
 
         return {
             'selected_round': store.get('selected_round'),
@@ -902,6 +909,7 @@ class Revision(Page):
             'lottery_name': store.get('lottery_name'),
             'lottery_id': store.get('lottery_id'),
             'realized_summary': realized_summary,
+            'realized_nodes_json': json.dumps(realized_nodes),
             'final_payoff_text': final_payoff_text,
             'selected_lottery': json.dumps(full_lottery),
             'continuation_rounds': Constants.continuation_rounds,
@@ -909,7 +917,34 @@ class Revision(Page):
             'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
         }
 
+class Revision_session3(Page):
+    # This page is only displayed in the continuation rounds to show the drawn lottery.
+    template_name = 'session1/Draw.html'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.continuation_rounds[1]
 
+    @staticmethod
+    def vars_for_template(player):
+        store = ensure_payment_lottery_selected(player)
+        full_lottery = get_selected_lottery(player, store=store)
+        realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
+
+        return {
+            'selected_round': store.get('selected_round'),
+            'selected_choice': store.get('selected_choice'),
+            'selected_option': store.get('selected_option'),
+            'selected_amount': store.get('selected_amount'),
+            'lottery_name': store.get('lottery_name'),
+            'lottery_id': store.get('lottery_id'),
+            'realized_summary': realized_summary,
+            'realized_nodes_json': json.dumps(realized_nodes),
+            'final_payoff_text': final_payoff_text,
+            'selected_lottery': json.dumps(full_lottery),
+            'continuation_rounds': Constants.continuation_rounds,
+            'is_revision': True,
+            'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+        }
 
 class WheelSession2(Page):
     """Fortune wheel to realize the first continuation outcome (for Session 2)."""
@@ -981,6 +1016,36 @@ class session3(Page):
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
 
+class Revision_session1(Page):
+    template_name = 'session1/Draw.html'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.initial_evaluation_rounds
+    
+    @staticmethod
+    def vars_for_template(player):
+        store = ensure_payment_lottery_selected(player)
+        full_lottery = get_selected_lottery(player, store=store)
+        realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
+
+        return {
+            'selected_round': store.get('selected_round'),
+            'selected_choice': store.get('selected_choice'),
+            'selected_option': store.get('selected_option'),
+            'selected_amount': store.get('selected_amount'),
+            'lottery_name': store.get('lottery_name'),
+            'lottery_id': store.get('lottery_id'),
+            'realized_summary': realized_summary,
+            'realized_nodes_json': json.dumps(realized_nodes),
+            'final_payoff_text': final_payoff_text,
+            'selected_lottery': json.dumps(full_lottery),
+            'continuation_rounds': Constants.continuation_rounds,
+            'is_revision': True,
+            'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+        }
+
+
+
 page_sequence = [
     Welcome,
     session1,
@@ -990,14 +1055,16 @@ page_sequence = [
     Play,
     Draw,
     WheelSession2,
+    Revision_session1,
     BridgeSession2,
     WelcomeSession2,
     session2,
+    Revision_session2,
     Play2,
     WheelSession3,
-    Revision,
     BridgeSession3,
     WelcomeSession3,
+    Revision_session3,
     session3,
     Play3,
     Thankyou,
