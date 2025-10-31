@@ -38,7 +38,7 @@ warnings.filterwarnings('ignore')
 # Manually specify alternate CPT parameter sets here (alpha, lambda, gamma)
 # Example: ALT_PARAMS = ["0.88,2.25,0.61", "0.80,2.00,0.70"]
 alpha_candidates = np.linspace(0.75, 0.95, 5)
-lambda_candidates = np.linspace(1.5, 2.5, 5)
+lambda_candidates = np.linspace(1, 2.5, 8) # let lambda vary more widely (1 allows risk neutral)
 gamma_candidates = np.linspace(0.58, 0.70, 5)
 ALT_PARAMS: Optional[List[str]] = [f"{alpha},{lambda_},{gamma}" for alpha in alpha_candidates for lambda_ in lambda_candidates for gamma in gamma_candidates]
 
