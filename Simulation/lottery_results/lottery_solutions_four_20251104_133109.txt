@@ -1,0 +1,364 @@
+================================================================================
+Unified Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-11-04 13:31:09
+Mode: outcomes=4, stake=lo
+Solutions found: 9
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-50, 50]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 4,116,510
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.180000
+Timestamp: 2025-11-04 12:14:48
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -5, b12=  5
+  Stage 2: c21= -3, c22=  3
+  Stage 3: c31= 17, c32=-43, c33=-25, c34=  1
+  Probabilities: p1=0.100, p2=0.700, p3=0.300
+Final outcomes:
+  z1 = 0+-5+-3+17 = 9 (prob=0.070)
+  z2 = 0+-5+-3+-43 = -51 (prob=0.030)
+  z3 = 0+5+3+-25 = -17 (prob=0.270)
+  z4 = 0+5+3+1 = 9 (prob=0.630)
+  Expected value: 0.180000
+
+Constraint verification:
+  1. Expected value constraint: 0.180000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-11.924, 9.000]
+  5. L1 interval IL1 = [-25.967, 9.000]
+     ✓ b11 = -5.000 ∈ IL1
+     ✓ b11+c21 = -8.000 ∈ IL1
+     ✓ E(L1) = -9.000 ∈ IL1
+     ✓ E(L) = 0.180 ∈ IL1
+  6. L2 interval IL2 = [-6.152, 9.000]
+     ✓ b12 = 5.000 ∈ IL2
+     ✓ b12+c22 = 8.000 ∈ IL2
+     ✓ E(L2) = 1.200 ∈ IL2
+     ✓ E(L) = 0.180 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 0.200000
+Timestamp: 2025-11-04 13:29:50
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= -6, b12= 12
+  Stage 2: c21= -5, c22= -4
+  Stage 3: c31=-41, c32= 28, c33=  9, c34=-43
+  Probabilities: p1=0.100, p2=0.400, p3=0.700
+Final outcomes:
+  z1 = 0+-6+-5+-41 = -52 (prob=0.040)
+  z2 = 0+-6+-5+28 = 17 (prob=0.060)
+  z3 = 0+12+-4+9 = 17 (prob=0.630)
+  z4 = 0+12+-4+-43 = -35 (prob=0.270)
+  Expected value: 0.200000
+
+Constraint verification:
+  1. Expected value constraint: 0.200000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-17.261, 17.000]
+  5. L1 interval IL1 = [-28.185, 17.000]
+     ✓ b11 = -6.000 ∈ IL1
+     ✓ b11+c21 = -11.000 ∈ IL1
+     ✓ E(L1) = -10.600 ∈ IL1
+     ✓ E(L) = 0.200 ∈ IL1
+  6. L2 interval IL2 = [-13.304, 17.000]
+     ✓ b12 = 12.000 ∈ IL2
+     ✓ b12+c22 = 8.000 ∈ IL2
+     ✓ E(L2) = 1.400 ∈ IL2
+     ✓ E(L) = 0.200 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 0.280000
+Timestamp: 2025-11-04 13:08:44
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  0, b12= 13
+  Stage 2: c21=  4, c22= -4
+  Stage 3: c31=-39, c32= 11, c33=-50, c34=  8
+  Probabilities: p1=0.300, p2=0.300, p3=0.300
+Final outcomes:
+  z1 = 0+0+4+-39 = -35 (prob=0.090)
+  z2 = 0+0+4+11 = 15 (prob=0.210)
+  z3 = 0+13+-4+-50 = -41 (prob=0.210)
+  z4 = 0+13+-4+8 = 17 (prob=0.490)
+  Expected value: -0.280000
+
+Constraint verification:
+  1. Expected value constraint: -0.280000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-16.415, 15.000]
+  5. L1 interval IL1 = [-14.139, 15.000]
+     ✓ b11 = 0.000 ∈ IL1
+     ✓ b11+c21 = 4.000 ∈ IL1
+     ✓ E(L1) = 0.000 ∈ IL1
+     ✓ E(L) = -0.280 ∈ IL1
+  6. L2 interval IL2 = [-16.801, 17.000]
+     ✓ b12 = 13.000 ∈ IL2
+     ✓ b12+c22 = 9.000 ∈ IL2
+     ✓ E(L2) = -0.400 ∈ IL2
+     ✓ E(L) = -0.280 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 4
+============================================================
+Objective function value: 0.290000
+Timestamp: 2025-11-04 11:08:40
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  1, b12=  9
+  Stage 2: c21= -1, c22=-16
+  Stage 3: c31=-34, c32=  9, c33=-26, c34= 27
+  Probabilities: p1=0.900, p2=0.200, p3=0.500
+Final outcomes:
+  z1 = 0+1+-1+-34 = -34 (prob=0.180)
+  z2 = 0+1+-1+9 = 9 (prob=0.720)
+  z3 = 0+9+-16+-26 = -33 (prob=0.050)
+  z4 = 0+9+-16+27 = 20 (prob=0.050)
+  Expected value: -0.290000
+
+Constraint verification:
+  1. Expected value constraint: -0.290000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-12.178, 9.000]
+  5. L1 interval IL1 = [-12.076, 9.000]
+     ✓ b11 = 1.000 ∈ IL1
+     ✓ b11+c21 = 0.000 ∈ IL1
+     ✓ E(L1) = 0.400 ∈ IL1
+     ✓ E(L) = -0.290 ∈ IL1
+  6. L2 interval IL2 = [-17.914, 20.000]
+     ✓ b12 = 9.000 ∈ IL2
+     ✓ b12+c22 = -7.000 ∈ IL2
+     ✓ E(L2) = -6.500 ∈ IL2
+     ✓ E(L) = -0.290 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 5
+============================================================
+Objective function value: 0.600000
+Timestamp: 2025-11-04 12:57:20
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 10, b12= 22
+  Stage 2: c21=-15, c22=-22
+  Stage 3: c31=-20, c32= 18, c33= 32, c34=-48
+  Probabilities: p1=0.100, p2=0.500, p3=0.600
+Final outcomes:
+  z1 = 0+10+-15+-20 = -25 (prob=0.050)
+  z2 = 0+10+-15+18 = 13 (prob=0.050)
+  z3 = 0+22+-22+32 = 32 (prob=0.540)
+  z4 = 0+22+-22+-48 = -48 (prob=0.360)
+  Expected value: -0.600000
+
+Constraint verification:
+  1. Expected value constraint: -0.600000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-20.178, 13.000]
+  5. L1 interval IL1 = [-14.183, 13.000]
+     ✓ b11 = 10.000 ∈ IL1
+     ✓ b11+c21 = -5.000 ∈ IL1
+     ✓ E(L1) = -6.000 ∈ IL1
+     ✓ E(L) = -0.600 ∈ IL1
+  6. L2 interval IL2 = [-20.388, 32.000]
+     ✓ b12 = 22.000 ∈ IL2
+     ✓ b12+c22 = 0.000 ∈ IL2
+     ✓ E(L2) = -0.000 ∈ IL2
+     ✓ E(L) = -0.600 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 6
+============================================================
+Objective function value: 0.650000
+Timestamp: 2025-11-04 13:11:35
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  9, b12=  4
+  Stage 2: c21= -7, c22= 10
+  Stage 3: c31=-45, c32=  9, c33=-41, c34= 10
+  Probabilities: p1=0.500, p2=0.200, p3=0.500
+Final outcomes:
+  z1 = 0+9+-7+-45 = -43 (prob=0.100)
+  z2 = 0+9+-7+9 = 11 (prob=0.400)
+  z3 = 0+4+10+-41 = -27 (prob=0.250)
+  z4 = 0+4+10+10 = 24 (prob=0.250)
+  Expected value: -0.650000
+
+Constraint verification:
+  1. Expected value constraint: -0.650000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-15.010, 11.000]
+  5. L1 interval IL1 = [-15.468, 11.000]
+     ✓ b11 = 9.000 ∈ IL1
+     ✓ b11+c21 = 2.000 ∈ IL1
+     ✓ E(L1) = 0.200 ∈ IL1
+     ✓ E(L) = -0.650 ∈ IL1
+  6. L2 interval IL2 = [-12.483, 24.000]
+     ✓ b12 = 4.000 ∈ IL2
+     ✓ b12+c22 = 14.000 ∈ IL2
+     ✓ E(L2) = -1.500 ∈ IL2
+     ✓ E(L) = -0.650 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 7
+============================================================
+Objective function value: 0.800000
+Timestamp: 2025-11-04 10:56:10
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 18, b12=  3
+  Stage 2: c21= -8, c22=  1
+  Stage 3: c31=  8, c32=-37, c33= 15, c34=-43
+  Probabilities: p1=0.500, p2=0.600, p3=0.700
+Final outcomes:
+  z1 = 0+18+-8+8 = 18 (prob=0.300)
+  z2 = 0+18+-8+-37 = -27 (prob=0.200)
+  z3 = 0+3+1+15 = 19 (prob=0.350)
+  z4 = 0+3+1+-43 = -39 (prob=0.150)
+  Expected value: 0.800000
+
+Constraint verification:
+  1. Expected value constraint: 0.800000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-14.510, 18.000]
+  5. L1 interval IL1 = [-11.468, 18.000]
+     ✓ b11 = 18.000 ∈ IL1
+     ✓ b11+c21 = 10.000 ∈ IL1
+     ✓ E(L1) = -0.000 ∈ IL1
+     ✓ E(L) = 0.800 ∈ IL1
+  6. L2 interval IL2 = [-14.801, 19.000]
+     ✓ b12 = 3.000 ∈ IL2
+     ✓ b12+c22 = 4.000 ∈ IL2
+     ✓ E(L2) = 1.600 ∈ IL2
+     ✓ E(L) = 0.800 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 8
+============================================================
+Objective function value: 0.800000
+Timestamp: 2025-11-04 12:48:06
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 10, b12=  6
+  Stage 2: c21=-12, c22= -1
+  Stage 3: c31= 12, c32=-26, c33= 17, c34=-39
+  Probabilities: p1=0.400, p2=0.700, p3=0.600
+Final outcomes:
+  z1 = 0+10+-12+12 = 10 (prob=0.280)
+  z2 = 0+10+-12+-26 = -28 (prob=0.120)
+  z3 = 0+6+-1+17 = 22 (prob=0.360)
+  z4 = 0+6+-1+-39 = -34 (prob=0.240)
+  Expected value: -0.800000
+
+Constraint verification:
+  1. Expected value constraint: -0.800000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-13.791, 10.000]
+  5. L1 interval IL1 = [-12.145, 10.000]
+     ✓ b11 = 10.000 ∈ IL1
+     ✓ b11+c21 = -2.000 ∈ IL1
+     ✓ E(L1) = -1.400 ∈ IL1
+     ✓ E(L) = -0.800 ∈ IL1
+  6. L2 interval IL2 = [-14.672, 22.000]
+     ✓ b12 = 6.000 ∈ IL2
+     ✓ b12+c22 = 5.000 ∈ IL2
+     ✓ E(L2) = -0.400 ∈ IL2
+     ✓ E(L) = -0.800 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 9
+============================================================
+Objective function value: 0.830000
+Timestamp: 2025-11-04 12:35:29
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  9, b12= 14
+  Stage 2: c21= -5, c22=-11
+  Stage 3: c31=-45, c32= 16, c33=-31, c34= 11
+  Probabilities: p1=0.900, p2=0.300, p3=0.500
+Final outcomes:
+  z1 = 0+9+-5+-45 = -41 (prob=0.270)
+  z2 = 0+9+-5+16 = 20 (prob=0.630)
+  z3 = 0+14+-11+-31 = -28 (prob=0.050)
+  z4 = 0+14+-11+11 = 14 (prob=0.050)
+  Expected value: 0.830000
+
+Constraint verification:
+  1. Expected value constraint: 0.830000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-15.985, 14.000]
+  5. L1 interval IL1 = [-15.549, 20.000]
+     ✓ b11 = 9.000 ∈ IL1
+     ✓ b11+c21 = 4.000 ∈ IL1
+     ✓ E(L1) = 1.700 ∈ IL1
+     ✓ E(L) = 0.830 ∈ IL1
+  6. L2 interval IL2 = [-16.045, 14.000]
+     ✓ b12 = 14.000 ∈ IL2
+     ✓ b12+c22 = 3.000 ∈ IL2
+     ✓ E(L2) = -7.000 ∈ IL2
+     ✓ E(L) = 0.830 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4   E[Z]  Violation
+   1   -5    5   -3    3   17  -43  -25    1 0.100 0.700 0.300   9 -51 -17   9  0.180      0.180
+   2   -6   12   -5   -4  -41   28    9  -43 0.100 0.400 0.700 -52  17  17 -35  0.200      0.200
+   3    0   13    4   -4  -39   11  -50    8 0.300 0.300 0.300 -35  15 -41  17 -0.280      0.280
+   4    1    9   -1  -16  -34    9  -26   27 0.900 0.200 0.500 -34   9 -33  20 -0.290      0.290
+   5   10   22  -15  -22  -20   18   32  -48 0.100 0.500 0.600 -25  13  32 -48 -0.600      0.600
+   6    9    4   -7   10  -45    9  -41   10 0.500 0.200 0.500 -43  11 -27  24 -0.650      0.650
+   7   18    3   -8    1    8  -37   15  -43 0.500 0.600 0.700  18 -27  19 -39  0.800      0.800
+   8   10    6  -12   -1   12  -26   17  -39 0.400 0.700 0.600  10 -28  22 -34 -0.800      0.800
+   9    9   14   -5  -11  -45   16  -31   11 0.900 0.300 0.500 -41  20 -28  14  0.830      0.830
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 9
+Unique lottery combinations: 9
+Unique probability combinations: 9
+Mean pairwise distance: 76.553
+Distance range: [15.812, 109.650]
+Distance standard deviation: 28.932
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 9329.89 seconds
+Total evaluations: 4,116,510
+Solutions found: 9
+Evaluation speed: 441 evals/s
+Best violation value: 0.180000
+Average violation value: 0.514444
+Worst violation value: 0.830000
