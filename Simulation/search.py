@@ -47,5 +47,6 @@ for o, s, a in product(outcomes, stakes, attempts):
         s,
         "--attempts",
         str(a),
+        "--cores 32"
     ]
     run(command, LOG_DIR / f"out_{o}_{s}_{a}.log")

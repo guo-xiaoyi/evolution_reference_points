@@ -191,8 +191,11 @@ class OptimizedConfig:
         if self.prob_choices is None:
             self.prob_choices = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
+        available_cores = max(1, mp.cpu_count())
         if self.num_cores is None:
-            self.num_cores = min(mp.cpu_count(), 8)
+            self.num_cores = available_cores
+        else:
+            self.num_cores = max(1, min(self.num_cores, available_cores))
 
         if self.outcomes == 6:
             self.output_dir = "lottery_results_6outcomes"
@@ -290,8 +293,10 @@ class UnifiedLotteryOptimizer:
         }
         if self._psutil_process:
             total_rss = 0
+            core_equivalents = 0.0
             try:
                 total_rss += self._psutil_process.memory_info().rss
+                core_equivalents += self._psutil_process.cpu_percent(None) / 100.0
             except psutil.Error:
                 pass
             live_workers = []
@@ -300,15 +305,13 @@ class UnifiedLotteryOptimizer:
                     try:
                         if worker_proc.is_running():
                             total_rss += worker_proc.memory_info().rss
+                            core_equivalents += worker_proc.cpu_percent(None) / 100.0
                             live_workers.append(worker_proc)
                     except psutil.Error:
                         continue
                 self._worker_ps = live_workers
             mem_gb = total_rss / (1024 ** 3) if total_rss else 0.0
-            cpu_pct = self._psutil_process.cpu_percent(None)
-            total_cores = psutil.cpu_count() or 1
-            core_usage = (cpu_pct / 100.0) * total_cores
-            status['CoreUse'] = f"{core_usage:.1f}"
+            status['CoreUse'] = f"{core_equivalents:.1f}"
             status['RAM'] = f"{mem_gb:.2f}GB"
             if self._worker_ps:
                 status['Workers'] = len(self._worker_ps)
@@ -1274,6 +1277,7 @@ def main():
     parser.add_argument("--attempts", type=int, default=None)
     parser.add_argument("--violation_threshold", type=float, default=None)
     parser.add_argument("--batch_size", type=int, default=None)
+    parser.add_argument("--cores", type=int, default=None, help="Number of CPU cores to use")
     parser.add_argument("--early", type=int, default=None, help="early termination solutions")
     parser.add_argument("--min", dest="lot_min", type=int, default=None)
     parser.add_argument("--max", dest="lot_max", type=int, default=None)
@@ -1290,6 +1294,9 @@ def main():
         config.violation_threshold = args.violation_threshold
     if args.batch_size is not None:
         config.batch_size = args.batch_size
+    if args.cores is not None:
+        available_cores = max(1, mp.cpu_count())
+        config.num_cores = max(1, min(args.cores, available_cores))
     if args.early is not None:
         config.early_termination_solutions = args.early
     if args.lot_min is not None:
