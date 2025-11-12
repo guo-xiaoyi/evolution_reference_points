@@ -1,0 +1,71 @@
+================================================================================
+Unified Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-11-04 10:07:40
+Mode: outcomes=4, stake=hi
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61
+Search configuration:
+  - Lottery range: [-1000, -100] and [100, 1000]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 18,919
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.000000
+Timestamp: 2025-11-04 09:40:16
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=300, b12=210
+  Stage 2: c21=-255, c22=-230
+  Stage 3: c31=375, c32=-665, c33=670, c34=-995
+  Probabilities: p1=0.800, p2=0.600, p3=0.600
+Final outcomes:
+  z1 = 0+300+-255+375 = 420 (prob=0.480)
+  z2 = 0+300+-255+-665 = -620 (prob=0.320)
+  z3 = 0+210+-230+670 = 650 (prob=0.120)
+  z4 = 0+210+-230+-995 = -1015 (prob=0.080)
+  Expected value: -0.000000
+
+Constraint verification:
+  1. Expected value constraint: -0.000000 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-340.559, 420.000]
+  5. L1 interval IL1 = [-261.050, 420.000]
+     ✓ b11 = 300.000 ∈ IL1
+     ✓ b11+c21 = 45.000 ∈ IL1
+     ✓ E(L1) = 4.000 ∈ IL1
+     ✓ E(L) = -0.000 ∈ IL1
+  6. L2 interval IL2 = [-440.334, 650.000]
+     ✓ b12 = 210.000 ∈ IL2
+     ✓ b12+c22 = -20.000 ∈ IL2
+     ✓ E(L2) = -16.000 ∈ IL2
+     ✓ E(L) = -0.000 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1   z2  z3    z4   E[Z]  Violation
+   1  300  210 -255 -230  375 -665  670 -995 0.800 0.600 0.600 420 -620 650 -1015 -0.000      0.000
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 2198.58 seconds
+Total evaluations: 18,919
+Solutions found: 1
+Evaluation speed: 9 evals/s
+Best violation value: 0.000000
+Average violation value: 0.000000
+Worst violation value: 0.000000

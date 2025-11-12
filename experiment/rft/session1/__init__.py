@@ -646,7 +646,7 @@ def store_cutoff_choice(player, lottery, base_offset=0):
 
     if cutoff_idx_int is not None:
         idx = max(0, min(count - 1, cutoff_idx_int))
-        player.cutoff_amount = amounts[idx]
+        player.cutoff_amount = amounts[idx - 1] if idx > 0 else amounts[idx]
         player.selected_choice = idx + 1
         player.selected_amount = amounts[idx]
         field_name = f'chf_{idx + 1}'
