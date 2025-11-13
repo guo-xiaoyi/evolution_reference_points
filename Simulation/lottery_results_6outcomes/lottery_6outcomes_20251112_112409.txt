@@ -1,0 +1,41 @@
+================================================================================
+Unified Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2025-11-12 11:24:09
+Mode: outcomes=6, stake=lo
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Search configuration:
+  - Lottery range: [-50, 50]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 314,118
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.739016
+Timestamp: 2025-11-12 11:15:26
+
+Lottery structure (6 outcomes):
+  Stage 1: b11= 27, b12= 16
+  Stage 2: c21=-14, c22=-16, c23= -3
+  Stage 3: c31=-49, c32= 38, c33= 23, c34=-19, c35=-46, c36= 39
+  Probabilities: p1=0.100, p2=0.600, p3=0.400, p4=0.400, p5=0.600
+Final outcomes (nominal -> discounted):
+  z1_nom=  -36 -> z1_disc=-33.780 (prob=0.060)
+  z2_nom=   51 -> z2_disc=49.775 (prob=0.040)
+  z3_nom=   23 -> z3_disc=22.409 (prob=0.144)
+  z4_nom=  -19 -> z4_disc=-17.928 (prob=0.216)
+  z5_nom=  -33 -> z5_disc=-31.118 (prob=0.324)
+  z6_nom=   52 -> z6_disc=50.516 (prob=0.216)
+  Discounted expected value: 0.147803
+  Probability sum: 1.000000
+
+Constraint verification:
+  1. Discounted value constraint: 0.147803 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-11.737, 22.409]
+     0 ∈ IL: True

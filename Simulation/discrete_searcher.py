@@ -24,7 +24,9 @@ import os
 import time
 import warnings
 import multiprocessing as mp
-from typing import List, Optional, Dict
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List, Optional, Dict, Tuple
 import random
 from dataclasses import dataclass, asdict
 import pickle
@@ -186,6 +188,7 @@ class OptimizedConfig:
     output_dir: str = "lottery_results"
     save_progress_enabled: bool = True
     alt_params: Optional[List[str]] = None  # list of "alpha,lambda,gamma, r" strings
+    alt_param_workers: Optional[int] = None  # threads dedicated to alternate-parameter validation
 
     def __post_init__(self):
         if self.prob_choices is None:
@@ -200,6 +203,11 @@ class OptimizedConfig:
         # If not provided via CLI, use ALT_PARAMS constant
         if self.alt_params is None and 'ALT_PARAMS' in globals():
             self.alt_params = ALT_PARAMS
+
+        if self.alt_param_workers is None:
+            self.alt_param_workers = max(1, min(self.num_cores, 4))
+        else:
+            self.alt_param_workers = max(1, int(self.alt_param_workers))
 
 
 class CompleteSolution:
@@ -243,6 +251,11 @@ class UnifiedLotteryOptimizer:
         self.r= config.r
         self.outcomes = config.outcomes
         self.stake = config.stake
+        self._alt_param_specs, self._alt_param_specs_invalid = self._parse_alt_param_specs(self.config.alt_params)
+        if self._alt_param_specs:
+            self._alt_param_workers = min(self.config.alt_param_workers, len(self._alt_param_specs))
+        else:
+            self._alt_param_workers = 0
 
         # Statistics
         self.stats = {
@@ -278,6 +291,25 @@ class UnifiedLotteryOptimizer:
             self.lottery_values = np.arange(self.config.lottery_min, self.config.lottery_max + 1)
 
         self.prob_choices = np.array(self.config.prob_choices)
+
+    def _parse_alt_param_specs(self, raw_specs: Optional[List[str]]) -> Tuple[List[Tuple[float, float, float, Optional[float]]], bool]:
+        if not raw_specs:
+            return [], False
+        parsed: List[Tuple[float, float, float, Optional[float]]] = []
+        for spec in raw_specs:
+            try:
+                parts = [x.strip() for x in spec.split(',')]
+                if len(parts) not in (3, 4):
+                    raise ValueError(f"Invalid alt param format: '{spec}'")
+                alpha = float(parts[0])
+                lambda_val = float(parts[1])
+                gamma = float(parts[2])
+                r_override = float(parts[3]) if len(parts) == 4 else None
+                parsed.append((alpha, lambda_val, gamma, r_override))
+            except Exception:
+                warnings.warn(f"Invalid alternate parameter specification skipped: '{spec}'", RuntimeWarning)
+                return [], True
+        return parsed, False
 
     def _progress_desc(self):
         mode = "Numba JIT" if NUMBA_AVAILABLE else "Python"
@@ -533,30 +565,54 @@ class UnifiedLotteryOptimizer:
         if self.outcomes == 6 and self.stake == 'hi':
             ev_violation = (abs(expected_value)) ** 2
         elif self.outcomes == 6 and self.stake == 'lo':
-            ev_violation = (abs(expected_value))
+            ev_violation = (abs(expected_value)) ** 2 
         elif self.outcomes == 4 and self.stake == 'hi':
-            ev_violation = (abs(expected_value)) * 10
+            ev_violation = (abs(expected_value)) ** 2 
         else:
-            ev_violation = (abs(expected_value))
+            ev_violation = (abs(expected_value)) ** 2 
         return False, float(ev_violation)
 
+    def _evaluate_alt_param_spec(self, params: np.ndarray, spec: Tuple[float, float, float, Optional[float]]) -> bool:
+        alpha, lambda_, gamma, r_override = spec
+        alt_viol, alt_ok = self.check_constraints_with_params(params, alpha, lambda_, gamma, r_override)
+        if not alt_ok:
+            return False
+        return alt_viol.get('total', float('inf')) < self.config.violation_threshold
+
+    def _alt_param_worker_task(self, params: np.ndarray, specs: List[Tuple[float, float, float, Optional[float]]], stop_event: threading.Event) -> bool:
+        for spec in specs:
+            if stop_event.is_set():
+                return True
+            if not self._evaluate_alt_param_spec(params, spec):
+                stop_event.set()
+                return False
+        return True
+
     def _alt_params_valid(self, params) -> bool:
-        if not self.config.alt_params:
+        if self._alt_param_specs_invalid:
+            return False
+        if not self._alt_param_specs:
             return True
-        for param_str in self.config.alt_params:
-            try:
-                parts = [x.strip() for x in param_str.split(',')]
-                if len(parts) not in (3, 4):
+        if self._alt_param_workers <= 1 or len(self._alt_param_specs) == 1:
+            for spec in self._alt_param_specs:
+                if not self._evaluate_alt_param_spec(params, spec):
                     return False
-                a_alt = float(parts[0])
-                l_alt = float(parts[1])
-                g_alt = float(parts[2])
-                r_alt = float(parts[3]) if len(parts) == 4 else None
-            except Exception:
-                return False
-            alt_viol, alt_ok = self.check_constraints_with_params(params, a_alt, l_alt, g_alt, r_alt)
-            if (not alt_ok) or (alt_viol.get('total', float('inf')) >= self.config.violation_threshold):
-                return False
+            return True
+
+        worker_count = min(self._alt_param_workers, len(self._alt_param_specs))
+        stop_event = threading.Event()
+        chunks: List[List[Tuple[float, float, float, Optional[float]]]] = [[] for _ in range(worker_count)]
+        for idx, spec in enumerate(self._alt_param_specs):
+            chunks[idx % worker_count].append(spec)
+        with ThreadPoolExecutor(max_workers=worker_count) as executor:
+            futures = [
+                executor.submit(self._alt_param_worker_task, params, chunk, stop_event)
+                for chunk in chunks if chunk
+            ]
+            for future in as_completed(futures):
+                if not future.result():
+                    stop_event.set()
+                    return False
         return True
 
     def check_full_constraints(self, params, track_stats: bool = True):
@@ -990,6 +1046,7 @@ class UnifiedLotteryOptimizer:
                         f.write(f"  Stage 3: c31={solution.c31:3d}, c32={solution.c32:3d}, c33={solution.c33:3d}, c34={solution.c34:3d}\n")
                         f.write(f"  Probabilities: p1={solution.p1:.3f}, p2={solution.p2:.3f}, p3={solution.p3:.3f}\n")
                         Z, p, Z_base = self.create_lottery_structure(solution.params)
+                        z1, z2, z3, z4 = Z
                         expected_value = np.sum(Z * p)
                         f.write("Final outcomes (nominal -> discounted):\n")
                         for idx, (z_nom, z_disc, prob) in enumerate(zip(Z_base, Z, p), start=1):
@@ -1033,6 +1090,7 @@ class UnifiedLotteryOptimizer:
                         f.write(f"  Stage 3: c31={solution.c31:3d}, c32={solution.c32:3d}, c33={solution.c33:3d}, c34={solution.c34:3d}, c35={solution.c35:3d}, c36={solution.c36:3d}\n")
                         f.write(f"  Probabilities: p1={solution.p1:.3f}, p2={solution.p2:.3f}, p3={solution.p3:.3f}, p4={solution.p4:.3f}, p5={solution.p5:.3f}\n")
                         Z, p, Z_base = self.create_lottery_structure(solution.params)
+                        z1, z2, z3, z4, z5, z6 = Z
                         expected_value = np.sum(Z * p)
                         f.write("Final outcomes (nominal -> discounted):\n")
                         for idx, (z_nom, z_disc, prob) in enumerate(zip(Z_base, Z, p), start=1):
@@ -1237,15 +1295,15 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             lottery_min=-100, lottery_max=100,
             lottery_min_bound=-1000, lottery_max_bound=1000,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=5000, early_termination_solutions=25,
+            batch_size=10000, early_termination_solutions=25,
             output_dir="lottery_results"
         )
     if outcomes == 4 and stake == 'lo':
         return OptimizedConfig(
             outcomes=4, stake='lo',
             lottery_min=-50, lottery_max=50,
-            num_attempts=1000000, violation_threshold=1.0,
-            batch_size=5000, early_termination_solutions=100,
+            num_attempts=10000000, violation_threshold=1.0,
+            batch_size=10000, early_termination_solutions=25,
             output_dir="lottery_results"
         )
     if outcomes == 6 and stake == 'hi':
@@ -1254,15 +1312,15 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             lottery_min=-500, lottery_max=500,
             lottery_min_bound=-1000, lottery_max_bound=1000,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=5000, early_termination_solutions=25,
+            batch_size=10000, early_termination_solutions=25,
             output_dir="lottery_results_6outcomes"
         )
     # outcomes == 6 and stake == 'lo'
     return OptimizedConfig(
         outcomes=6, stake='lo',
         lottery_min=-50, lottery_max=50,
-        num_attempts=1000000, violation_threshold=1.0,
-        batch_size=5000, early_termination_solutions=50,
+        num_attempts=10000000, violation_threshold=1.0,
+        batch_size=10000, early_termination_solutions=25,
         output_dir="lottery_results_6outcomes"
     )
 
@@ -1281,6 +1339,7 @@ def main():
     parser.add_argument("--max_bound", type=int, default=None)
     parser.add_argument("--save_progress", action="store_true")
     parser.add_argument("--alt_params", nargs='*', default=None, help="Alternate parameter sets as 'alpha,lambda,gamma[,r]' (space-separated for multiple)")
+    parser.add_argument("--alt_workers", type=int, default=None, help="Threads to use when validating alternate parameter sets")
     args = parser.parse_args()
 
     config = build_preset_config(args.outcomes, args.stake)
@@ -1304,6 +1363,8 @@ def main():
         config.save_progress_enabled = True
     if args.alt_params:
         config.alt_params = args.alt_params
+    if args.alt_workers is not None:
+        config.alt_param_workers = args.alt_workers
 
     # Create optimizer
     optimizer = UnifiedLotteryOptimizer(config)

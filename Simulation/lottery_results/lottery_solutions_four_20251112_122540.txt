@@ -1,0 +1,37 @@
+================================================================================
+Unified Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2025-11-12 12:25:40
+Mode: outcomes=4, stake=lo
+Solutions found: 100
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Search configuration:
+  - Lottery range: [-50, 50]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 1,176,685
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.000800
+Timestamp: 2025-11-12 12:21:21
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  1, b12=  6
+  Stage 2: c21=  8, c22= -3
+  Stage 3: c31= 27, c32=-41, c33=-39, c34= 15
+  Probabilities: p1=0.800, p2=0.500, p3=0.500
+Final outcomes (nominal -> discounted):
+  z1_nom=   36 -> z1_disc=34.771 (prob=0.400)
+  z2_nom=  -32 -> z2_disc=-30.536 (prob=0.400)
+  z3_nom=  -36 -> z3_disc=-34.396 (prob=0.100)
+  z4_nom=   18 -> z4_disc=17.466 (prob=0.100)
+  Discounted expected value: 0.000800
+
+Constraint verification:
+  1. Expected value constraint: 0.000800 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-13.767, 17.466]
