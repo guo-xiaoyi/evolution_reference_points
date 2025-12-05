@@ -50,7 +50,7 @@ warnings.filterwarnings('ignore')
 # lambda_candidates = np.linspace(2.25, 2.25, 1)
 # gamma_candidates = np.linspace(0.61, 0.61, 1)   
 alpha_candidates = np.linspace(0.75, 0.95, 5)
-lambda_candidates = np.linspace(1.25, 2.5, 5) # let lambda vary more widely (1 allows loss neutral)
+lambda_candidates = np.linspace(1.6, 2.5, 5) # let lambda vary more widely (1 allows loss neutral)
 gamma_candidates = np.linspace(0.58, 0.70, 5)
 r_candidates = np.linspace(0.96, 0.99, 4)
 
@@ -195,7 +195,8 @@ class OptimizedConfig:
             self.prob_choices = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
         if self.num_cores is None:
-            self.num_cores = min(mp.cpu_count(), 8)
+            cpu_total = mp.cpu_count() or 1
+            self.num_cores = cpu_total
 
         if self.outcomes == 6:
             self.output_dir = "lottery_results_6outcomes"
@@ -242,6 +243,14 @@ class CompleteSolution:
         }
 
 
+@dataclass
+class LotteryStructure:
+    Z: np.ndarray
+    p: np.ndarray
+    outcomes_base: np.ndarray
+    expected_value: float
+
+
 class UnifiedLotteryOptimizer:
     def __init__(self, config: OptimizedConfig):
         self.config = config
@@ -271,6 +280,9 @@ class UnifiedLotteryOptimizer:
         self._prepare_discrete_space()
         self._psutil_process = psutil.Process(os.getpid()) if PSUTIL_AVAILABLE else None
         self._worker_ps = []
+        self._resource_sample_interval = 1.0  # seconds between psutil polls
+        self._last_resource_sample = 0.0
+        self._cached_resource_status: Optional[Dict[str, str]] = None
         if self._psutil_process:
             self._psutil_process.cpu_percent(None)
 
@@ -316,37 +328,52 @@ class UnifiedLotteryOptimizer:
         return f"Batch optimization [{mode}]"
 
     def _resource_postfix(self):
-        status = {
+        base_status = {
             'Numba': 'On' if NUMBA_AVAILABLE else 'Off',
             'Cores': self.config.num_cores
         }
-        if self._psutil_process:
-            total_rss = 0
-            try:
-                total_rss += self._psutil_process.memory_info().rss
-            except psutil.Error:
-                pass
-            live_workers = []
-            if self._worker_ps:
-                for worker_proc in self._worker_ps:
-                    try:
-                        if worker_proc.is_running():
-                            total_rss += worker_proc.memory_info().rss
-                            live_workers.append(worker_proc)
-                    except psutil.Error:
-                        continue
-                self._worker_ps = live_workers
-            mem_gb = total_rss / (1024 ** 3) if total_rss else 0.0
-            cpu_pct = self._psutil_process.cpu_percent(None)
-            total_cores = psutil.cpu_count() or 1
-            core_usage = (cpu_pct / 100.0) * total_cores
-            status['CoreUse'] = f"{core_usage:.1f}"
-            status['RAM'] = f"{mem_gb:.2f}GB"
-            if self._worker_ps:
-                status['Workers'] = len(self._worker_ps)
-        else:
-            status['CoreUse'] = 'n/a'
-            status['RAM'] = 'n/a'
+        if not self._psutil_process:
+            base_status['CoreUse'] = 'n/a'
+            base_status['RAM'] = 'n/a'
+            return base_status
+
+        now = time.time()
+        if (
+            self._cached_resource_status is not None
+            and now - self._last_resource_sample < self._resource_sample_interval
+        ):
+            cached = dict(self._cached_resource_status)
+            cached['Numba'] = base_status['Numba']
+            cached['Cores'] = base_status['Cores']
+            return cached
+
+        status = dict(base_status)
+        total_rss = 0
+        try:
+            total_rss += self._psutil_process.memory_info().rss
+        except psutil.Error:
+            pass
+        live_workers = []
+        if self._worker_ps:
+            for worker_proc in self._worker_ps:
+                try:
+                    if worker_proc.is_running():
+                        total_rss += worker_proc.memory_info().rss
+                        live_workers.append(worker_proc)
+                except psutil.Error:
+                    continue
+            self._worker_ps = live_workers
+        mem_gb = total_rss / (1024 ** 3) if total_rss else 0.0
+        cpu_pct = self._psutil_process.cpu_percent(None)
+        total_cores = psutil.cpu_count() or 1
+        core_usage = (cpu_pct / 100.0) * total_cores
+        status['CoreUse'] = f"{core_usage:.1f}"
+        status['RAM'] = f"{mem_gb:.2f}GB"
+        if self._worker_ps:
+            status['Workers'] = len(self._worker_ps)
+
+        self._cached_resource_status = dict(status)
+        self._last_resource_sample = now
         return status
 
     def _register_solution(self, solution: 'CompleteSolution', container: List['CompleteSolution']):
@@ -549,19 +576,19 @@ class UnifiedLotteryOptimizer:
             return None, None
 
     # ---------- Constraints ----------
-    def _basic_constraint_violation(self, params):
+    def _basic_constraint_violation(self, params, return_structure: bool = False):
         # probability bounds
         if self.outcomes == 4:
             p1, p2, p3 = params[8:]
             if not (0 <= p1 <= 1 and 0 <= p2 <= 1 and 0 <= p3 <= 1):
-                return True, 1000.0
+                return (True, 1000.0, None) if return_structure else (True, 1000.0)
         else:
             p1, p2, p3, p4, p5 = params[11:]
             if not (0 <= p1 <= 1 and 0 <= p2 <= 1 and 0 <= p3 <= 1 and 0 <= p4 <= 1 and 0 <= p5 <= 1):
-                return True, 1000.0
+                return (True, 1000.0, None) if return_structure else (True, 1000.0)
 
-        Z, p, _ = self.create_lottery_structure(params)
-        expected_value = np.sum(Z * p)
+        Z, p, outcomes_base = self.create_lottery_structure(params)
+        expected_value = float(np.sum(Z * p))
         if self.outcomes == 6 and self.stake == 'hi':
             ev_violation = (abs(expected_value)) ** 2
         elif self.outcomes == 6 and self.stake == 'lo':
@@ -570,32 +597,44 @@ class UnifiedLotteryOptimizer:
             ev_violation = (abs(expected_value)) ** 2 
         else:
             ev_violation = (abs(expected_value)) ** 2 
-        return False, float(ev_violation)
+        result = (False, float(ev_violation))
+        if return_structure:
+            structure = LotteryStructure(Z=Z, p=p, outcomes_base=outcomes_base, expected_value=expected_value)
+            return False, float(ev_violation), structure
+        return result
 
-    def _evaluate_alt_param_spec(self, params: np.ndarray, spec: Tuple[float, float, float, Optional[float]]) -> bool:
+    def _evaluate_alt_param_spec(self, params: np.ndarray, spec: Tuple[float, float, float, Optional[float]], base_structure: Optional[LotteryStructure] = None) -> bool:
         alpha, lambda_, gamma, r_override = spec
-        alt_viol, alt_ok = self.check_constraints_with_params(params, alpha, lambda_, gamma, r_override)
+        structure_hint = base_structure if (base_structure is not None and r_override is None) else None
+        alt_viol, alt_ok = self.check_constraints_with_params(
+            params,
+            alpha,
+            lambda_,
+            gamma,
+            r_override,
+            base_structure=structure_hint
+        )
         if not alt_ok:
             return False
         return alt_viol.get('total', float('inf')) < self.config.violation_threshold
 
-    def _alt_param_worker_task(self, params: np.ndarray, specs: List[Tuple[float, float, float, Optional[float]]], stop_event: threading.Event) -> bool:
+    def _alt_param_worker_task(self, params: np.ndarray, specs: List[Tuple[float, float, float, Optional[float]]], stop_event: threading.Event, base_structure: Optional[LotteryStructure]) -> bool:
         for spec in specs:
             if stop_event.is_set():
                 return True
-            if not self._evaluate_alt_param_spec(params, spec):
+            if not self._evaluate_alt_param_spec(params, spec, base_structure):
                 stop_event.set()
                 return False
         return True
 
-    def _alt_params_valid(self, params) -> bool:
+    def _alt_params_valid(self, params, base_structure: Optional[LotteryStructure] = None) -> bool:
         if self._alt_param_specs_invalid:
             return False
         if not self._alt_param_specs:
             return True
         if self._alt_param_workers <= 1 or len(self._alt_param_specs) == 1:
             for spec in self._alt_param_specs:
-                if not self._evaluate_alt_param_spec(params, spec):
+                if not self._evaluate_alt_param_spec(params, spec, base_structure):
                     return False
             return True
 
@@ -606,7 +645,7 @@ class UnifiedLotteryOptimizer:
             chunks[idx % worker_count].append(spec)
         with ThreadPoolExecutor(max_workers=worker_count) as executor:
             futures = [
-                executor.submit(self._alt_param_worker_task, params, chunk, stop_event)
+                executor.submit(self._alt_param_worker_task, params, chunk, stop_event, base_structure)
                 for chunk in chunks if chunk
             ]
             for future in as_completed(futures):
@@ -615,16 +654,23 @@ class UnifiedLotteryOptimizer:
                     return False
         return True
 
-    def check_full_constraints(self, params, track_stats: bool = True):
+    def check_full_constraints(self, params, track_stats: bool = True, precomputed: Optional[LotteryStructure] = None):
         try:
             if track_stats:
                 self.stats['evaluations'] += 1
-            Z, p, _ = self.create_lottery_structure(params)
+            if precomputed is None:
+                Z, p, outcomes_base = self.create_lottery_structure(params)
+                expected_value = float(np.sum(Z * p))
+                structure = LotteryStructure(Z=Z, p=p, outcomes_base=outcomes_base, expected_value=expected_value)
+            else:
+                structure = precomputed
+                Z = structure.Z
+                p = structure.p
+                expected_value = structure.expected_value
             violations = {}
             total_violations = 0.0
 
             # Expected value weighting consistent with originals
-            expected_value = np.sum(Z * p)
             if self.outcomes == 6 and self.stake == 'hi':
                 violations['expected_value'] = (abs(expected_value)) ** 2
             elif self.outcomes == 6 and self.stake == 'lo':
@@ -732,15 +778,20 @@ class UnifiedLotteryOptimizer:
             violations['total'] = float(total_violations)
             if total_violations < self.stats['best_violation']:
                 self.stats['best_violation'] = float(total_violations)
-            return violations, True
+            return violations, True, structure
         except Exception as e:
-            return {'total': 10000, 'error': str(e)}, False
+            return {'total': 10000, 'error': str(e)}, False, None
 
-    def check_constraints_with_params(self, params, alpha, lambda_, gamma, r_override: Optional[float] = None):
+    def check_constraints_with_params(self, params, alpha, lambda_, gamma, r_override: Optional[float] = None, base_structure: Optional[LotteryStructure] = None):
         try:
-            Z, p, _ = self.create_lottery_structure(params, r_override)
+            if base_structure is not None and r_override is None:
+                Z = base_structure.Z
+                p = base_structure.p
+                expected_value = base_structure.expected_value
+            else:
+                Z, p, _ = self.create_lottery_structure(params, r_override)
+                expected_value = float(np.sum(Z * p))
             total_violations = 0.0
-            expected_value = np.sum(Z * p)
             # Use a moderate weighting for EV under alt params
             total_violations += float(abs(expected_value))
 
@@ -837,31 +888,35 @@ class UnifiedLotteryOptimizer:
     # ---------- Generation ----------
     def generate_batch_params(self, batch_size: int) -> np.ndarray:
         if self.outcomes == 4:
-            params_batch = np.empty((batch_size, 11), dtype=np.float64)
-            for i in range(batch_size):
-                params_batch[i, :8] = np.random.choice(self.lottery_values, 8)
-                params_batch[i, 8:] = np.random.choice(self.prob_choices, 3)
-            return params_batch
+            lottery_draws = np.random.choice(self.lottery_values, size=(batch_size, 8)).astype(np.float64, copy=False)
+            prob_draws = np.random.choice(self.prob_choices, size=(batch_size, 3)).astype(np.float64, copy=False)
+            return np.concatenate([lottery_draws, prob_draws], axis=1)
         else:
-            params_batch = np.empty((batch_size, 16), dtype=np.float64)
-            for i in range(batch_size):
-                params_batch[i, :11] = np.random.choice(self.lottery_values, 11)
-                params_batch[i, 11:] = np.random.choice(self.prob_choices, 5)
-            return params_batch
+            lottery_draws = np.random.choice(self.lottery_values, size=(batch_size, 11)).astype(np.float64, copy=False)
+            prob_draws = np.random.choice(self.prob_choices, size=(batch_size, 5)).astype(np.float64, copy=False)
+            return np.concatenate([lottery_draws, prob_draws], axis=1)
 
-    def fast_prefilter(self, params_batch: np.ndarray) -> np.ndarray:
+    def fast_prefilter(self, params_batch: np.ndarray, cache_structures: bool = False) -> Tuple[np.ndarray, Optional[List[LotteryStructure]]]:
         if not self.config.use_fast_prefilter:
-            return params_batch
+            return params_batch, None
         valid_indices = []
+        cached_structures: Optional[List[LotteryStructure]] = [] if cache_structures else None
         for i in range(len(params_batch)):
             params = params_batch[i]
-            invalid, violation = self._basic_constraint_violation(params)
+            if cache_structures:
+                invalid, violation, structure = self._basic_constraint_violation(params, return_structure=True)
+            else:
+                invalid, violation = self._basic_constraint_violation(params)
+                structure = None
             if (not invalid) and violation < self.config.violation_threshold * 2:
                 valid_indices.append(i)
+                if cached_structures is not None and structure is not None:
+                    cached_structures.append(structure)
             else:
                 self.stats['prefilter_rejections'] += 1
         shape = (0, 11) if self.outcomes == 4 else (0, 16)
-        return params_batch[valid_indices] if valid_indices else np.empty(shape)
+        filtered = params_batch[valid_indices] if valid_indices else np.empty(shape)
+        return filtered, cached_structures
 
     # ---------- Optimization ----------
     def batch_optimize(self) -> List[CompleteSolution]:
@@ -899,34 +954,55 @@ class UnifiedLotteryOptimizer:
             while attempts_made < self.config.num_attempts and not early_stop:
                 current_batch_size = min(self.config.batch_size, self.config.num_attempts - attempts_made)
                 params_batch = self.generate_batch_params(current_batch_size)
-                filtered_params = self.fast_prefilter(params_batch)
+                filtered_params, cached_structs = self.fast_prefilter(
+                    params_batch,
+                    cache_structures=not use_parallel
+                )
 
                 if use_parallel and filtered_params.size > 0:
-                    chunk_size = max(1, len(filtered_params) // (self.config.num_cores * 2))
-                    evaluations_this_batch = 0
-                    for result in pool.imap_unordered(_mp_worker_process, filtered_params, chunksize=chunk_size):
-                        evaluations_this_batch += 1
+                    rows = len(filtered_params)
+                    worker_divisor = max(1, self.config.num_cores * 2)
+                    block_size = max(1, rows // worker_divisor)
+                    block_size = min(block_size, rows)
+                    chunk_iter = (
+                        filtered_params[start:start + block_size]
+                        for start in range(0, rows, block_size)
+                    )
+                    for result in pool.imap_unordered(_mp_worker_process, chunk_iter, chunksize=1):
                         if not result:
                             continue
-                        if isinstance(result, tuple) and len(result) == 2 and isinstance(result[0], str) and result[0] == 'error':
-                            warnings.warn(f"Worker error: {result[1]}")
+                        if isinstance(result, dict) and 'error' in result:
+                            warnings.warn(f"Worker error: {result['error']}")
                             continue
-                        violation_value, candidate_params = result
-                        sol = CompleteSolution(self.outcomes, candidate_params, violation_value)
-                        self._register_solution(sol, solutions)
-                        if len(solutions) >= self.config.early_termination_solutions:
-                            early_stop = True
-                            if pool:
-                                pool_terminated = True
-                                pool.terminate()
+                        self.stats['evaluations'] += result.get('evaluations', 0)
+                        for violation_value, candidate_params in result.get('solutions', []):
+                            sol = CompleteSolution(self.outcomes, candidate_params, violation_value)
+                            self._register_solution(sol, solutions)
+                            if len(solutions) >= self.config.early_termination_solutions:
+                                early_stop = True
+                                if pool:
+                                    pool_terminated = True
+                                    pool.terminate()
+                                break
+                        if early_stop:
                             break
-                    self.stats['evaluations'] += evaluations_this_batch
                 else:
-                    for params in filtered_params:
-                        violations, valid = self.check_full_constraints(params)
+                    if cached_structs is not None and len(cached_structs) != len(filtered_params):
+                        cached_iter = None
+                    else:
+                        cached_iter = cached_structs
+                    if cached_iter is not None:
+                        param_iter = zip(filtered_params, cached_iter)
+                    else:
+                        param_iter = ((params, None) for params in filtered_params)
+                    for params, cached_structure in param_iter:
+                        violations, valid, structure = self.check_full_constraints(
+                            params,
+                            precomputed=cached_structure
+                        )
                         if not (valid and violations['total'] < self.config.violation_threshold):
                             continue
-                        if not self._alt_params_valid(params):
+                        if not self._alt_params_valid(params, structure):
                             continue
                         sol = CompleteSolution(self.outcomes, params, violations['total'])
                         self._register_solution(sol, solutions)
@@ -1273,19 +1349,24 @@ def _mp_worker_initializer(config_state: Dict):
     MP_WORKER_OPTIMIZER = UnifiedLotteryOptimizer(config)
 
 
-def _mp_worker_process(params):
+def _mp_worker_process(params_block):
     optimizer = MP_WORKER_OPTIMIZER
     if optimizer is None:
-        return ('error', 'Worker not initialized')
+        return {'error': 'Worker not initialized'}
+    evaluations = 0
+    solutions: List[Tuple[float, np.ndarray]] = []
     try:
-        violations, valid = optimizer.check_full_constraints(params, track_stats=False)
-        if not (valid and violations['total'] < optimizer.config.violation_threshold):
-            return None
-        if not optimizer._alt_params_valid(params):
-            return None
-        return (float(violations['total']), params)
+        for params in params_block:
+            evaluations += 1
+            violations, valid, structure = optimizer.check_full_constraints(params, track_stats=False)
+            if not (valid and violations['total'] < optimizer.config.violation_threshold):
+                continue
+            if not optimizer._alt_params_valid(params, structure):
+                continue
+            solutions.append((float(violations['total']), params.copy()))
+        return {'evaluations': evaluations, 'solutions': solutions}
     except Exception as exc:
-        return ('error', str(exc))
+        return {'error': str(exc)}
 
 
 def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
@@ -1312,7 +1393,7 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             lottery_min=-500, lottery_max=500,
             lottery_min_bound=-1000, lottery_max_bound=1000,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=10000, early_termination_solutions=25,
+            batch_size=30000, early_termination_solutions=25,
             output_dir="lottery_results_6outcomes"
         )
     # outcomes == 6 and stake == 'lo'
