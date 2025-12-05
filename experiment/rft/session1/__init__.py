@@ -29,12 +29,14 @@ class Constants(BaseConstants):
     short_choice_count = 10
     long_choice_count = 20
     max_choice_count = long_choice_count
+    high_refinement_count = 5
     
     # Dictionary of lottery structures
     lotteries = {
         'lottery_1': {
             'name': 'Apple',
             'outcome_number': 4,
+            'stake': 'lo',
             'max_payoff': 40,
             'min_payoff': -12,
             'description': 'Example lottery with four final outcomes',
@@ -59,6 +61,7 @@ class Constants(BaseConstants):
         'lottery_2': {
             'name': 'Banana',
             'outcome_number': 6,
+            'stake': 'hi',
             'max_payoff': 825,
             'min_payoff': -1245,
             'description': 'Example lottery with four final outcomes',
@@ -116,9 +119,15 @@ class Player(BasePlayer):
     # Store the choice selected for payment
     selected_choice = models.IntegerField(blank=True)
     selected_amount = models.IntegerField(blank=True)
-    
+
     # Store which option was chosen for the selected choice
     selected_option = models.StringField(blank=True)
+
+    # Additional refinement information for high-stake lists
+    fine_cutoff_index = models.IntegerField(blank=True)
+    fine_selected_choice = models.IntegerField(blank=True)
+    fine_selected_amount = models.IntegerField(blank=True)
+    fine_cutoff_amount = models.IntegerField(blank=True)
     
     # Store the schedule start for session 2 and 3
     session2_start = models.FloatField(blank=True)
@@ -407,8 +416,8 @@ class Play(Page):
 
     @staticmethod
     def _choice_amounts(lottery, base_offset=0):
-        outcome_number = lottery.get('outcome_number') or 0
-        count = Constants.short_choice_count if outcome_number <= 4 else Constants.long_choice_count
+        stake = lottery.get('stake') or 0
+        count = Constants.short_choice_count if stake == 'lo' else Constants.long_choice_count
         amounts = np.linspace(
             base_offset + lottery['min_payoff'],
             base_offset + lottery['max_payoff'],
@@ -426,21 +435,36 @@ class Play(Page):
     def _choice_rows(lottery, base_offset=0):
         amounts = Play._choice_amounts(lottery, base_offset)
         field_names = Play._choice_field_names(lottery, base_offset)
-        return [
-            {
-                'index': idx,
-                'amount': amount,
-                'abs_amount': abs(amount),
-                'field_name': field_name
-            }
-            for idx, (amount, field_name) in enumerate(zip(amounts, field_names))
-        ]
+        stake = lottery.get('stake')
+        refinement_count = Constants.high_refinement_count if stake == 'hi' else 0
+        rows = []
+        for idx, (amount, field_name) in enumerate(zip(amounts, field_names)):
+            prev_amount = amounts[idx - 1] if idx > 0 else None
+            refinement_series = []
+            if refinement_count and prev_amount is not None:
+                refinement_series = build_refinement_series(
+                    prev_amount,
+                    amount,
+                    refinement_count
+                )
+            rows.append(
+                {
+                    'index': idx,
+                    'amount': amount,
+                    'abs_amount': abs(amount),
+                    'field_name': field_name,
+                    'prev_amount': prev_amount,
+                    'refinement_series': refinement_series,
+                }
+            )
+        return rows
 
     @staticmethod
     def get_form_fields(player):
         lottery = Constants.lotteries[player.lottery_id]
         fields = Play._choice_field_names(lottery, base_offset=0)
         fields.append('cutoff_index')
+        fields.append('fine_cutoff_index')
         return fields
 
     @staticmethod
@@ -460,6 +484,39 @@ class Play(Page):
                 future_round=Constants.continuation_rounds[0],
             )
             ensure_payment_lottery_selected(player)
+
+
+def build_refined_amounts(lower, upper, count):
+    """Return evenly spaced integer amounts between lower and upper (exclusive)."""
+    if count is None or count <= 0:
+        return []
+    if lower is None or upper is None:
+        return []
+    if lower == upper:
+        return []
+    start = float(lower)
+    end = float(upper)
+    descending = False
+    if start > end:
+        start, end = end, start
+        descending = True
+    grid = np.linspace(start, end, count + 2, endpoint=True)[1:-1]
+    values = [int(round(val)) for val in grid]
+    return list(reversed(values)) if descending else values
+
+
+def build_refinement_series(lower, upper, count):
+    """Return ordered fine options strictly above lower and including upper."""
+    if lower is None or upper is None or lower == upper:
+        return []
+    between = build_refined_amounts(lower, upper, count)
+    candidates = list(between)
+    candidates.append(int(round(upper)))
+    ordered = []
+    for value in candidates:
+        if not ordered or ordered[-1] != value:
+            ordered.append(value)
+    return ordered
 
 
 def should_show_bridge(player, expected_round, prefix):
@@ -497,6 +554,8 @@ def build_play_context(player, choice_lottery, display_lottery=None, base_offset
         'max_payoff': choice_lottery.get('max_payoff'),
         'min_payoff': choice_lottery.get('min_payoff'),
         'choice_rows': choice_rows,
+        'stake': choice_lottery.get('stake'),
+        'high_refinement_count': Constants.high_refinement_count,
         'accept_label': Constants.options[0],
         'play_label': Constants.options[1],
         'period_1': display_periods.get(1, []),
@@ -624,6 +683,44 @@ def build_realized_display(store):
     return summary, realized_nodes, final_payoff_text
 
 
+def clear_fine_cutoff(player):
+    """Reset all fine-grained cutoff metadata."""
+    player.fine_cutoff_index = None
+    player.fine_selected_choice = None
+    player.fine_selected_amount = None
+    player.fine_cutoff_amount = None
+
+
+def populate_fine_cutoff(player, lottery, amounts, cutoff_idx):
+    """Store the fine-grained cutoff choice for high-stake lotteries."""
+    if lottery.get('stake') != 'hi' or cutoff_idx <= 0:
+        clear_fine_cutoff(player)
+        return
+
+    lower = amounts[cutoff_idx - 1]
+    upper = amounts[cutoff_idx]
+    refined_series = build_refinement_series(lower, upper, Constants.high_refinement_count)
+    if not refined_series:
+        clear_fine_cutoff(player)
+        return
+
+    fine_idx_value = get_player_field(player, 'fine_cutoff_index')
+    try:
+        fine_idx = int(round(float(fine_idx_value)))
+    except (TypeError, ValueError):
+        fine_idx = None
+
+    if fine_idx is None:
+        clear_fine_cutoff(player)
+        return
+
+    fine_idx = max(0, min(len(refined_series) - 1, fine_idx))
+    player.fine_cutoff_index = fine_idx
+    player.fine_selected_choice = fine_idx + 1
+    player.fine_selected_amount = refined_series[fine_idx]
+    player.fine_cutoff_amount = refined_series[fine_idx - 1] if fine_idx > 0 else lower
+
+
 def store_cutoff_choice(player, lottery, base_offset=0):
     """Record the participant's cutoff information for the provided lottery."""
     amounts = Play._choice_amounts(lottery, base_offset)
@@ -651,11 +748,13 @@ def store_cutoff_choice(player, lottery, base_offset=0):
         player.selected_amount = amounts[idx]
         field_name = f'chf_{idx + 1}'
         player.selected_option = getattr(player, field_name, None)
+        populate_fine_cutoff(player, lottery, amounts, idx)
     else:
         player.cutoff_amount = None
         player.selected_choice = None
         player.selected_amount = None
         player.selected_option = None
+        clear_fine_cutoff(player)
 
 
 def schedule_session_start(player, prefix, wait_seconds, future_round):
