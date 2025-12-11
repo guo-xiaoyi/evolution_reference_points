@@ -25,7 +25,7 @@ import time
 import warnings
 import multiprocessing as mp
 import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 from typing import List, Optional, Dict, Tuple
 import random
 from dataclasses import dataclass, asdict
@@ -40,8 +40,19 @@ except ImportError:
     PSUTIL_AVAILABLE = False
 
 
-random.seed(10)
-np.random.seed(10)
+DEFAULT_RANDOM_SEED = 10
+DEFAULT_NUMPY_SEED = 15
+
+
+def apply_global_seeds(seed: Optional[int] = None) -> Tuple[int, int]:
+    seed_value = DEFAULT_RANDOM_SEED if seed is None else int(seed)
+    numpy_seed = DEFAULT_NUMPY_SEED if seed is None else seed_value
+    random.seed(seed_value)
+    np.random.seed(numpy_seed)
+    return seed_value, numpy_seed
+
+
+apply_global_seeds()
 warnings.filterwarnings('ignore')
 
 # Manually specify alternate CPT parameter sets here (alpha, lambda, gamma)
@@ -50,7 +61,10 @@ warnings.filterwarnings('ignore')
 # lambda_candidates = np.linspace(2.25, 2.25, 1)
 # gamma_candidates = np.linspace(0.61, 0.61, 1)   
 alpha_candidates = np.linspace(0.75, 0.95, 5)
-lambda_candidates = np.linspace(1.6, 2.5, 5) # let lambda vary more widely (1 allows loss neutral)
+# longer interval
+lambda_candidates = np.linspace(1.25, 2.5, 5)
+# shorter interval
+#lambda_candidates = np.linspace(1.6, 2.5, 5) # let lambda vary more widely (1 allows loss neutral)
 gamma_candidates = np.linspace(0.58, 0.70, 5)
 r_candidates = np.linspace(0.96, 0.99, 4)
 
@@ -162,6 +176,7 @@ class OptimizedConfig:
     lambda_: float = 2.25
     gamma: float = 0.61
     r : float = 0.98
+    seed: Optional[int] = None
 
     # Mode
     outcomes: int = 4  # 4 or 6
@@ -178,6 +193,7 @@ class OptimizedConfig:
     num_attempts: int = 1000000
     violation_threshold: float = 1.0
     num_cores: Optional[int] = None
+    progress_position: int = 0
 
     # Performance optimization settings
     batch_size: int = 10000
@@ -948,7 +964,13 @@ class UnifiedLotteryOptimizer:
         else:
             self._worker_ps = []
 
-        pbar = tqdm(total=self.config.num_attempts, desc=self._progress_desc())
+        pbar = tqdm(
+            total=self.config.num_attempts,
+            desc=self._progress_desc(),
+            position=self.config.progress_position,
+            leave=True,
+            dynamic_ncols=True
+        )
         early_stop = False
         try:
             while attempts_made < self.config.num_attempts and not early_stop:
@@ -1069,10 +1091,11 @@ class UnifiedLotteryOptimizer:
 
     def _default_filename(self) -> str:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        seed_suffix = f"_seed{self.config.seed}" if getattr(self.config, 'seed', None) is not None else ""
         if self.outcomes == 4:
-            return os.path.join(self.config.output_dir, f"lottery_solutions_four_{timestamp}.txt")
+            return os.path.join(self.config.output_dir, f"lottery_solutions_four{seed_suffix}_{timestamp}.txt")
         suffix = "_hi" if self.stake == 'hi' else ""
-        return os.path.join(self.config.output_dir, f"lottery_6outcomes_{timestamp}{suffix}.txt")
+        return os.path.join(self.config.output_dir, f"lottery_6outcomes{seed_suffix}_{timestamp}{suffix}.txt")
 
     def save_solutions_to_file(self, solutions: List[CompleteSolution], filename: str = None) -> str:
         if filename is None:
@@ -1321,7 +1344,8 @@ class UnifiedLotteryOptimizer:
         if filename is None:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             suffix = f"_6outcomes" if self.outcomes == 6 else ""
-            filename = os.path.join(self.config.output_dir, f"lottery_progress{suffix}_{timestamp}.pkl")
+            seed_suffix = f"_seed{self.config.seed}" if getattr(self.config, 'seed', None) is not None else ""
+            filename = os.path.join(self.config.output_dir, f"lottery_progress{suffix}{seed_suffix}_{timestamp}.pkl")
         progress_data = {
             'solutions': [s.to_dict() for s in solutions],
             'stats': self.stats,
@@ -1406,6 +1430,29 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
     )
 
 
+def run_seed_job(config_state: Dict, seed_value: Optional[int], position: int = 0):
+    applied_seed, numpy_seed = apply_global_seeds(seed_value)
+    state_copy = dict(config_state)
+    state_copy['seed'] = applied_seed
+    state_copy['progress_position'] = position
+    config = OptimizedConfig(**state_copy)
+    optimizer = UnifiedLotteryOptimizer(config)
+    solutions = optimizer.solve()
+    txt_file = optimizer.save_solutions_to_file(solutions)
+    progress_file = None
+    if optimizer.config.save_progress_enabled:
+        progress_file = optimizer.save_progress(solutions)
+    best_violation = solutions[0].violation if solutions else None
+    return {
+        'seed': applied_seed,
+        'numpy_seed': numpy_seed,
+        'solutions_found': len(solutions),
+        'best_violation': best_violation,
+        'txt_file': txt_file,
+        'progress_file': progress_file
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description="Unified Discrete Lottery Optimizer")
     parser.add_argument("--outcomes", type=int, choices=[4, 6], default=4)
@@ -1421,6 +1468,9 @@ def main():
     parser.add_argument("--save_progress", action="store_true")
     parser.add_argument("--alt_params", nargs='*', default=None, help="Alternate parameter sets as 'alpha,lambda,gamma[,r]' (space-separated for multiple)")
     parser.add_argument("--alt_workers", type=int, default=None, help="Threads to use when validating alternate parameter sets")
+    parser.add_argument("--seed", type=int, nargs='*', default=None, help="Override RNG seed(s). Provide multiple seeds to fan out runs.")
+    parser.add_argument("--seed_workers", type=int, default=None, help="Parallel processes to launch when multiple seeds are provided.")
+    parser.add_argument("--cores", type=int, default=None, help="CPU cores to use inside each optimization run.")
     args = parser.parse_args()
 
     config = build_preset_config(args.outcomes, args.stake)
@@ -1446,12 +1496,39 @@ def main():
         config.alt_params = args.alt_params
     if args.alt_workers is not None:
         config.alt_param_workers = args.alt_workers
+    if args.cores is not None:
+        config.num_cores = max(1, args.cores)
+
+    seed_values = args.seed if args.seed else [None]
+
+    if len(seed_values) > 1:
+        seed_workers = args.seed_workers or min(len(seed_values), mp.cpu_count() or len(seed_values))
+        base_config_state = asdict(config)
+        if args.cores is None:
+            total_cpus = mp.cpu_count() or 1
+            base_config_state['num_cores'] = max(1, total_cpus // seed_workers)
+        print(f"Running {len(seed_values)} seeds with up to {seed_workers} parallel processes (cores per run: {base_config_state.get('num_cores')})")
+        results = []
+        with ProcessPoolExecutor(max_workers=seed_workers) as executor:
+            futures = {
+                executor.submit(run_seed_job, base_config_state, seed, idx): seed
+                for idx, seed in enumerate(seed_values)
+            }
+            for future in as_completed(futures):
+                res = future.result()
+                results.append(res)
+                print(f"[seed {res['seed']}] solutions={res['solutions_found']}, best={res['best_violation']}, saved={res['txt_file']}")
+        return results
+
+    seed_to_use = seed_values[0] if seed_values else None
+    applied_seed, numpy_seed = apply_global_seeds(seed_to_use)
+    config.seed = applied_seed
 
     # Create optimizer
     optimizer = UnifiedLotteryOptimizer(config)
 
     # Run optimization
-    print("Starting optimization...")
+    print(f"Starting optimization with seed={applied_seed} (numpy_seed={numpy_seed})...")
     solutions = optimizer.solve()
 
     # Save results to file
