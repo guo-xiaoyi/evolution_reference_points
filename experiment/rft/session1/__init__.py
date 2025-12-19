@@ -1,3 +1,4 @@
+from matplotlib.dviread import Page
 from otree.api import *
 import copy
 import json
@@ -102,8 +103,13 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     num_failed_attempts = models.IntegerField(initial=0)
-    failed_too_many = models.BooleanField(initial=False)
-    quiz1 = models.IntegerField(blank=True)
+    failed_too_many_1 = models.BooleanField(initial=False)
+    failed_too_many_2 = models.BooleanField(initial=False)
+    failed_too_many_3 = models.BooleanField(initial=False)
+    quiz1 = models.StringField(
+        label='What is the capital of Canada?',
+        choices=['Ottawa', 'Toronto', 'Vancouver'],
+    )
     quiz2 = models.IntegerField(blank=True)
     quiz3 = models.IntegerField(blank=True)
     quiz4 = models.IntegerField(blank=True)
@@ -398,7 +404,19 @@ class session1(Page):
         return player.round_number == 1
     pass
 
-class Introduction(Page):
+class Introduction1(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+    pass
+
+class Introduction2(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+    pass
+
+class Introduction3(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -793,18 +811,19 @@ class Results(Page):
             'selected_option': player.selected_option
         }
 
-class Check(Page):
+class Check1(Page):
+    allow_back_button = True
     form_model = 'player'
-    form_fields = ['quiz1', 'quiz2', 'quiz3', 'quiz4', 'quiz5']
+    form_fields = ['quiz1']
     # This is for comprehension check
     @staticmethod
     def error_message(player: Player, values):
-        solutions = dict(quiz1= 1, quiz2= 2, quiz3= 3, quiz4= 4, quiz5= 5)
-        errors = {name : "Incorrect answer. Please try again." for name in solutions.keys()}
+        solutions = dict(quiz1= 'Ottawa')
+        errors = {name: 'Wrong' for name in solutions if values[name] != solutions[name]}
         if errors:
             player.num_failed_attempts += 1
-            if player.num_failed_attempts >= 3:
-                player.failed_too_many = True
+            if player.num_failed_attempts >= 5:
+                player.failed_too_many_1 = True
             else:
                 return errors
     
@@ -812,14 +831,52 @@ class Check(Page):
     def is_displayed(player):
         return player.round_number == 1
 
+class Check2(Page):
+    allow_back_button = True
+    form_model = 'player'
+    form_fields = ['quiz1']
+    # This is for comprehension check
+    @staticmethod
+    def error_message(player: Player, values):
+        solutions = dict(quiz1= 'Ottawa')
+        errors = {name : "Incorrect answer. Please try again." for name in solutions.keys()}
+        if errors:
+            player.num_failed_attempts += 1
+            if player.num_failed_attempts >= 5:
+                player.failed_too_many_2 = True
+            else:
+                return errors
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+    
+class Check3(Page):
+    allow_back_button = True
+    form_model = 'player'
+    form_fields = ['quiz1']
+    # This is for comprehension check
+    @staticmethod
+    def error_message(player: Player, values):
+        solutions = dict(quiz1= 'Ottawa')
+        errors = {name : "Incorrect answer. Please try again." for name in solutions.keys()}
+        if errors:
+            player.num_failed_attempts += 1
+            if player.num_failed_attempts >= 5:
+                player.failed_too_many_3 = True
+            else:
+                return errors
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
 
 class Failed(Page):
     # This is for failed comprehension check
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.failed_too_many
-
-
+        return player.failed_too_many_1 or player.failed_too_many_2 or player.failed_too_many_3
 
 class Draw(Page):
     # This page is only displayed in the final round to draw the lottery for payment.
@@ -992,7 +1049,7 @@ class Revision_session2(Page):
     template_name = 'session1/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[1]
 
     @staticmethod
     def vars_for_template(player):
@@ -1051,7 +1108,7 @@ class WheelSession2(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.initial_evaluation_rounds
+        return player.round_number == Constants.continuation_rounds[0] #Constants.initial_evaluation_rounds
 
     @staticmethod
     def vars_for_template(player):
@@ -1073,7 +1130,7 @@ class WheelSession3(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[1]
 
     @staticmethod
     def vars_for_template(player):
@@ -1119,7 +1176,7 @@ class Revision_session1(Page):
     template_name = 'session1/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.initial_evaluation_rounds
+        return player.round_number == Constants.continuation_rounds[0]
     
     @staticmethod
     def vars_for_template(player):
@@ -1148,24 +1205,30 @@ class Revision_session1(Page):
 page_sequence = [
     Welcome,
     session1,
-    Introduction,
-    Check,
+    Introduction1,
+    Check1,
+    Failed,
+    Introduction2,
+    Check2,
+    Failed,
+    Introduction3,
+    Check3,
     Failed,
     Play,
     Draw,
-    WheelSession2,
-    Revision_session1,
     BridgeSession2,
     WelcomeSession2,
+    WheelSession2,
+    Revision_session1,
     session2,
-    Revision_session2,
     Play2,
-    WheelSession3,
     BridgeSession3,
     WelcomeSession3,
-    Revision_session3,
+    WheelSession3,
+    Revision_session2,
     session3,
     Play3,
+    #Revision_session3,
     Thankyou,
 ]
 
