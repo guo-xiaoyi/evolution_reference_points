@@ -398,7 +398,7 @@ class Welcome(Page):
         return player.round_number == 1
     pass
 
-class session1(Page):
+class Session1(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -1044,7 +1044,7 @@ class Play3(Page):
             player.participant.vars['session1_final_payoff'] = final_payoff
 
 
-class Revision_session2(Page):
+class RevisionSession2(Page):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
     template_name = 'session1/Draw.html'
     @staticmethod
@@ -1073,7 +1073,7 @@ class Revision_session2(Page):
             'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
         }
 
-class Revision_session3(Page):
+class RevisionSession3(Page):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
     template_name = 'session1/Draw.html'
     @staticmethod
@@ -1162,17 +1162,17 @@ class WelcomeSession3(Page):
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
 
-class session2(Page):
+class Session2(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[0]
 
-class session3(Page):
+class Session3(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
 
-class Revision_session1(Page):
+class RevisionSession1(Page):
     template_name = 'session1/Draw.html'
     @staticmethod
     def is_displayed(player):
@@ -1204,7 +1204,7 @@ class Revision_session1(Page):
 
 page_sequence = [
     Welcome,
-    session1,
+    Session1,
     Introduction1,
     Check1,
     Failed,
@@ -1219,14 +1219,14 @@ page_sequence = [
     BridgeSession2,
     WelcomeSession2,
     WheelSession2,
-    Revision_session1,
-    session2,
+    RevisionSession1,
+    Session2,
     Play2,
     BridgeSession3,
     WelcomeSession3,
     WheelSession3,
-    Revision_session2,
-    session3,
+    RevisionSession2,
+    Session3,
     Play3,
     #Revision_session3,
     Thankyou,
