@@ -671,13 +671,8 @@
 
 
 
-      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please use the following table to indicate your evaluation to this lottery.</h4>
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree</h4>
 
-      <p style="color: white; margin-left: 2em; margin-right: 2em;">
-
-        We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
-
-      </p>
 
       <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
         <thead style="background-color: #181818; color: white; text-align: center;">
@@ -697,11 +692,11 @@
             data-refinement-series='{{ row.refinement_series|json }}'
           >
             {{if row.amount < 0}}
-            <td class="cut-left">You pay us ${{ row.abs_amount }} and leave</td>
+            <td class="cut-left">I would prefer to pay £{{ row.abs_amount }}</td>
             {{ elif row.amount == 0 }}
-            <td class="cut-left">You neither pay nor receive anything and leave</td>
+            <td class="cut-left">I would prefer to obtain the outcomes of the random payoff tree</td>
             {{else}}
-            <td class="cut-left">You receive ${{ row.abs_amount }} and leave</td>
+            <td class="cut-left">I would prefer to receive £{{ row.abs_amount }}</td>
             {{ endif }}
             <td><input type="radio" name="cutoff" value="{{ row.index }}"></td>
             <td class="cut-right">Stay</td>
@@ -792,7 +787,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // period titles
 
-  const prettyTitle = i => (i === 0 ? 'Current session' : i === 1 ? 'Next session (Session 2)' : i === 2 ? 'Session 3' : `At the end of Session ${i}`);
+  const prettyTitle = i => (i === 0 ? 'Today [Session 1]' : i === 1 ? 'In 3 days [Session 2]' : i === 2 ? 'In 6 days [Session 3]' : `In 9 days`);
 
   // ---- build normalized periods array (0..max sorted) ----
 
@@ -1248,19 +1243,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatAmount(amount) {
       if (!Number.isFinite(amount)) return '';
       const formatted = amountFormatter.format(Math.abs(amount));
-      return amount < 0 ? `-$${formatted}` : `$${formatted}`;
+      return amount < 0 ? `-£${formatted}` : `£${formatted}`;
     }
 
     function describeSafeOption(amount) {
       if (!Number.isFinite(amount)) return '';
       const formatted = amountFormatter.format(Math.abs(amount));
       if (amount < 0) {
-        return `You pay us $${formatted} and leave`;
+        return `You pay us £${formatted} and leave`;
       }
       if (amount === 0) {
         return 'You neither pay nor receive anything and leave';
       }
-      return `You receive $${formatted} and leave`;
+      return `You receive £${formatted} and leave`;
     }
 
     function resetFinePanel() {

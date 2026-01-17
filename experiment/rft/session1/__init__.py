@@ -44,18 +44,18 @@ class Constants(BaseConstants):
             'periods': {
                 0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
                 1: [
-                    {'label': '+$10', 'probability': 0.6, 'from': 'Start', 'abs_prob' : 0.6},
-                    {'label': '-$10', 'probability': 0.4, 'from': 'Start', 'abs_prob' : 0.4}
+                    {'label': '+£10', 'probability': 0.6, 'from': 'Start', 'abs_prob' : 0.6},
+                    {'label': '-£10', 'probability': 0.4, 'from': 'Start', 'abs_prob' : 0.4}
                 ],
                 2: [
-                    {'label': '+$7', 'probability': 1, 'from': '+$10', 'abs_prob' : 0.6},
-                    {'label': '-$12', 'probability': 1, 'from': '-$10', 'abs_prob' : 0.4}
+                    {'label': '+£7', 'probability': 1, 'from': '+£10', 'abs_prob' : 0.6},
+                    {'label': '-£12', 'probability': 1, 'from': '-£10', 'abs_prob' : 0.4}
                 ],
                 3: [
-                    {'label': '+$8', 'probability': 0.8, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.48},
-                    {'label': '+$0', 'probability': 0.2, 'from': '+$7', 'parent': '+$10', 'abs_prob' : 0.12},
-                    {'label': '+$2', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.2},
-                    {'label': '+$5', 'probability': 0.5, 'from': '-$12', 'parent': '-$10', 'abs_prob' : 0.2},
+                    {'label': '+£8', 'probability': 0.8, 'from': '+£7', 'parent': '+£10', 'abs_prob' : 0.48},
+                    {'label': '+£0', 'probability': 0.2, 'from': '+£7', 'parent': '+£10', 'abs_prob' : 0.12},
+                    {'label': '+£2', 'probability': 0.5, 'from': '-£12', 'parent': '-£10', 'abs_prob' : 0.2},
+                    {'label': '+£5', 'probability': 0.5, 'from': '-£12', 'parent': '-£10', 'abs_prob' : 0.2},
                 ]
             }
         },
@@ -69,21 +69,21 @@ class Constants(BaseConstants):
             'periods': {
                 0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
                 1: [
-                    {'label': '+$610', 'probability': 0.7, 'from': 'Start', 'abs_prob' : 0.6},
-                    {'label': '+$645', 'probability': 0.3, 'from': 'Start', 'abs_prob' : 0.4}
+                    {'label': '+£610', 'probability': 0.7, 'from': 'Start', 'abs_prob' : 0.6},
+                    {'label': '+£645', 'probability': 0.3, 'from': 'Start', 'abs_prob' : 0.4}
                 ],
                 2: [
-                    {'label': '-$665', 'probability': 1, 'from': '+$610', 'abs_prob' : 0.6},
-                    {'label': '-$895', 'probability': 0.6, 'from': '+$645', 'abs_prob' : 0.4},
-                    {'label': '-$800', 'probability': 0.4, 'from': '+$645', 'abs_prob' : 0.4}
+                    {'label': '-£665', 'probability': 1, 'from': '+£610', 'abs_prob' : 0.6},
+                    {'label': '-£895', 'probability': 0.6, 'from': '+£645', 'abs_prob' : 0.4},
+                    {'label': '-£800', 'probability': 0.4, 'from': '+£645', 'abs_prob' : 0.4}
                 ],
                 3: [
-                    {'label': '+$865', 'probability': 0.3, 'from': '-$665', 'parent': '+$610', 'abs_prob' : 0.48},
-                    {'label': '-$925', 'probability': 0.7, 'from': '-$665', 'parent': '+$610', 'abs_prob' : 0.12},
-                    {'label': '+$940', 'probability': 0.6, 'from': '-$895', 'parent': '+$645', 'abs_prob' : 0.2},
-                    {'label': '-$995', 'probability': 0.4, 'from': '-$895', 'parent': '+$645', 'abs_prob' : 0.2},
-                    {'label': '-$860', 'probability': 0.6, 'from': '-$800', 'parent': '+$645', 'abs_prob' : 0.2},
-                    {'label': '+$980', 'probability': 0.4, 'from': '-$800', 'parent': '+$645', 'abs_prob' : 0.2}
+                    {'label': '+£865', 'probability': 0.3, 'from': '-£665', 'parent': '+£610', 'abs_prob' : 0.48},
+                    {'label': '-£925', 'probability': 0.7, 'from': '-£665', 'parent': '+£610', 'abs_prob' : 0.12},
+                    {'label': '+£940', 'probability': 0.6, 'from': '-£895', 'parent': '+£645', 'abs_prob' : 0.2},
+                    {'label': '-£995', 'probability': 0.4, 'from': '-£895', 'parent': '+£645', 'abs_prob' : 0.2},
+                    {'label': '-£860', 'probability': 0.6, 'from': '-£800', 'parent': '+£645', 'abs_prob' : 0.2},
+                    {'label': '+£980', 'probability': 0.4, 'from': '-£800', 'parent': '+£645', 'abs_prob' : 0.2}
                 ]
             }
         },
@@ -107,13 +107,25 @@ class Player(BasePlayer):
     failed_too_many_2 = models.BooleanField(initial=False)
     failed_too_many_3 = models.BooleanField(initial=False)
     quiz1 = models.StringField(
-        label='What is the capital of Canada?',
-        choices=['Ottawa', 'Toronto', 'Vancouver'],
+        label='Do you need to be able to participate in all three sessions to participate in this experiment?',
+        choices=['Yes', 'No'],
     )
-    quiz2 = models.IntegerField(blank=True)
-    quiz3 = models.IntegerField(blank=True)
-    quiz4 = models.IntegerField(blank=True)
-    quiz5 = models.IntegerField(blank=True)
+    quiz2 = models.StringField(
+        label='Is it fine to use AI in the experiment?',
+        choices=['Yes', 'No'],
+    )
+    quiz3 = models.StringField(
+        label='Imagine you make the following choice. Does this mean that you would rather receive the outcomes of the given random payoff tree than a payment of £4? ',
+        choices=['Yes', 'No'],
+    )
+    quiz4 = models.StringField(
+        label='Is the following sentence correct? The figure below signifies that there is a 60% chance of a gain of £10 and a 40% chance of a loss of £10.',
+        choices=['Yes', 'No'],
+    )
+    quiz5 = models.StringField(
+        label='Please consider the following random payoff tree. Imagine that the random determination of the first outcome (three days from now) yields a loss of £10, as indi-cated by the red arrow to “-£10”. Is it possible that the outcome six days from now yields a gain of £7? ',
+        choices=['Yes', 'No'],
+    )
 
     # Lottery assigned per round in creating_session
     lottery_id = models.StringField()
@@ -152,10 +164,10 @@ for i in range(1, Constants.max_choice_count + 1):
 
 
 def parse_payoff_label(label):
-    """Convert textual payoff labels such as '+$10' into integers."""
+    """Convert textual payoff labels such as '+£10' into integers."""
     if not label:
         return None
-    cleaned = label.replace(',', '').replace('$', '').strip()
+    cleaned = label.replace(',', '').replace('£', '').strip()
     match = AMOUNT_PATTERN.search(cleaned)
     if not match:
         return None
@@ -814,12 +826,20 @@ class Results(Page):
 class Check1(Page):
     allow_back_button = True
     form_model = 'player'
-    form_fields = ['quiz1']
+    form_fields = ['quiz1', 'quiz2']
     # This is for comprehension check
     @staticmethod
     def error_message(player: Player, values):
-        solutions = dict(quiz1= 'Ottawa')
-        errors = {name: 'Wrong' for name in solutions if values[name] != solutions[name]}
+        solutions = dict(quiz1= 'Yes', quiz2= 'No')
+        error_messages = {
+            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this experiment if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 10 minutes each).',
+            'quiz2': 'You should have chosen “No” for this question.  We are interested in your personal preferences (there are no right or wrong answers). Therefore, please do not use AI during the experiment.',
+        }
+        errors = {
+            name: error_messages.get(name, 'Incorrect answer. Please try again.')
+            for name in solutions
+            if values[name] != solutions[name]
+        }
         if errors:
             player.num_failed_attempts += 1
             if player.num_failed_attempts >= 5:
@@ -834,16 +854,25 @@ class Check1(Page):
 class Check2(Page):
     allow_back_button = True
     form_model = 'player'
-    form_fields = ['quiz1']
+    form_fields = ['quiz3', 'quiz4', 'quiz5']
     # This is for comprehension check
     @staticmethod
     def error_message(player: Player, values):
-        solutions = dict(quiz1= 'Ottawa')
-        errors = {name : "Incorrect answer. Please try again." for name in solutions.keys()}
+        solutions = dict(quiz3= 'Yes', quiz4= 'Yes', quiz5= 'No')
+        error_messages = {
+            'quiz3': 'You should have answered “Yes” to this question. If you could choose between receiving the outcomes of the random decision tree and £5 or less, you would prefer the outcomes of the random decision tree. (For an amount of £11 or more, you would prefer the fixed amount of money if you made the selection as in the picture.)',
+            'quiz4':'You should have answered “Yes”. That is exactly what this graph means.',
+            'quiz5':'You should have answered “No”. There is no path from the loss of £10 in the period in three days to the gain of £7 in the period in six days.'
+        }
+        errors = {
+            name: error_messages.get(name, 'Incorrect answer. Please try again.')
+            for name in solutions
+            if values[name] != solutions[name]
+        }
         if errors:
             player.num_failed_attempts += 1
             if player.num_failed_attempts >= 5:
-                player.failed_too_many_2 = True
+                player.failed_too_many_1 = True
             else:
                 return errors
     
@@ -1205,14 +1234,13 @@ class RevisionSession1(Page):
 page_sequence = [
     Welcome,
     Session1,
-    Introduction1,
     Check1,
     Failed,
     Introduction2,
     Check2,
     Failed,
     Introduction3,
-    Check3,
+    #Check3,
     Failed,
     Play,
     Draw,
