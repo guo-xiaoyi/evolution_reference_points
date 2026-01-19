@@ -5,17 +5,7 @@ SESSION_CONFIGS = [
         name='session1',
         app_sequence=['session1'],
         num_demo_participants=3,
-    ),
-    dict(
-        name='session2',
-        app_sequence=['session2'],
-        num_demo_participants=3,
-    ),
-    dict(
-        name='session3',
-        app_sequence=['session3'],
-        num_demo_participants=3,
-    ),
+    )
 
 ]
 
@@ -44,5 +34,7 @@ ADMIN_USERNAME = 'admin'
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 DEMO_PAGE_INTRO_HTML = """ """
+
+OTREE_AUTH_LEVEL = 'STUDY'  # for adding participants from the admin interface
 
 SECRET_KEY = '6053408606911'

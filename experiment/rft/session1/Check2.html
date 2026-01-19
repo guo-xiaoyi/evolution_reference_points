@@ -17,9 +17,10 @@
   <link href="jumbotron.css" rel="stylesheet">
   
   <style>
-    .otree-body{
+      .otree-body{
         max-width: 1280px;
     }
+    /* CSS for the framework */
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f5f5f5;
@@ -39,6 +40,11 @@
       background-color: white;
       padding: 2rem 0;
     }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
     .btn-primary {
       background-color: #007095;
       border-color: #007095;
@@ -56,10 +62,12 @@
       padding: 2rem 0;
       background-color: #f5f5f5;
       border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
     }
     h2 {
       font-weight: 500;
       color: #333;
+      margin-top: 2rem;
     }
     .content-image {
       width: 100%;
@@ -69,36 +77,133 @@
     .feature-box {
       margin-bottom: 2rem;
     }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }
   </style>
 </head>
 
 <body>
-  <main role="main">
+    <main role="main">
     <!-- Main jumbotron for primary marketing message -->
     <div class="jumbotron">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
-            <h1 class="university-title">Comprehension Check 2</h1>
-            <h3>To proceed, you have to answer the following questions correctly. This is crucial because we need to ensure you understand the task. If you fail to answer correctly for a total of five times, you will be excluded from the experiment. If you forget some part of the instruction, you can use the back button below to read them again.</h3>
+            <h1 class="university-title">Comprehension check 2</h1>
           </div>
-          </div>
+
         </div>
       </div>
     </div>
 
     <div class="main-container">
-      <div class="container">
-        {{ formfield 'quiz1' }}
+      <div class="content-wrapper">
+                <p>Please answer the following questions to make sure that you have fully understood the previous instructions. It is also possible to re-read the instructions by using the “Back” button below. If you answer more than 5 questions incorrectly, you may not be able to continue with the experiment.</p>
+
+
+        <p><strong>Question 1</strong></p>{{ formfield 'quiz3' }}
+        <p><strong>Question 2</strong></p>{{ formfield 'quiz4' }}
+        <p><strong>Question 3</strong></p>{{ formfield 'quiz5' }}
         <p style="text-align:right; margin-top: 1.5rem;">
               
               <button class="button btn btn-primary" onclick="back_button(1)"> &laquo; Read Instructions Again </button>
               <button class="otree-btn-next btn btn-primary">Submit &raquo;</button>
 
           </p>
+
       </div>
+
     </div>
+
   </main>
+
 
   <footer class="footer">
     <div class="container">
@@ -112,10 +217,9 @@
   </footer>
 
   <!-- Hidden form fields for oTree -->
-  <div style="display:none;">
-    {{ formfields }}
-  </div>
+ 
 
+  
   <!-- Bootstrap core JavaScript -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>

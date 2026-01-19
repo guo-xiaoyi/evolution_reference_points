@@ -230,16 +230,16 @@
           <div class="col-md-6">
             <h1 class="university-title">
               {{ if is_revision }}
-              Review your previously selected lottery.
+              Review 'your' previously drawn random payoff tree
               {{ else }}
-              Draw your lottery
+              Draw 'your' random payoff tree
               {{ endif }}
             </h1>
             <p>
               {{ if is_revision }}
-              The lottery below was drawn at the end of Session&nbsp;1 and carries over to the continuation sessions. Please review it before you proceed.
+              The random payoff tree below was drawn at the end of Session&nbsp;1 and carries over to the continuation sessions. Please review it before you proceed.
               {{ else }}
-              Thank you for providing your evaluations. Now we pick your risky prospect that you will evaluate in the subsequent two sessions. Please click the following card to draw one from your previously evaluated 15 risky prospects.
+              Thank you for providing your evaluations. Now we pick your risky payoff tree that you will evaluate in the subsequent two sessions. Please click the following button to draw one from your previously evaluated 15 random payoff trees. This will be 'your' lottery for the continuation sessions.
               {{ endif }}
             </p>
 
@@ -262,7 +262,7 @@
                 {{ if is_revision }}
                 Lottery already selected - review below.
                 {{ else }}
-                Click the card to start the draw.
+                Click the button to start the draw.
                 {{ endif }}
               </p>
               {{ if is_revision }}
@@ -277,18 +277,17 @@
               <button type="button" class="draw-card" id="draw-card" aria-live="polite">Click to draw</button>
               {{ endif }}
               <div class="draw-summary" id="draw-summary" {{ if is_revision }}{{ else }}hidden{{ endif }}>
-                <p>Your lottery for the continuation sessions is <strong>{{ lottery_name }}</strong>.</p>
+                <p>The following random payoff tree has been randomly determined for the continuation. In the next two sessions, we will only ask you about this lottery.</p>
                 {{ if selected_round }}
-                <p>It was drawn from round <strong>{{ selected_round }}</strong>{{ if selected_choice }} based on choice <strong>#{{ selected_choice }}</strong>{{ if selected_option }} ({{ selected_option }}){{ endif }}{{ endif }}{{ if selected_amount }} with a recorded amount of <strong>{{ selected_amount }}</strong>{{ endif }}.</p>
+                <p>You evaluated this random payoff tree with <strong>{{ selected_amount }}</strong>.</p>
                 {{ endif }}
                 {{ if is_revision }}
-                <p>This is a revision screen only. No new draw takes place; the same lottery applies for the continuation rounds.</p>
-                <p>You are currently in <strong>Session {{ current_session_number }}</strong>. The continuation tasks will use this lottery.</p>
+                <p>The following random payoff tree has been randomly determined for the continuation. In the next two sessions, we will only ask you about this lottery.</p>
                 {{ if realized_summary }}
                 <p>You have realized the following stages so far:</p>
                 <ul>
                   {{ for item in realized_summary }}
-                  <li>Period {{ item.period }}: {{ item.label }}{{ if item.probability_text }} ({{ item.probability_text }}){{ endif }}</li>
+                  <li>Session {{ item.period }}: {{ item.label }}{{ if item.probability_text }} ({{ item.probability_text }}){{ endif }}</li>
                   {{ endfor }}
                 </ul>
                 {{ endif }}
@@ -305,12 +304,12 @@
                   <span class="timeline-detail">
                     {{ if is_revision }}
                       {{ if current_session_number == 2 }}
-                      This session &mdash; Play2 (round {{ continuation_rounds.0 }})
+                      <strong>Today</strong>
                       {{ else }}
-                      Completed Play2 (round {{ continuation_rounds.0 }})
+                      3 days ago
                       {{ endif }}
                     {{ else }}
-                    Upcoming Play2 (round {{ continuation_rounds.0 }})
+                    In 3 days
                     {{ endif }}
                   </span>
                 </li>
@@ -319,19 +318,19 @@
                   <span class="timeline-detail">
                     {{ if is_revision }}
                       {{ if current_session_number == 3 }}
-                      This session &mdash; Play3 (round {{ continuation_rounds.1 }})
+                      <strong>Today</strong>
                       {{ else }}
-                      Upcoming Play3 (round {{ continuation_rounds.1 }})
+                      In 3 days
                       {{ endif }}
                     {{ else }}
-                    Upcoming Play3 (round {{ continuation_rounds.1 }})
+                    In 6 days
                     {{ endif }}
                   </span>
                 </li>
               </ul>
               {{ endif }}
               <div class="lottery-preview" id="lottery-preview" {{ if is_revision }}{{ else }}hidden{{ endif }}>
-                <h3 class="preview-title">Lottery preview</h3>
+                <h3 class="preview-title">PREVIEW</h3>
                 <div id="lottery-visualization" aria-live="polite"></div>
                  {{if is_revision }}
                  <p style="text-align:right;">
@@ -339,7 +338,7 @@
             </p>
             {{ else}}
             <p style="text-align:right;">
-              <button class="otree-btn-next btn btn-primary">To fortune wheel &raquo;</button>
+              <button class="otree-btn-next btn btn-primary">Next &raquo;</button>
             </p>
             {{ endif }}
               </div>
@@ -627,13 +626,13 @@
           svg.appendChild(mk('rect', { x: x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: columnClass }));
           var titleLabel;
           if (periodKey === 0) {
-            titleLabel = 'Start';
+            titleLabel = 'Session 1';
           } else if (periodKey === 1) {
-            titleLabel = 'Period 1 (Session 2)';
+            titleLabel = 'Session 2';
           } else if (periodKey === 2) {
-            titleLabel = 'Period 2 (Session 3)';
+            titleLabel = 'Session 3';
           } else {
-            titleLabel = 'Period ' + periodKey;
+            titleLabel = 'After session 3';
           }
           svg.appendChild(mk('text', { x: x + colW / 2, y: topPad + 18, class: 'title', 'text-anchor': 'middle' }, titleLabel));
           var wheelCx = x + wheelCxOffset;
@@ -816,13 +815,6 @@
             'dominant-baseline': 'top',
             fill: isHighlight ? '#b56600' : '#1c3b4d'
           }, o.label));
-          svg.appendChild(mk('text', {
-            x: o.probX,
-            y: o.y + 16,
-            class: isHighlight ? 'prob highlight-node' : 'prob',
-            'text-anchor': 'middle',
-            fill: isHighlight ? '#b56600' : '#37474f'
-          }, o.probText));
         });
         mount.innerHTML = '';
         mount.appendChild(svg);
@@ -842,7 +834,7 @@
         card.classList.add('final');
         card.disabled = true;
         card.setAttribute('aria-disabled', 'true');
-        status.textContent = isRevision ? 'Lottery already selected - review below.' : 'Lottery selected!';
+        status.textContent = isRevision ? 'REVIEW THE RANDOM PAYOFF TREE' : 'YOUR RANDOM PAYOFF TREE';
         if (summary) {
           summary.removeAttribute('hidden');
         }
