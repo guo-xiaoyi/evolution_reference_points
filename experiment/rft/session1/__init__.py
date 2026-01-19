@@ -1147,9 +1147,9 @@ class WheelSession2(Page):
             title='Spin for Session 2',
             description='We now realize the first period of your lottery. The outcome applies to Session 2 (Play2).',
             stage_label='Period 1 outcome',
-            status_text='Click the button to reveal the branch you will face in Session 2 (Play2).',
+            status_text='Click the button to reveal the branch you will face today.',
             button_label='Spin for Session 2',
-            next_step='This outcome determines the branch you will evaluate in Session 2 (Play2).',
+            next_step='This outcome determines the branch you will evaluate today.',
         )
 
 

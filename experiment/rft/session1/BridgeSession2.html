@@ -67,10 +67,70 @@
     .feature-box {
       margin-bottom: 2rem;
     }
+    .demo-popup {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+    }
+    .demo-popup__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .demo-popup__card {
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      color: #333;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      max-width: 520px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+    .demo-popup__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .demo-popup__text {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .demo-popup__count {
+      font-weight: 700;
+    }
+    .demo-popup__close {
+      margin-top: 1rem;
+      background: #007095;
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+    }
+    .demo-popup__close:hover {
+      background: #005a79;
+    }
   </style>
 </head>
 
 <body>
+  <div id="demo-popup" class="demo-popup" role="dialog" aria-modal="true" aria-labelledby="demo-popup-title">
+    <div class="demo-popup__backdrop" aria-hidden="true"></div>
+    <div class="demo-popup__card">
+      <div id="demo-popup-title" class="demo-popup__title">Demo version</div>
+      <p class="demo-popup__text">
+        This is only a demo version. You will be redirected to the next session in 1 minute.
+      </p>
+      <button type="button" class="demo-popup__close" id="demo-popup-close">Close</button>
+    </div>
+  </div>
   <main role="main">
     <!-- Main jumbotron for primary marketing message -->
     <div class="jumbotron">
@@ -95,27 +155,6 @@
       </div>
     </div>
 
-    <div class="main-container">
-      <div class="container">
-        <!-- Information columns -->
-        <div class="row">
-          <div class="col-md-4 feature-box">
-            <h2>How to play</h2>
-            <p>Follow the instructions provided in each section. Make sure to read carefully and complete each task to the best of your ability. If you have any questions, feel free to ask the experimenter using the Prolific chatting window. Work as if this is your real money. It is important for us to elicit your true preferences even though you do not really earn or lose money from the depicted situations you see later.</p>
-          </div>
-          <div class="col-md-4 feature-box">
-            <h2>Who are we</h2>
-            <p>We are researchers from the University of St. Gallen, Switzerland. We cordially invite you to take part in our lottery evaluation tasks. This experiment is part of our project "Evolution of Reference Points over Time". We are: Xiaoyi Guo, Matthias Weber, Enrico de Giorgi, Andrija Lukovic.</p>
-          </div>
-          <div class="col-md-4 feature-box">
-            <h2>What to expect</h2>
-            <p>You will be presented with various lottery scenarios and asked to make valuations. Your responses will
-              help us understand decision-making processes under uncertainty. We will incentivize you by paying you a show-up fee for three times, and a bonus if you attend all three sessions.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
 
   <footer class="footer">
     <div class="container">
@@ -142,9 +181,18 @@
     (function () {
       const waitTimestamp = {{ wait_timestamp|json }};
       const serverNow = {{ server_timestamp|json }};
+      const form = document.querySelector('form');
+      const popup = document.getElementById('demo-popup');
+      const popupClose = document.getElementById('demo-popup-close');
+
+      if (popupClose && popup) {
+        popupClose.addEventListener('click', () => {
+          popup.style.display = 'none';
+        });
+      }
+
       if (waitTimestamp) {
         const skew = serverNow - (Date.now() / 1000);
-        const form = document.querySelector('form');
 
         function submitWhenReady() {
           if (!form || form.dataset.autosubmitted === 'true') {
@@ -152,8 +200,10 @@
           }
           const adjustedNow = (Date.now() / 1000) + skew;
           if (adjustedNow >= waitTimestamp) {
-            form.dataset.autosubmitted = 'true';
-            form.submit();
+            if (form && form.dataset.autosubmitted !== 'true') {
+              form.dataset.autosubmitted = 'true';
+              form.submit();
+            }
           } else {
             window.setTimeout(submitWhenReady, 1000);
           }

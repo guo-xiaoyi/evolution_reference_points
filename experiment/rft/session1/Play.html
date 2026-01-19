@@ -511,9 +511,17 @@
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
 
     /* Selection table styles */
+    .cut-table { table-layout: fixed; width: 100%; }
+    .cut-table col { width: 50%; }
     .cut-table th, .cut-table td { text-align: center; vertical-align: middle; }
     .cut-left.shaded { background-color: #e7f7ec; }
-    .cut-right.shaded { background-color: #ffe9e9; }
+    .cut-right.shaded { background-color: #e7f7ec; }
+    .cut-table tbody tr { cursor: pointer; }
+    .cut-table tbody tr:hover td:not(.shaded) { background-color: #c9c9c9; }
+    .cut-table .cutoff-input,
+    .cut-table .fine-cutoff-input {
+        display: none;
+    }
     .fine-panel {
         margin-top: 1.5rem;
         background-color: #f5f1eb;
@@ -528,7 +536,7 @@
     }
 
     :root {
-      --sidebar-width: 650px; /* increase this value to make the sidebar wider */
+      --sidebar-width: 750px; /* increase this value to make the sidebar wider */
     }
 
     .sidebar {
@@ -616,12 +624,9 @@
 
     <div class="row">
 
-        <h1 class="university-title">Lottery Valuation Task ({{player.round_number}}/15)</h1>
+        <h1 class="university-title">Random Payoff Tree ({{player.round_number}}/15)</h1>
 
-        <h3>Please provide your valuation to this lottery.</h3>
-
-        <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
-        <p>After you have observed the lottery carefully, you can click the "Start evaluation" button on the right, which will open the sidebar with evaluation table. You can open or close the sidebar and check the whole lottery anytime.</p>
+        <p> Please provide your evaluation to this random payoff tree. Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
 
 
               <p style="text-align:right;">
@@ -670,16 +675,19 @@
  
 
 
+    <h2><span style=" color:white; margin-left: 1em; margin-right: 2em;">↓</span></h2>
 
-      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree</h4>
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree. </h4>
 
-
+      
       <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
+        <colgroup>
+          <col>
+          <col>
+        </colgroup>
         <thead style="background-color: #181818; color: white; text-align: center;">
           <tr>
-            <th style="text-align: center">Safe option</th>
-            <th style="text-align: center; width: 30%;">&darr;</th>
-            <th style="text-align: center; width: 30%;">Risky option</th>
+            <th style="text-align: center" colspan="2">I would prefer to...</th>
           </tr>
         </thead>
         <tbody style="background-color: #d3d3d3; text-align: center">
@@ -692,14 +700,13 @@
             data-refinement-series='{{ row.refinement_series|json }}'
           >
             {{if row.amount < 0}}
-            <td class="cut-left">I would prefer to pay £{{ row.abs_amount }}</td>
+            <td class="cut-left">...pay £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ elif row.amount == 0 }}
-            <td class="cut-left">I would prefer to obtain the outcomes of the random payoff tree</td>
+            <td class="cut-left">...neither pay or receive<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{else}}
-            <td class="cut-left">I would prefer to receive £{{ row.abs_amount }}</td>
+            <td class="cut-left">...receive £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ endif }}
-            <td><input type="radio" name="cutoff" value="{{ row.index }}"></td>
-            <td class="cut-right">Stay</td>
+            <td class="cut-right">...obtain the outcomes of the random payoff tree</td>
           </tr>
           {{ endfor }}
         </tbody>
@@ -715,20 +722,21 @@
 
       {{ if stake == 'hi' }}
       <div id="fine-choice-panel" class="fine-panel hidden">
-        <h5>We want to know more about your choice.</h5>
+        <h5>We would like to ask for more detail about your choice.</h5>
         <p id="fine-range-message">
-          Your current switch happens between <strong id="fine-range-lower"></strong> and <strong id="fine-range-upper"></strong>.
-          We want to offer you a more refined list of fixed payments between these two amounts. Please select one option from the list below.
+          Please inidcate your valuation of the same random payoff tree below.
         </p>
         <div id="fine-choice-warning" class="text-danger" style="display:none;">
           Please select an option in the refinement list.
         </div>
         <table class="table cut-table fine-table">
+          <colgroup>
+            <col>
+            <col>
+          </colgroup>
           <thead style="background-color: #1f1f1f; color:white; text-align:center;">
             <tr>
-              <th style="text-align:center;">Safe option (refined)</th>
-              <th style="text-align:center; width:30%;">&darr;</th>
-              <th style="text-align:center; width:30%;">Risky option</th>
+              <th style="text-align:center;" colspan="2">I would prefer to...</th>
             </tr>
           </thead>
           <tbody style="background-color:#f5f5f5; text-align:center;"></tbody>
@@ -737,7 +745,7 @@
       {{ endif }}
 
       <p style="text-align:right;">
-
+        <br><br>
         <button class="otree-btn-next btn btn-primary" style="margin-right: 2em;">Submit &raquo;</button>
 
       </p>
@@ -1238,6 +1246,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (left && Number.isFinite(amount)) {
         left.textContent = describeSafeOption(amount);
       }
+      tr.addEventListener('click', () => {
+        const idx = Number(tr.dataset.index);
+        if (!Number.isInteger(idx)) return;
+        const radio = tr.querySelector('input[name="cutoff"]');
+        if (radio) radio.checked = true;
+        applyCutoff(idx);
+      });
     });
 
     function formatAmount(amount) {
@@ -1250,12 +1265,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!Number.isFinite(amount)) return '';
       const formatted = amountFormatter.format(Math.abs(amount));
       if (amount < 0) {
-        return `You pay us £${formatted} and leave`;
+        return `...pay £${formatted}`;
       }
       if (amount === 0) {
-        return 'You neither pay nor receive anything and leave';
+        return '...neither pay or receive';
       }
-      return `You receive £${formatted} and leave`;
+      return `...receive £${formatted}`;
     }
 
     function resetFinePanel() {
@@ -1306,22 +1321,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const left = document.createElement('td');
         left.className = 'cut-left';
         left.textContent = describeSafeOption(amount);
-        const mid = document.createElement('td');
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'fine_cutoff';
         radio.value = idx;
+        radio.className = 'fine-cutoff-input';
         const right = document.createElement('td');
         right.className = 'cut-right';
-        right.textContent = 'Stay';
-        mid.appendChild(radio);
+        right.textContent = '...obtain the outcomes of the random payoff tree';
+        left.appendChild(radio);
         tr.appendChild(left);
-        tr.appendChild(mid);
         tr.appendChild(right);
         fineTable.appendChild(tr);
         fineRows.push(tr);
         fineRadios.push(radio);
         radio.addEventListener('change', () => applyFineCutoff(idx));
+        tr.addEventListener('click', () => applyFineCutoff(idx));
         if (Number.isInteger(selectedIdx) && idx === selectedIdx) {
           radio.checked = true;
         }

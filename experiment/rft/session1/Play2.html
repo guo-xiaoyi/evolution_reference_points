@@ -523,9 +523,29 @@
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
 
     /* Selection table styles */
+     .cut-table { table-layout: fixed; width: 100%; }
+    .cut-table col { width: 50%; }
     .cut-table th, .cut-table td { text-align: center; vertical-align: middle; }
     .cut-left.shaded { background-color: #e7f7ec; }
-    .cut-right.shaded { background-color: #ffe9e9; }
+    .cut-right.shaded { background-color: #e7f7ec; }
+    .cut-table tbody tr { cursor: pointer; }
+    .cut-table tbody tr:hover td:not(.shaded) { background-color: #c9c9c9; }
+    .cut-table .cutoff-input,
+    .cut-table .fine-cutoff-input {
+        display: none;
+    }
+    .fine-panel {
+        margin-top: 1.5rem;
+        background-color: #f5f1eb;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+    }
+    .fine-panel.hidden {
+        display: none;
+    }
+    .fine-panel table {
+        margin-top: 1rem;
+    }
 
     :root {
       --sidebar-width: 650px; /* increase this value to make the sidebar wider */
@@ -616,12 +636,10 @@
 
     <div class="row">
 
-        <h1 class="university-title">Lottery Valuation Task (Session 2)</h1>
 
-        <h3>Please provide your valuation to this lottery.</h3>
+        <h1 class="university-title">Random Payoff Tree (Session 2)</h1>
 
-        <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
-        <p>After you have observed the lottery carefully, you can click the "Start evaluation" button on the right, which will open the sidebar with evaluation table. You can open or close the sidebar and check the whole lottery anytime.</p>
+        <p> Please provide your evaluation to this random payoff tree. Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
 
 
               <p style="text-align:right;">
@@ -670,35 +688,37 @@
  
 
 
+    <h2><span style=" color:white; margin-left: 1em; margin-right: 2em;">↓</span></h2>
 
-      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please use the following table to indicate your evaluation to this lottery.</h4>
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree. </h4>
 
-      <p style="color: white; margin-left: 2em; margin-right: 2em;">
-
-        We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
-
-      </p>
-
-      <table id="choice-table" class="table cut-table">
+      <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
+        <colgroup>
+          <col>
+          <col>
+        </colgroup>
         <thead style="background-color: #181818; color: white; text-align: center;">
           <tr>
-            <th style="text-align: center">Safe option</th>
-            <th style="text-align: center; width: 30%;">&darr;</th>
-            <th style="text-align: center; width: 30%;">Risky option</th>
+            <th style="text-align: center" colspan="2">I would prefer to...</th>
           </tr>
         </thead>
         <tbody style="background-color: #d3d3d3; text-align: center">
           {{ for row in choice_rows }}
-          <tr data-index="{{ row.index }}" data-field="{{ row.field_name }}">
+          <tr
+            data-index="{{ row.index }}"
+            data-field="{{ row.field_name }}"
+            data-amount="{{ row.amount }}"
+            data-lower-amount="{{ row.prev_amount }}"
+            data-refinement-series='{{ row.refinement_series|json }}'
+          >
             {{if row.amount < 0}}
-            <td class="cut-left">You pay us ${{ row.abs_amount }} and leave</td>
+            <td class="cut-left">...pay £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ elif row.amount == 0 }}
-            <td class="cut-left">You neither pay nor receive anything and leave</td>
+            <td class="cut-left">...neither pay or receive<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{else}}
-            <td class="cut-left">You receive ${{ row.abs_amount }} and leave</td>
+            <td class="cut-left">...receive £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ endif }}
-            <td><input type="radio" name="cutoff" value="{{ row.index }}"></td>
-            <td class="cut-right">Stay</td>
+            <td class="cut-right">...obtain the outcomes of the random payoff tree</td>
           </tr>
           {{ endfor }}
         </tbody>
@@ -709,13 +729,39 @@
           <input type="hidden" name="{{ row.field_name }}" value="">
         {{ endfor }}
         <input type="hidden" name="cutoff_index" value="">
+        <input type="hidden" name="fine_cutoff_index" value="">
       </div>
 
-      <p style="text-align:right;">
+      {{ if stake == 'hi' }}
+      <div id="fine-choice-panel" class="fine-panel hidden">
+        <h5>We would like to ask for more detail about your choice.</h5>
+        <p id="fine-range-message">
+          Please inidcate your valuation of the same random payoff tree below.
+        </p>
+        <div id="fine-choice-warning" class="text-danger" style="display:none;">
+          Please select an option in the refinement list.
+        </div>
+        <table class="table cut-table fine-table">
+          <colgroup>
+            <col>
+            <col>
+          </colgroup>
+          <thead style="background-color: #1f1f1f; color:white; text-align:center;">
+            <tr>
+              <th style="text-align:center;" colspan="2">I would prefer to...</th>
+            </tr>
+          </thead>
+          <tbody style="background-color:#f5f5f5; text-align:center;"></tbody>
+        </table>
+      </div>
+      {{ endif }}
 
+      <p style="text-align:right;">
+        <br><br>
         <button class="otree-btn-next btn btn-primary" style="margin-right: 2em;">Submit &raquo;</button>
 
       </p>
+
 
 </div>
 
@@ -1256,7 +1302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ----- selection table shading and mapping -----
   const table = document.getElementById('choice-table');
-  if (table) {
+if (table) {
     const rows = Array.from(table.querySelectorAll('tbody tr'));
     const radios = Array.from(table.querySelectorAll('input[name="cutoff"]'));
     const hiddenInputs = new Map();
@@ -1264,14 +1310,216 @@ document.addEventListener('DOMContentLoaded', function () {
       hiddenInputs.set(input.name, input);
     });
     const cutoffField = hiddenInputs.get('cutoff_index');
+    const fineField = hiddenInputs.get('fine_cutoff_index');
     const acceptLabel = {{ accept_label|json }};
     const playLabel = {{ play_label|json }};
+    const stakeType = (table.dataset.stake || '').toLowerCase();
+    const isHighStake = stakeType === 'hi';
+    const finePanel = document.getElementById('fine-choice-panel');
+    const fineTable = finePanel ? finePanel.querySelector('tbody') : null;
+    const fineLowerEl = document.getElementById('fine-range-lower');
+    const fineUpperEl = document.getElementById('fine-range-upper');
+    const fineWarning = document.getElementById('fine-choice-warning');
 
-    function applyCutoff(idx) {
+    function resolveLocalePreference(candidates) {
+      for (const hint of candidates) {
+        if (!hint) continue;
+        const norm = hint.toLowerCase();
+        if (norm.includes('ch')) return 'de-CH';
+        if (norm.includes('us')) return 'en-US';
+        if (norm.includes('en')) return 'en-US';
+        if (norm.includes('de')) return 'de-DE';
+        if (norm.includes('fr')) return 'fr-FR';
+        if (norm.includes('it')) return 'it-IT';
+        return hint;
+      }
+      return 'en-US';
+    }
+
+    const localeHints = [];
+    if (table.dataset.numberLocale) localeHints.push(table.dataset.numberLocale);
+    const htmlLang = document.documentElement ? document.documentElement.lang : null;
+    if (htmlLang) localeHints.push(htmlLang);
+    if (typeof navigator !== 'undefined') {
+      if (navigator.languages && navigator.languages.length) {
+        localeHints.push(...navigator.languages);
+      } else if (navigator.language) {
+        localeHints.push(navigator.language);
+      }
+    }
+    const resolvedLocale = resolveLocalePreference(localeHints);
+    let amountFormatter;
+    try {
+      amountFormatter = new Intl.NumberFormat(resolvedLocale, {
+        useGrouping: true,
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      });
+    } catch (err) {
+      amountFormatter = new Intl.NumberFormat('en-US', {
+        useGrouping: true,
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      });
+    }
+    let fineRows = [];
+    let fineRadios = [];
+    let currentFineValues = [];
+    let currentFineLower = null;
+
+    rows.forEach(tr => {
+      const left = tr.querySelector('.cut-left');
+      const amount = Number(tr.dataset.amount);
+      if (left && Number.isFinite(amount)) {
+        left.textContent = describeSafeOption(amount);
+      }
+      tr.addEventListener('click', () => {
+        const idx = Number(tr.dataset.index);
+        if (!Number.isInteger(idx)) return;
+        const radio = tr.querySelector('input[name="cutoff"]');
+        if (radio) radio.checked = true;
+        applyCutoff(idx);
+      });
+    });
+
+    function formatAmount(amount) {
+      if (!Number.isFinite(amount)) return '';
+      const formatted = amountFormatter.format(Math.abs(amount));
+      return amount < 0 ? `-£${formatted}` : `£${formatted}`;
+    }
+
+    function describeSafeOption(amount) {
+      if (!Number.isFinite(amount)) return '';
+      const formatted = amountFormatter.format(Math.abs(amount));
+      if (amount < 0) {
+        return `...pay £${formatted}`;
+      }
+      if (amount === 0) {
+        return '...neither pay or receive';
+      }
+      return `...receive £${formatted}`;
+    }
+
+    function resetFinePanel() {
+      if (!finePanel) return;
+      finePanel.classList.add('hidden');
+      if (fineTable) fineTable.innerHTML = '';
+      fineRows = [];
+      fineRadios = [];
+      currentFineValues = [];
+      currentFineLower = null;
+      if (fineLowerEl) fineLowerEl.textContent = '';
+      if (fineUpperEl) fineUpperEl.textContent = '';
+      if (fineWarning) fineWarning.style.display = 'none';
+      if (fineField) fineField.value = '';
+    }
+
+    function applyFineCutoff(idx) {
+      const hasIdx = Number.isInteger(idx);
+      fineRows.forEach((tr, i) => {
+        const left = tr.querySelector('.cut-left');
+        const right = tr.querySelector('.cut-right');
+        const shade = hasIdx ? i >= idx : false;
+        const shadeRight = hasIdx ? i < idx : false;
+        if (left) left.classList.toggle('shaded', shade);
+        if (right) right.classList.toggle('shaded', shadeRight);
+      });
+      fineRadios.forEach((radio, i) => {
+        radio.checked = hasIdx ? i === idx : false;
+      });
+      if (fineField) {
+        fineField.value = hasIdx ? idx : '';
+      }
+      if (hasIdx && fineWarning) {
+        fineWarning.style.display = 'none';
+      }
+    }
+
+    function buildFineRows(selectedIdx) {
+      if (!fineTable) return;
+      fineTable.innerHTML = '';
+      fineRows = [];
+      fineRadios = [];
+      currentFineValues.forEach((val, idx) => {
+        const amount = Number(val);
+        if (!Number.isFinite(amount)) return;
+        const tr = document.createElement('tr');
+        tr.dataset.value = amount;
+        const left = document.createElement('td');
+        left.className = 'cut-left';
+        left.textContent = describeSafeOption(amount);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'fine_cutoff';
+        radio.value = idx;
+        radio.className = 'fine-cutoff-input';
+        const right = document.createElement('td');
+        right.className = 'cut-right';
+        right.textContent = '...obtain the outcomes of the random payoff tree';
+        left.appendChild(radio);
+        tr.appendChild(left);
+        tr.appendChild(right);
+        fineTable.appendChild(tr);
+        fineRows.push(tr);
+        fineRadios.push(radio);
+        radio.addEventListener('change', () => applyFineCutoff(idx));
+        tr.addEventListener('click', () => applyFineCutoff(idx));
+        if (Number.isInteger(selectedIdx) && idx === selectedIdx) {
+          radio.checked = true;
+        }
+      });
+      applyFineCutoff(Number.isInteger(selectedIdx) ? selectedIdx : null);
+    }
+
+    function renderFinePanel(idx, selectedIdx = null) {
+      if (!isHighStake || !finePanel) return;
+      const row = rows[idx];
+      if (!row) {
+        resetFinePanel();
+        return;
+      }
+      const lowerAttr = row.dataset.lowerAmount;
+      const seriesAttr = row.dataset.refinementSeries;
+      if (!lowerAttr || !seriesAttr || seriesAttr === '[]') {
+        resetFinePanel();
+        return;
+      }
+      const lower = Number(lowerAttr);
+      if (!Number.isFinite(lower)) {
+        resetFinePanel();
+        return;
+      }
+      let values;
+      try {
+        values = JSON.parse(seriesAttr);
+      } catch (err) {
+        values = [];
+      }
+      if (!Array.isArray(values) || !values.length) {
+        resetFinePanel();
+        return;
+      }
+      currentFineLower = lower;
+      currentFineValues = values.map(v => Number(v)).filter(v => Number.isFinite(v));
+      if (!currentFineValues.length) {
+        resetFinePanel();
+        return;
+      }
+      if (fineLowerEl) fineLowerEl.textContent = formatAmount(lower);
+      if (fineUpperEl) {
+        const last = currentFineValues[currentFineValues.length - 1];
+        fineUpperEl.textContent = formatAmount(last);
+      }
+      finePanel.classList.remove('hidden');
+      if (fineWarning) fineWarning.style.display = 'none';
+      const safeIdx = Number.isInteger(selectedIdx) ? Math.min(selectedIdx, currentFineValues.length - 1) : null;
+      buildFineRows(safeIdx);
+    }
+
+    function applyCutoff(idx, opts = {}) {
       if (!Number.isInteger(idx)) return;
 
       rows.forEach((tr, i) => {
-        // Shade left/right cells based on cutoff
         const left = tr.querySelector('.cut-left');
         const right = tr.querySelector('.cut-right');
         if (left) left.classList.toggle('shaded', i >= idx);
@@ -1280,13 +1528,29 @@ document.addEventListener('DOMContentLoaded', function () {
         const fieldName = tr.dataset.field;
         const hidden = hiddenInputs.get(fieldName);
         if (hidden) {
-          if (i >= idx) hidden.value = acceptLabel;
-          else hidden.value = playLabel;
+          hidden.value = i >= idx ? acceptLabel : playLabel;
         }
       });
 
       if (cutoffField) {
         cutoffField.value = idx;
+      }
+
+      if (isHighStake && finePanel) {
+        const preserve = opts && opts.preserveFineSelection;
+        let fineIdx = null;
+        if (preserve && fineField && fineField.value !== '') {
+          const parsed = Number(fineField.value);
+          if (Number.isInteger(parsed)) {
+            fineIdx = parsed;
+          }
+        }
+        renderFinePanel(idx, fineIdx);
+        if (!preserve && fineField) {
+          fineField.value = '';
+        }
+      } else if (finePanel) {
+        resetFinePanel();
       }
     }
 
@@ -1303,8 +1567,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (preselected) {
       const idx = Number(preselected.value);
       if (Number.isInteger(idx)) {
-        applyCutoff(idx);
+        applyCutoff(idx, { preserveFineSelection: true });
       }
+    }
+
+    const form = document.querySelector('form');
+    if (form && isHighStake && finePanel) {
+      form.addEventListener('submit', event => {
+        const visibleFinePanel = !finePanel.classList.contains('hidden');
+        const missing = !fineField || fineField.value === '';
+        if (visibleFinePanel && missing) {
+          event.preventDefault();
+          if (fineWarning) {
+            fineWarning.style.display = 'block';
+          }
+          finePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
     }
   }
 
