@@ -61,10 +61,11 @@ warnings.filterwarnings('ignore')
 # lambda_candidates = np.linspace(2.25, 2.25, 1)
 # gamma_candidates = np.linspace(0.61, 0.61, 1)   
 alpha_candidates = np.linspace(0.75, 0.95, 5)
+#alpha_candidates = np.linspace(0.8, 0.95, 4)
 # longer interval
-lambda_candidates = np.linspace(1.25, 2.5, 5)
+# lambda_candidates = np.linspace(1.25, 2.5, 5)
 # shorter interval
-#lambda_candidates = np.linspace(1.6, 2.5, 5) # let lambda vary more widely (1 allows loss neutral)
+lambda_candidates = np.linspace(1.6, 2.5, 3) # let lambda vary more widely (1 allows loss neutral)
 gamma_candidates = np.linspace(0.58, 0.70, 5)
 r_candidates = np.linspace(0.96, 0.99, 4)
 
@@ -197,7 +198,7 @@ class OptimizedConfig:
 
     # Performance optimization settings
     batch_size: int = 10000
-    early_termination_solutions: int = 50
+    early_termination_solutions: int = 10
     use_fast_prefilter: bool = True
 
     # Output settings
