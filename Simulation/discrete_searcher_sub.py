@@ -718,17 +718,23 @@ class UnifiedLotteryOptimizer:
             if self.outcomes == 4:
                 z1, z2, z3, z4 = Z
                 p1, p2, p3 = params[8:]
-                Z_L1 = np.array([z1-b11, z2-b11]); p_L1 = np.array([p2, 1 - p2])
-                Z_L2 = np.array([z3-b12, z4-b12]); p_L2 = np.array([p3, 1 - p3])
+                b11, b12 = params[:2]
+                c21, c22, c31, c32, c33, c34 = params[2:8]
+                r_sq = self.r * self.r
+                Z_L1 = np.array([c31 * self.r, c32 * self.r]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([c33 * self.r, c34 * self.r]); p_L2 = np.array([p3, 1 - p3])
+                Z_L3 = np.array([c21 * self.r + c31 * r_sq, c21 * self.r + c32 * r_sq]); p_L3 = np.array([p2, 1 - p2])
+                Z_L4 = np.array([c22 * self.r + c33 * r_sq, c22 * self.r + c34 * r_sq]); p_L4 = np.array([p3, 1 - p3])
                 E_L1 = np.sum(Z_L1 * p_L1)
                 E_L2 = np.sum(Z_L2 * p_L2)
-                b11, b12, c21, c22 = params[:4]
+                E_L3 = np.sum(Z_L3 * p_L3)
+                E_L4 = np.sum(Z_L4 * p_L4)
 
                 IL1_lower, IL1_upper = self.find_monotonic_interval(Z_L1, p_L1)
                 if IL1_lower is None or IL1_upper is None or IL1_lower >= IL1_upper:
                     total_violations += 100
                 else:
-                    for value in [b11, b11 + c21, E_L1, expected_value]:
+                    for value in [0.0, E_L1]:
                         if value < IL1_lower:
                             total_violations += (IL1_lower - value)
                         elif value > IL1_upper:
@@ -738,28 +744,56 @@ class UnifiedLotteryOptimizer:
                 if IL2_lower is None or IL2_upper is None or IL2_lower >= IL2_upper:
                     total_violations += 100
                 else:
-                    for value in [b12, b12 + c22, E_L2, expected_value]:
+                    for value in [0.0, E_L2]:
                         if value < IL2_lower:
                             total_violations += (IL2_lower - value)
                         elif value > IL2_upper:
                             total_violations += (value - IL2_upper)
+
+                IL3_lower, IL3_upper = self.find_monotonic_interval(Z_L3, p_L3)
+                if IL3_lower is None or IL3_upper is None or IL3_lower >= IL3_upper:
+                    total_violations += 100
+                else:
+                    for value in [0.0, E_L3]:
+                        if value < IL3_lower:
+                            total_violations += (IL3_lower - value)
+                        elif value > IL3_upper:
+                            total_violations += (value - IL3_upper)
+
+                IL4_lower, IL4_upper = self.find_monotonic_interval(Z_L4, p_L4)
+                if IL4_lower is None or IL4_upper is None or IL4_lower >= IL4_upper:
+                    total_violations += 100
+                else:
+                    for value in [0.0, E_L4]:
+                        if value < IL4_lower:
+                            total_violations += (IL4_lower - value)
+                        elif value > IL4_upper:
+                            total_violations += (value - IL4_upper)
             else:
                 z1, z2, z3, z4, z5, z6 = Z
                 p1, p2, p3, p4, p5 = params[11:]
-                Z_L1 = np.array([z1-b11, z2-b11]); p_L1 = np.array([p2, 1 - p2])
-                Z_L2 = np.array([z3-c22, z4-c22]); p_L2 = np.array([p4, 1 - p4])
-                Z_L3 = np.array([z5-c23, z6-c23]); p_L3 = np.array([p5, 1 - p5])
+                c21, c22, c23, c31, c32, c33, c34, c35, c36 = params[2:11]
+                r_sq = self.r * self.r
+                Z_L1 = np.array([c31 * self.r, c32 * self.r]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([c33 * self.r, c34 * self.r]); p_L2 = np.array([p4, 1 - p4])
+                Z_L3 = np.array([c35 * self.r, c36 * self.r]); p_L3 = np.array([p5, 1 - p5])
                 p_L4 = np.array([p3 * p4, p3 * (1 - p4), (1 - p3) * p5, (1 - p3) * (1 - p5)])
-                Z_L4 = np.array([z3-b12, z4-b12, z5-b12, z6-b12])
+                Z_L4 = np.array([c22 * self.r + c33 * r_sq, c22 * self.r + c34 * r_sq,
+                                 c23 * self.r + c35 * r_sq, c23 * self.r + c36 * r_sq])
+                Z_L5 = np.array([c21 * self.r + c31 * r_sq, c21 * self.r + c32 * r_sq])
+                p_L5 = np.array([p2, 1 - p2])
+                E_L1 = np.sum(Z_L1 * p_L1)
                 E_L2 = np.sum(Z_L2 * p_L2)
                 E_L3 = np.sum(Z_L3 * p_L3)
-                E_L4 = p3 * E_L2 + (1 - p3) * E_L3
-                b11, b12, c21, c22, c23 = params[:5]
+                E_L4 = np.sum(Z_L4 * p_L4)
+                E_L5 = np.sum(Z_L5 * p_L5)
 
                 for (Z_sub, p_sub, values, penalty_key) in [
-                    (Z_L1, p_L1, [b11, b11 + c21, np.sum(Z_L1 * p_L1), expected_value], 'L1'),
-                    (Z_L2, p_L2, [b12, b12 + c22, E_L2, E_L4], 'L2'),
-                    (Z_L3, p_L3, [b12, b12 + c23, E_L3, E_L4], 'L3'),
+                    (Z_L1, p_L1, [0.0, E_L1], 'L1'),
+                    (Z_L2, p_L2, [0.0, E_L2], 'L2'),
+                    (Z_L3, p_L3, [0.0, E_L3], 'L3'),
+                    (Z_L4, p_L4, [0.0, E_L4], 'L4'),
+                    (Z_L5, p_L5, [0.0, E_L5], 'L5')
                 ]:
                     lo, up = self.find_monotonic_interval(Z_sub, p_sub)
                     if lo is None or up is None or lo >= up:
@@ -771,15 +805,7 @@ class UnifiedLotteryOptimizer:
                             elif value > up:
                                 total_violations += (value - up)
 
-                lo4, up4 = self.find_monotonic_interval(Z_L4, p_L4)
-                if lo4 is None or up4 is None or lo4 >= up4:
-                    total_violations += 100
-                else:
-                    for value in [b12, E_L4, expected_value]:
-                        if value < lo4:
-                            total_violations += (lo4 - value)
-                        elif value > up4:
-                            total_violations += (value - up4)
+
 
             # Probability bounds soft check
             prob_bound_violations = 0.0
@@ -810,6 +836,7 @@ class UnifiedLotteryOptimizer:
             total_violations = 0.0
             # Use a moderate weighting for EV under alt params
             total_violations += float(abs(expected_value))
+            r_value = self.r if r_override is None else r_override
 
             # Main interval
             IL_lower, IL_upper = self.find_monotonic_interval_params(Z, p, alpha, lambda_, gamma)
@@ -826,17 +853,22 @@ class UnifiedLotteryOptimizer:
             if self.outcomes == 4:
                 z1, z2, z3, z4 = Z
                 _, _, _, _, _, _, _, _, p1, p2, p3 = params
-                Z_L1 = np.array([z1, z2]); p_L1 = np.array([p2, 1 - p2])
-                Z_L2 = np.array([z3, z4]); p_L2 = np.array([p3, 1 - p3])
+                c21, c22, c31, c32, c33, c34 = params[2:8]
+                r_sq = r_value * r_value
+                Z_L1 = np.array([c31 * r_value, c32 * r_value]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([c33 * r_value, c34 * r_value]); p_L2 = np.array([p3, 1 - p3])
+                Z_L3 = np.array([c21 * r_value + c31 * r_sq, c21 * r_value + c32 * r_sq]); p_L3 = np.array([p2, 1 - p2])
+                Z_L4 = np.array([c22 * r_value + c33 * r_sq, c22 * r_value + c34 * r_sq]); p_L4 = np.array([p3, 1 - p3])
                 E_L1 = np.sum(Z_L1 * p_L1)
                 E_L2 = np.sum(Z_L2 * p_L2)
-                b11, b12, c21, c22 = params[:4]
+                E_L3 = np.sum(Z_L3 * p_L3)
+                E_L4 = np.sum(Z_L4 * p_L4)
 
                 lo1, up1 = self.find_monotonic_interval_params(Z_L1, p_L1, alpha, lambda_, gamma)
                 if lo1 is None or up1 is None or lo1 >= up1:
                     total_violations += 100
                 else:
-                    for value in [b11, b11 + c21, E_L1, expected_value]:
+                    for value in [0.0, E_L1]:
                         if value < lo1:
                             total_violations += (lo1 - value)
                         elif value > up1:
@@ -846,28 +878,56 @@ class UnifiedLotteryOptimizer:
                 if lo2 is None or up2 is None or lo2 >= up2:
                     total_violations += 100
                 else:
-                    for value in [b12, b12 + c22, E_L2, expected_value]:
+                    for value in [0.0, E_L2]:
                         if value < lo2:
                             total_violations += (lo2 - value)
                         elif value > up2:
                             total_violations += (value - up2)
+
+                lo3, up3 = self.find_monotonic_interval_params(Z_L3, p_L3, alpha, lambda_, gamma)
+                if lo3 is None or up3 is None or lo3 >= up3:
+                    total_violations += 100
+                else:
+                    for value in [0.0, E_L3]:
+                        if value < lo3:
+                            total_violations += (lo3 - value)
+                        elif value > up3:
+                            total_violations += (value - up3)
+
+                lo4, up4 = self.find_monotonic_interval_params(Z_L4, p_L4, alpha, lambda_, gamma)
+                if lo4 is None or up4 is None or lo4 >= up4:
+                    total_violations += 100
+                else:
+                    for value in [0.0, E_L4]:
+                        if value < lo4:
+                            total_violations += (lo4 - value)
+                        elif value > up4:
+                            total_violations += (value - up4)
             else:
                 z1, z2, z3, z4, z5, z6 = Z
                 _, _, _, _, _, _, _, _, _, _, _, p1, p2, p3, p4, p5 = params
-                Z_L1 = np.array([z1, z2]); p_L1 = np.array([p2, 1 - p2])
-                Z_L2 = np.array([z3, z4]); p_L2 = np.array([p4, 1 - p4])
-                Z_L3 = np.array([z5, z6]); p_L3 = np.array([p5, 1 - p5])
-                Z_L4 = np.array([z3, z4, z5, z6])
+                c21, c22, c23, c31, c32, c33, c34, c35, c36 = params[2:11]
+                r_sq = r_value * r_value
+                Z_L1 = np.array([c31 * r_value, c32 * r_value]); p_L1 = np.array([p2, 1 - p2])
+                Z_L2 = np.array([c33 * r_value, c34 * r_value]); p_L2 = np.array([p4, 1 - p4])
+                Z_L3 = np.array([c35 * r_value, c36 * r_value]); p_L3 = np.array([p5, 1 - p5])
                 p_L4 = np.array([p3 * p4, p3 * (1 - p4), (1 - p3) * p5, (1 - p3) * (1 - p5)])
+                Z_L4 = np.array([c22 * r_value + c33 * r_sq, c22 * r_value + c34 * r_sq,
+                                 c23 * r_value + c35 * r_sq, c23 * r_value + c36 * r_sq])
+                Z_L5 = np.array([c21 * r_value + c31 * r_sq, c21 * r_value + c32 * r_sq])
+                p_L5 = np.array([p2, 1 - p2])
+                E_L1 = np.sum(Z_L1 * p_L1)
                 E_L2 = np.sum(Z_L2 * p_L2)
                 E_L3 = np.sum(Z_L3 * p_L3)
-                E_L4 = p3 * E_L2 + (1 - p3) * E_L3
-                b11, b12, c21, c22, c23 = params[:5]
+                E_L4 = np.sum(Z_L4 * p_L4)
+                E_L5 = np.sum(Z_L5 * p_L5)
 
                 for (Z_sub, p_sub, values) in [
-                    (Z_L1, p_L1, [b11, b11 + c21, np.sum(Z_L1 * p_L1), expected_value]),
-                    (Z_L2, p_L2, [b12, b12 + c22, E_L2, E_L4]),
-                    (Z_L3, p_L3, [b12, b12 + c23, E_L3, E_L4]),
+                    (Z_L1, p_L1, [0.0, E_L1]),
+                    (Z_L2, p_L2, [0.0, E_L2]),
+                    (Z_L3, p_L3, [0.0, E_L3]),
+                    (Z_L4, p_L4, [0.0, E_L4]),
+                    (Z_L5, p_L5, [0.0, E_L5]),
                 ]:
                     lo, up = self.find_monotonic_interval_params(Z_sub, p_sub, alpha, lambda_, gamma)
                     if lo is None or up is None or lo >= up:
@@ -878,16 +938,6 @@ class UnifiedLotteryOptimizer:
                                 total_violations += (lo - value)
                             elif value > up:
                                 total_violations += (value - up)
-
-                lo4, up4 = self.find_monotonic_interval_params(Z_L4, p_L4, alpha, lambda_, gamma)
-                if lo4 is None or up4 is None or lo4 >= up4:
-                    total_violations += 100
-                else:
-                    for value in [b12, E_L4, expected_value]:
-                        if value < lo4:
-                            total_violations += (lo4 - value)
-                        elif value > up4:
-                            total_violations += (value - up4)
 
             # Probability bounds soft check
             prob_bound_violations = 0.0
@@ -1161,27 +1211,58 @@ class UnifiedLotteryOptimizer:
                         if IL_lower is not None and IL_upper is not None:
                             f.write(f"  4. Main interval IL = [{IL_lower:.3f}, {IL_upper:.3f}]\n")
 
-                        Z_L1 = np.array([z1, z2]); p_L1 = np.array([solution.p2, 1 - solution.p2])
+                        r_sq = self.r * self.r
+                        Z_L1 = np.array([solution.c31 * self.r, solution.c32 * self.r]); p_L1 = np.array([solution.p2, 1 - solution.p2])
                         E_L1 = np.sum(Z_L1 * p_L1)
                         IL1_lower, IL1_upper = self.find_monotonic_interval(Z_L1, p_L1)
                         if IL1_lower is not None and IL1_upper is not None:
                             f.write(f"  5. L1 interval IL1 = [{IL1_lower:.3f}, {IL1_upper:.3f}]\n")
-                            values_to_check_L1 = [solution.b11, solution.b11 + solution.c21, E_L1, expected_value]
-                            value_names_L1 = ['b11', 'b11+c21', 'E(L1)', 'E(L)']
+                            values_to_check_L1 = [0.0, E_L1]
+                            value_names_L1 = ['0', 'E(L1)']
                             for j, value in enumerate(values_to_check_L1):
                                 in_interval = (IL1_lower <= value <= IL1_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {value_names_L1[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL1\n")
 
-                        Z_L2 = np.array([z3, z4]); p_L2 = np.array([solution.p3, 1 - solution.p3])
+                        Z_L2 = np.array([solution.c33 * self.r, solution.c34 * self.r]); p_L2 = np.array([solution.p3, 1 - solution.p3])
                         E_L2 = np.sum(Z_L2 * p_L2)
                         IL2_lower, IL2_upper = self.find_monotonic_interval(Z_L2, p_L2)
                         if IL2_lower is not None and IL2_upper is not None:
                             f.write(f"  6. L2 interval IL2 = [{IL2_lower:.3f}, {IL2_upper:.3f}]\n")
-                            values_to_check_L2 = [solution.b12, solution.b12 + solution.c22, E_L2, expected_value]
-                            value_names_L2 = ['b12', 'b12+c22', 'E(L2)', 'E(L)']
+                            values_to_check_L2 = [0.0, E_L2]
+                            value_names_L2 = ['0', 'E(L2)']
                             for j, value in enumerate(values_to_check_L2):
                                 in_interval = (IL2_lower <= value <= IL2_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {value_names_L2[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL2\n")
+
+                        Z_L3 = np.array([
+                            solution.c21 * self.r + solution.c31 * r_sq,
+                            solution.c21 * self.r + solution.c32 * r_sq
+                        ])
+                        p_L3 = np.array([solution.p2, 1 - solution.p2])
+                        E_L3 = np.sum(Z_L3 * p_L3)
+                        IL3_lower, IL3_upper = self.find_monotonic_interval(Z_L3, p_L3)
+                        if IL3_lower is not None and IL3_upper is not None:
+                            f.write(f"  7. L3 interval IL3 = [{IL3_lower:.3f}, {IL3_upper:.3f}]\n")
+                            values_to_check_L3 = [0.0, E_L3]
+                            value_names_L3 = ['0', 'E(L3)']
+                            for j, value in enumerate(values_to_check_L3):
+                                in_interval = (IL3_lower <= value <= IL3_upper)
+                                f.write(f"     {'✓' if in_interval else '✗'} {value_names_L3[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL3\n")
+
+                        Z_L4 = np.array([
+                            solution.c22 * self.r + solution.c33 * r_sq,
+                            solution.c22 * self.r + solution.c34 * r_sq
+                        ])
+                        p_L4 = np.array([solution.p3, 1 - solution.p3])
+                        E_L4 = np.sum(Z_L4 * p_L4)
+                        IL4_lower, IL4_upper = self.find_monotonic_interval(Z_L4, p_L4)
+                        if IL4_lower is not None and IL4_upper is not None:
+                            f.write(f"  8. L4 interval IL4 = [{IL4_lower:.3f}, {IL4_upper:.3f}]\n")
+                            values_to_check_L4 = [0.0, E_L4]
+                            value_names_L4 = ['0', 'E(L4)']
+                            for j, value in enumerate(values_to_check_L4):
+                                in_interval = (IL4_lower <= value <= IL4_upper)
+                                f.write(f"     {'✓' if in_interval else '✗'} {value_names_L4[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL4\n")
                     else:
                         f.write("Lottery structure (6 outcomes):\n")
                         f.write(f"  Stage 1: b11={solution.b11:3d}, b12={solution.b12:3d}\n")
@@ -1207,53 +1288,80 @@ class UnifiedLotteryOptimizer:
                             f.write(f"  4. Main interval IL = [{IL_lower:.3f}, {IL_upper:.3f}]\n")
                             f.write(f"     0 ∈ IL: {IL_lower <= 0 <= IL_upper}\n")
 
-                        # Sub-lottery expected values (all discounted)
-                        E_L1 = z1 * solution.p2 + z2 * (1 - solution.p2)
-                        E_L2 = z3 * solution.p4 + z4 * (1 - solution.p4)
-                        E_L3 = z5 * solution.p5 + z6 * (1 - solution.p5)
-                        E_L4 = solution.p3 * E_L2 + (1 - solution.p3) * E_L3
+                        # Sub-lottery expected values (stage-3 increments and accumulated branches)
+                        r_sq = self.r * self.r
+                        Z_L1 = np.array([solution.c31 * self.r, solution.c32 * self.r]); p_L1 = np.array([solution.p2, 1 - solution.p2])
+                        Z_L2 = np.array([solution.c33 * self.r, solution.c34 * self.r]); p_L2 = np.array([solution.p4, 1 - solution.p4])
+                        Z_L3 = np.array([solution.c35 * self.r, solution.c36 * self.r]); p_L3 = np.array([solution.p5, 1 - solution.p5])
+                        Z_L4 = np.array([
+                            solution.c22 * self.r + solution.c33 * r_sq,
+                            solution.c22 * self.r + solution.c34 * r_sq,
+                            solution.c23 * self.r + solution.c35 * r_sq,
+                            solution.c23 * self.r + solution.c36 * r_sq
+                        ])
+                        Z_L5 = np.array([
+                            solution.c21 * self.r + solution.c31 * r_sq,
+                            solution.c21 * self.r + solution.c32 * r_sq
+                        ])
+                        p_L4 = np.array([
+                            solution.p3 * solution.p4,
+                            solution.p3 * (1 - solution.p4),
+                            (1 - solution.p3) * solution.p5,
+                            (1 - solution.p3) * (1 - solution.p5)
+                        ])
+                        p_L5 = np.array([solution.p2, 1 - solution.p2])
+
+                        E_L1 = np.sum(Z_L1 * p_L1)
+                        E_L2 = np.sum(Z_L2 * p_L2)
+                        E_L3 = np.sum(Z_L3 * p_L3)
+                        E_L4 = np.sum(Z_L4 * p_L4)
+                        E_L5 = np.sum(Z_L5 * p_L5)
 
                         # Intervals and membership checks
-                        Z_L1 = np.array([z1, z2]); p_L1 = np.array([solution.p2, 1 - solution.p2])
                         IL1_lower, IL1_upper = self.find_monotonic_interval(Z_L1, p_L1)
                         if IL1_lower is not None and IL1_upper is not None:
                             f.write(f"  5. L1 interval IL1 = [{IL1_lower:.3f}, {IL1_upper:.3f}]\n")
-                            values_L1 = [solution.b11, solution.b11 + solution.c21, E_L1, expected_value]
-                            names_L1 = ['b11', 'b11+c21', 'E(L1)', 'E(L)']
+                            values_L1 = [0.0, E_L1]
+                            names_L1 = ['0', 'E(L1)']
                             for j, value in enumerate(values_L1):
                                 in_interval = (IL1_lower <= value <= IL1_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {names_L1[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL1\n")
 
-                        Z_L2 = np.array([z3, z4]); p_L2 = np.array([solution.p4, 1 - solution.p4])
                         IL2_lower, IL2_upper = self.find_monotonic_interval(Z_L2, p_L2)
                         if IL2_lower is not None and IL2_upper is not None:
                             f.write(f"  6. L2 interval IL2 = [{IL2_lower:.3f}, {IL2_upper:.3f}]\n")
-                            values_L2 = [solution.b12, solution.b12 + solution.c22, E_L2, E_L4]
-                            names_L2 = ['b12', 'b12+c22', 'E(L2)', 'E(L4)']
+                            values_L2 = [0.0, E_L2]
+                            names_L2 = ['0', 'E(L2)']
                             for j, value in enumerate(values_L2):
                                 in_interval = (IL2_lower <= value <= IL2_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {names_L2[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL2\n")
 
-                        Z_L3 = np.array([z5, z6]); p_L3 = np.array([solution.p5, 1 - solution.p5])
                         IL3_lower, IL3_upper = self.find_monotonic_interval(Z_L3, p_L3)
                         if IL3_lower is not None and IL3_upper is not None:
                             f.write(f"  7. L3 interval IL3 = [{IL3_lower:.3f}, {IL3_upper:.3f}]\n")
-                            values_L3 = [solution.b12, solution.b12 + solution.c23, E_L3, E_L4]
-                            names_L3 = ['b12', 'b12+c23', 'E(L3)', 'E(L4)']
+                            values_L3 = [0.0, E_L3]
+                            names_L3 = ['0', 'E(L3)']
                             for j, value in enumerate(values_L3):
                                 in_interval = (IL3_lower <= value <= IL3_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {names_L3[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL3\n")
 
-                        Z_L4 = np.array([z3, z4, z5, z6])
-                        p_L4 = np.array([solution.p3 * solution.p4, solution.p3 * (1 - solution.p4), (1 - solution.p3) * solution.p5, (1 - solution.p3) * (1 - solution.p5)])
                         IL4_lower, IL4_upper = self.find_monotonic_interval(Z_L4, p_L4)
                         if IL4_lower is not None and IL4_upper is not None:
                             f.write(f"  8. L4 interval IL4 = [{IL4_lower:.3f}, {IL4_upper:.3f}]\n")
-                            values_L4 = [solution.b12, E_L4, expected_value]
-                            names_L4 = ['b12', 'E(L4)', 'E(L)']
+                            values_L4 = [0.0, E_L4]
+                            names_L4 = ['0', 'E(L4)']
                             for j, value in enumerate(values_L4):
                                 in_interval = (IL4_lower <= value <= IL4_upper)
                                 f.write(f"     {'✓' if in_interval else '✗'} {names_L4[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL4\n")
+
+                        IL5_lower, IL5_upper = self.find_monotonic_interval(Z_L5, p_L5)
+                        if IL5_lower is not None and IL5_upper is not None:
+                            f.write(f"  9. L5 interval IL5 = [{IL5_lower:.3f}, {IL5_upper:.3f}]\n")
+                            values_L5 = [0.0, E_L5]
+                            names_L5 = ['0', 'E(L5)']
+                            for j, value in enumerate(values_L5):
+                                in_interval = (IL5_lower <= value <= IL5_upper)
+                                f.write(f"     {'✓' if in_interval else '✗'} {names_L5[j]} = {value:.3f} {'∈' if in_interval else '∉'} IL5\n")
 
                     # Alternate parameter sanity checks
                     if self.config.alt_params:
