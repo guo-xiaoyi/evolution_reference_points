@@ -164,7 +164,6 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
     }
   </style>
 </head>
@@ -189,8 +188,17 @@
 
 
         <p><strong>Question 1</strong></p>{{ formfield 'quiz3' }}
+    <br></br>
+    <img src= "{{ static 'global/quiz3.png' }}" alt="MPLChosen" class="center" width="100%">
+    <br></br>
         <p><strong>Question 2</strong></p>{{ formfield 'quiz4' }}
+    <br></br>
+    <img src= "{{ static 'global/quiz4.png' }}" alt="MPLChosen" class="center" width="30%">
+    <br></br>
         <p><strong>Question 3</strong></p>{{ formfield 'quiz5' }}
+            <br></br>
+    <img src= "{{ static 'global/quiz5.png' }}" alt="MPLChosen" class="center" width="100%">
+    <br></br>
         <p style="text-align:right; margin-top: 1.5rem;">
               
               <button class="button btn btn-primary" onclick="back_button(1)"> &laquo; Read Instructions Again </button>

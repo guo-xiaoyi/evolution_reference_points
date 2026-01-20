@@ -59,6 +59,34 @@ class Constants(BaseConstants):
                 ]
             }
         },
+
+        'lottery_3': {
+            'name': 'Lychee',
+            'outcome_number': 4,
+            'stake': 'hi',
+            'max_payoff': 335,
+            'min_payoff': -725,
+            'description': 'Example lottery with four final outcomes',
+            'periods': {
+                0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
+                1: [
+                    {'label': '+£120', 'probability': 0.8, 'from': 'Start', 'abs_prob' : 0.8},
+                    {'label': '-£250', 'probability': 0.2, 'from': 'Start', 'abs_prob' : 0.2}
+                ],
+                2: [
+                    {'label': '-£115', 'probability': 1, 'from': '+£120', 'abs_prob' : 0.8},
+                    {'label': '£120', 'probability': 1, 'from': '-£250', 'abs_prob' : 0.2}
+                ],
+                3: [
+                    {'label': '+£210', 'probability': 0.8, 'from': '-£115', 'parent': '+£120', 'abs_prob' : 0.64},
+                    {'label': '-£625', 'probability': 0.2, 'from': '-£115', 'parent': '+£120', 'abs_prob' : 0.16},
+                    {'label': '-£595', 'probability': 0.5, 'from': '£120', 'parent': '-£250', 'abs_prob' : 0.1},
+                    {'label': '+£465', 'probability': 0.5, 'from': '£120', 'parent': '-£250', 'abs_prob' : 0.1},
+                ]
+            }
+        },
+
+
         'lottery_2': {
             'name': 'Banana',
             'outcome_number': 6,
@@ -231,6 +259,11 @@ def get_payment_store(player):
     return store
 
 
+def persist_payment_store(player, store):
+    """Persist payment store updates immediately."""
+    player.participant.vars[PAYMENT_STORE_KEY] = store
+
+
 def ensure_payment_lottery_selected(player):
     """Select the paying round/lottery once (after the main evaluation rounds)."""
     store = get_payment_store(player)
@@ -257,6 +290,7 @@ def ensure_payment_lottery_selected(player):
         future_player.lottery_id = lottery_id
 
     ensure_realized_up_to(player, 1, store=store)
+    persist_payment_store(player, store)
     return store
 
 
@@ -277,26 +311,32 @@ def ensure_realized_up_to(player, period, store=None):
     base_lottery = Constants.lotteries.get(lottery_id, Constants.lotteries[Constants.default_lottery])
     periods = base_lottery.get('periods', {})
     realized = store.setdefault('realized_nodes', {})
+    changed = False
 
     if period >= 1 and 1 not in realized:
         node = _sample_period_node(periods.get(1, []), 'Start')
         if node:
             node['realized'] = True
             realized[1] = node
+            changed = True
 
     if period >= 2 and 1 in realized and 2 not in realized:
         node = _sample_period_node(periods.get(2, []), realized[1]['label'])
         if node:
             node['realized'] = True
             realized[2] = node
+            changed = True
 
     if period >= 3 and 2 in realized and 3 not in realized:
         node = _sample_period_node(periods.get(3, []), realized[2]['label'])
         if node:
             node['realized'] = True
             realized[3] = node
+            changed = True
 
     store['realized_nodes'] = realized
+    if changed:
+        persist_payment_store(player, store)
     return store
 
 
@@ -510,7 +550,7 @@ class Play(Page):
             schedule_session_start(
                 player,
                 prefix='session2',
-                wait_seconds=86400,
+                wait_seconds=15,
                 future_round=Constants.continuation_rounds[0],
             )
             ensure_payment_lottery_selected(player)
@@ -1010,7 +1050,7 @@ class Play2(Page):
             schedule_session_start(
                 player,
                 prefix='session3',
-                wait_seconds=86400,
+                wait_seconds=15,
                 future_round=Constants.continuation_rounds[1],
             )
 
