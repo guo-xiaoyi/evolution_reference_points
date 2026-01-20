@@ -1,0 +1,19 @@
+================================================================================
+Unified Discrete Lottery Optimizer - 6 Outcomes Results
+================================================================================
+Generated on: 2026-01-16 02:43:39
+Mode: outcomes=6, stake=hi
+Solutions found: 0
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Search configuration:
+  - Lottery range: [-750, -500] and [500, 750]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 13,102,216
+  - Numba acceleration: Enabled
+
+No solutions found!
+Suggestions:
+  - Increase num_attempts
+  - Relax violation_threshold
+  - Adjust parameter ranges
