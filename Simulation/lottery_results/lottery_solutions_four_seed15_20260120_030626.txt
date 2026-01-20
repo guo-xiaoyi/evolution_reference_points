@@ -1,0 +1,71 @@
+================================================================================
+Unified Discrete Lottery Optimizer - Results Report
+================================================================================
+Generated on: 2026-01-20 03:06:26
+Mode: outcomes=4, stake=hi
+Solutions found: 1
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Search configuration:
+  - Lottery range: [-1000, -100] and [100, 1000]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 918,118
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.660800
+Timestamp: 2026-01-20 03:06:25
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=105, b12=245
+  Stage 2: c21=-210, c22=-205
+  Stage 3: c31=-825, c32=495, c33=-565, c34=865
+  Probabilities: p1=0.900, p2=0.300, p3=0.600
+Final outcomes (nominal -> discounted):
+  z1_nom= -930 -> z1_disc=-893.130 (prob=0.270)
+  z2_nom=  390 -> z2_disc=374.598 (prob=0.630)
+  z3_nom= -525 -> z3_disc=-498.526 (prob=0.060)
+  z4_nom=  905 -> z4_disc=874.846 (prob=0.040)
+  Discounted expected value: -0.066080
+
+Constraint verification:
+  1. Expected value constraint: -0.066080 ≈ 0 ✓
+  3. Probability constraint: all probabilities ∈ [0,1] ✓
+  4. Main interval IL = [-325.602, 374.598]
+  5. L1 interval IL1 = [-364.204, 374.598]
+     ✓ b11 = 105.000 ∈ IL1
+     ✓ b11+c21 = -105.000 ∈ IL1
+     ✓ E(L1) = -5.720 ∈ IL1
+     ✓ E(L) = -0.066 ∈ IL1
+  6. L2 interval IL2 = [-181.253, 874.846]
+     ✓ b12 = 245.000 ∈ IL2
+     ✓ b12+c22 = 40.000 ∈ IL2
+     ✓ E(L2) = 50.823 ∈ IL2
+     ✓ E(L) = -0.066 ∈ IL2
+
+Alternate-parameter sanity checks:
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3   z1  z2   z3  z4  z1_disc  z2_disc  z3_disc  z4_disc   E[Z]  Violation
+   1  105  245 -210 -205 -825  495 -565  865 0.900 0.300 0.600 -930 390 -525 905 -893.130  374.598 -498.526  874.846 -0.066      0.661
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 1
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 14849.82 seconds
+Total evaluations: 918,118
+Solutions found: 1
+Evaluation speed: 62 evals/s
+Best violation value: 0.660800
+Average violation value: 0.660800
+Worst violation value: 0.660800

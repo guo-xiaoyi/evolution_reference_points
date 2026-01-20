@@ -198,7 +198,7 @@ class OptimizedConfig:
 
     # Performance optimization settings
     batch_size: int = 10000
-    early_termination_solutions: int = 10
+    early_termination_solutions: int = 1
     use_fast_prefilter: bool = True
 
     # Output settings
@@ -1401,7 +1401,7 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             lottery_min=-100, lottery_max=100,
             lottery_min_bound=-1000, lottery_max_bound=1000,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=10000, early_termination_solutions=25,
+            batch_size=10000, early_termination_solutions=1,
             output_dir="lottery_results"
         )
     if outcomes == 4 and stake == 'lo':
@@ -1409,7 +1409,7 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             outcomes=4, stake='lo',
             lottery_min=-50, lottery_max=50,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=10000, early_termination_solutions=25,
+            batch_size=10000, early_termination_solutions=5,
             output_dir="lottery_results"
         )
     if outcomes == 6 and stake == 'hi':
@@ -1418,7 +1418,7 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
             lottery_min=-500, lottery_max=500,
             lottery_min_bound=-1000, lottery_max_bound=1000,
             num_attempts=10000000, violation_threshold=1.0,
-            batch_size=30000, early_termination_solutions=25,
+            batch_size=30000, early_termination_solutions=5,
             output_dir="lottery_results_6outcomes"
         )
     # outcomes == 6 and stake == 'lo'
@@ -1426,7 +1426,7 @@ def build_preset_config(outcomes: int, stake: str) -> OptimizedConfig:
         outcomes=6, stake='lo',
         lottery_min=-50, lottery_max=50,
         num_attempts=10000000, violation_threshold=1.0,
-        batch_size=10000, early_termination_solutions=25,
+        batch_size=10000, early_termination_solutions=5,
         output_dir="lottery_results_6outcomes"
     )
 
