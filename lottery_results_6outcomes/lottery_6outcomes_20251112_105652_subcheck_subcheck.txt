@@ -1,0 +1,9 @@
+================================================================================
+Discrete Searcher Sub Constraint Check
+================================================================================
+Input file: lottery_results_6outcomes\lottery_6outcomes_20251112_105652_subcheck.txt
+Mode: outcomes=6, stake=lo
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Violation threshold: 1.0
+Solutions parsed: 0
+No solutions parsed from file.
