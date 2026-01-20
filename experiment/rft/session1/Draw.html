@@ -84,10 +84,16 @@
       letter-spacing: 0.08em;
       color: #007095;
     }
+    .draw-status.drawing::after {
+      content: ' ...';
+      animation: drawDots 1.1s steps(4, end) infinite;
+      display: inline-block;
+      width: 1.6rem;
+    }
     .draw-card {
       margin: 1rem auto 0;
       padding: 1rem 1.5rem;
-      max-width: 420px;
+      max-width: 500px;
       text-align: center;
       font-size: 1.5rem;
       font-weight: 600;
@@ -100,6 +106,8 @@
       cursor: pointer;
       width: 100%;
       outline: none;
+      white-space: pre-line;
+      line-height: 1.35;
     }
     .draw-card:focus-visible {
       outline: 3px solid #ffffff;
@@ -108,8 +116,9 @@
     .draw-card[disabled] {
       cursor: default;
     }
-    .draw-card.spinning {
-      animation: drawPulse 0.8s ease-in-out infinite alternate;
+    .draw-card.drawing {
+      background-size: 200% 200%;
+      animation: drawPulse 1.4s ease-in-out infinite alternate, drawSweep 1.6s linear infinite;
     }
     .draw-card.final {
       background: linear-gradient(135deg, #0b8457, #20b873);
@@ -203,6 +212,22 @@
         box-shadow: 0 12px 24px rgba(0, 112, 149, 0.35);
       }
     }
+    @keyframes drawSweep {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+    @keyframes drawDots {
+      0% {
+        width: 0.4rem;
+      }
+      100% {
+        width: 1.6rem;
+      }
+    }
     @media (max-width: 860px) {
       .lottery-draw {
         margin-top: 1rem;
@@ -239,7 +264,7 @@
               {{ if is_revision }}
               The random payoff tree below was drawn at the end of Session&nbsp;1 and carries over to the continuation sessions. Please review it before you proceed.
               {{ else }}
-              Thank you for providing your evaluations. Now we pick your risky payoff tree that you will evaluate in the subsequent two sessions. Please click the following button to draw one from your previously evaluated 15 random payoff trees. This will be 'your' lottery for the continuation sessions.
+              Thank you for providing your evaluations. Now we pick your random payoff tree that you will evaluate in the subsequent two sessions. Please click the following button to draw one from your previously evaluated 15 random payoff trees. This will be 'your' random payoff tree for the continuation sessions.
               {{ endif }}
             </p>
 
@@ -260,7 +285,7 @@
                      <div class="lottery-draw" id="lottery-draw">
               <p class="draw-status" id="draw-status">
                 {{ if is_revision }}
-                Lottery already selected - review below.
+                Random payoff tree already selected - review below.
                 {{ else }}
                 Click the button to start the draw.
                 {{ endif }}
@@ -268,16 +293,15 @@
               {{ if is_revision }}
               <button type="button" class="draw-card final" id="draw-card" disabled aria-disabled="true" aria-live="polite">
                 {{ if lottery_name }}
-                {{ lottery_name }}
+                YOUR PAYOFF TREE
                 {{ else }}
-                Lottery selected
+                Random payoff tree selected
                 {{ endif }}
               </button>
               {{ else }}
               <button type="button" class="draw-card" id="draw-card" aria-live="polite">Click to draw</button>
               {{ endif }}
               <div class="draw-summary" id="draw-summary" {{ if is_revision }}{{ else }}hidden{{ endif }}>
-                <p>The following random payoff tree has been randomly determined for the continuation. In the next two sessions, we will only ask you about this lottery.</p>
                 {{ if selected_round }}
                 <p>You evaluated this random payoff tree with <strong>{{ selected_amount }}</strong>.</p>
                 {{ endif }}
@@ -343,7 +367,7 @@
             {{ endif }}
               </div>
               <noscript>
-                <p class="draw-noscript">Your lottery for the continuation sessions is <strong>{{ lottery_name }}</strong>.</p>
+                <p class="draw-noscript">Your random payoff tree has been selected for the continuation sessions. Please enable JavaScript to see the preview.</p>
               </noscript>
               <br>
 
@@ -396,6 +420,8 @@
       var lotteries = {{ Constants.lotteries|json }};
       var finalName = {{ lottery_name|json }};
       var selectedLotteryId = {{ lottery_id|json }};
+      var selectedAmount = {{ selected_amount|json }};
+      var finalPayoffText = {{ final_payoff_text|json }};
       var selectedLottery = null;
       try {
         selectedLottery = JSON.parse('{{ selected_lottery|safe }}');
@@ -404,37 +430,30 @@
       }
 
       var lotteriesByName = {};
-      var names = [];
+      var lotteryCount = 0;
       if (lotteries && typeof lotteries === 'object') {
-        Object.keys(lotteries).forEach(function (key) {
+        var lotteryKeys = Object.keys(lotteries);
+        lotteryCount = lotteryKeys.length;
+        lotteryKeys.forEach(function (key) {
           var item = lotteries[key];
           if (!item) {
             return;
           }
           if (item.name) {
             lotteriesByName[item.name] = item;
-            if (names.indexOf(item.name) === -1) {
-              names.push(item.name);
-            }
           }
           if (!selectedLottery && selectedLotteryId && key === selectedLotteryId) {
             selectedLottery = item;
           }
         });
       }
-      if (selectedLottery && selectedLottery.name && names.indexOf(selectedLottery.name) === -1) {
-        names.push(selectedLottery.name);
+      if (selectedLottery && selectedLottery.name && !lotteriesByName[selectedLottery.name]) {
         lotteriesByName[selectedLottery.name] = selectedLottery;
       }
       if (!selectedLottery && finalName && lotteriesByName[finalName]) {
         selectedLottery = lotteriesByName[finalName];
       }
-      if (finalName && names.indexOf(finalName) === -1) {
-        names.push(finalName);
-      }
-      names = names.filter(function (name) {
-        return typeof name === 'string' && name.trim().length > 0;
-      });
+      var hasDrawData = !!(lotteryCount || finalName || (selectedLottery && selectedLottery.name));
 
       function renderLotteryPreview(lotteryData) {
         if (!mount) {
@@ -823,17 +842,39 @@
       var revealed = false;
       var drawStarted = false;
 
+      function hasValue(value) {
+        return value !== null && value !== undefined && String(value).trim().length > 0;
+      }
+
+      function buildFinalCardText() {
+        var baseText = 'Below is your random payoff tree';
+        var lines = [baseText];
+        if (hasValue(selectedAmount)) {
+          lines.push('Your evaluation in this session: ' + String(selectedAmount));
+          return lines.join('\n');
+        }
+        if (hasValue(finalPayoffText)) {
+          lines.push('Accumulated payoff: ' + String(finalPayoffText));
+          return lines.join('\n');
+        }
+        if (lotteryCount) {
+          lines.push('Selected from ' + String(lotteryCount) + ' payoff trees');
+          return lines.join('\n');
+        }
+        return lines.join('\n');
+      }
+
       function revealFinal() {
         if (revealed) {
           return;
         }
         revealed = true;
-        var displayName = finalName || (selectedLottery && selectedLottery.name) || (names.length ? names[names.length - 1] : 'Lottery selected');
-        card.textContent = displayName || 'Lottery selected';
-        card.classList.remove('spinning');
+        card.textContent = buildFinalCardText();
+        card.classList.remove('drawing');
         card.classList.add('final');
         card.disabled = true;
         card.setAttribute('aria-disabled', 'true');
+        status.classList.remove('drawing');
         status.textContent = isRevision ? 'REVIEW THE RANDOM PAYOFF TREE' : 'YOUR RANDOM PAYOFF TREE';
         if (summary) {
           summary.removeAttribute('hidden');
@@ -845,8 +886,8 @@
           preview.removeAttribute('hidden');
         }
         var data = selectedLottery;
-        if (!data && displayName && lotteriesByName[displayName]) {
-          data = lotteriesByName[displayName];
+        if (!data && finalName && lotteriesByName[finalName]) {
+          data = lotteriesByName[finalName];
         }
         renderLotteryPreview(data);
       }
@@ -859,30 +900,17 @@
         card.disabled = true;
         card.setAttribute('aria-disabled', 'true');
         card.classList.remove('final');
-        card.textContent = 'Drawing...';
-        status.textContent = 'Drawing now...';
-        card.classList.add('spinning');
-        window.setTimeout(showNext, 400);
+        card.textContent = 'Drawing your payoff tree';
+        status.textContent = 'Drawing in progress';
+        status.classList.add('drawing');
+        card.classList.add('drawing');
+        var drawDuration = 2400 + Math.floor(Math.random() * 900);
+        window.setTimeout(revealFinal, drawDuration);
       }
 
-      if (!names.length && !isRevision) {
+      if (!hasDrawData && !isRevision) {
         revealFinal();
         return;
-      }
-
-      var iteration = 0;
-      var totalCycles = Math.max(names.length * 4, 18);
-      var delay = 140;
-
-      function showNext() {
-        card.textContent = names[iteration % names.length];
-        iteration += 1;
-        delay = Math.min(delay + 35, 420);
-        if (iteration < totalCycles) {
-          window.setTimeout(showNext, delay);
-        } else {
-          window.setTimeout(revealFinal, 600);
-        }
       }
 
       if (isRevision) {
