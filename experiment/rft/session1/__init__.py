@@ -443,6 +443,54 @@ def compute_realized_offset(realized_nodes, upto_period=None):
     return total
 
 
+def compute_upcoming_payoff_range(lottery, start_period):
+    """Return min/max totals from start_period to the final period."""
+    periods = (lottery or {}).get('periods', {}) or {}
+    if not periods or start_period not in periods:
+        return None, None
+    last_period = max(periods.keys())
+
+    def _collect_totals(period, parent_labels):
+        nodes = periods.get(period, [])
+        if parent_labels is not None:
+            nodes = [
+                node for node in nodes
+                if (node.get('from') or 'Start') in parent_labels
+            ]
+        if not nodes:
+            return []
+        totals = []
+        for node in nodes:
+            value = parse_payoff_label(node.get('label'))
+            if value is None:
+                continue
+            if period >= last_period:
+                totals.append(value)
+                continue
+            child_totals = _collect_totals(period + 1, {node.get('label')})
+            if child_totals:
+                totals.extend([value + child for child in child_totals])
+            else:
+                totals.append(value)
+        return totals
+
+    totals = _collect_totals(start_period, None)
+    if not totals:
+        return None, None
+    return min(totals), max(totals)
+
+
+def with_upcoming_payoff_range(lottery, start_period):
+    """Clone lottery with min/max set to upcoming payoff range."""
+    min_payoff, max_payoff = compute_upcoming_payoff_range(lottery, start_period)
+    if min_payoff is None or max_payoff is None:
+        return lottery
+    adjusted = dict(lottery)
+    adjusted['min_payoff'] = min_payoff
+    adjusted['max_payoff'] = max_payoff
+    return adjusted
+
+
 # PAGES
 class Welcome(Page):
     @staticmethod
@@ -532,7 +580,8 @@ class Play(Page):
     @staticmethod
     def get_form_fields(player):
         lottery = Constants.lotteries[player.lottery_id]
-        fields = Play._choice_field_names(lottery, base_offset=0)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
+        fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
         fields.append('fine_cutoff_index')
         return fields
@@ -540,12 +589,14 @@ class Play(Page):
     @staticmethod
     def vars_for_template(player):
         lottery = Constants.lotteries[player.lottery_id]
-        return build_play_context(player, choice_lottery=lottery, display_lottery=lottery, base_offset=0)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
+        return build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
 
     @staticmethod
     def before_next_page(player, timeout_happened):
         lottery = Constants.lotteries[player.lottery_id]
-        store_cutoff_choice(player, lottery)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
+        store_cutoff_choice(player, choice_lottery)
         if player.round_number == Constants.initial_evaluation_rounds:
             schedule_session_start(
                 player,
@@ -1011,9 +1062,8 @@ class Play2(Page):
         store = ensure_payment_setup(player)
         ensure_realized_up_to(player, 1, store=store)
         lottery = get_conditional_lottery(player, realized_up_to=1)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=1)
-        fields = Play._choice_field_names(lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
+        fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
         return fields
 
@@ -1023,9 +1073,8 @@ class Play2(Page):
         ensure_realized_up_to(player, 1, store=store)
         conditional_lottery = get_conditional_lottery(player, realized_up_to=1)
         full_lottery = get_selected_lottery(player, store=store)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=1)
-        context = build_play_context(player, choice_lottery=conditional_lottery, display_lottery=full_lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(conditional_lottery, start_period=2)
+        context = build_play_context(player, choice_lottery=choice_lottery, display_lottery=full_lottery, base_offset=0)
         realized_nodes = store.get('realized_nodes', {})
         context.update(
             continuation_stage=2,
@@ -1042,9 +1091,8 @@ class Play2(Page):
     def before_next_page(player, timeout_happened):
         store = ensure_payment_setup(player)
         lottery = get_conditional_lottery(player, realized_up_to=1)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=1)
-        store_cutoff_choice(player, lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
+        store_cutoff_choice(player, choice_lottery, base_offset=0)
         ensure_realized_up_to(player, 2, store=store)
         if player.round_number == Constants.continuation_rounds[0]:
             schedule_session_start(
@@ -1067,9 +1115,8 @@ class Play3(Page):
         store = ensure_payment_setup(player)
         ensure_realized_up_to(player, 2, store=store)
         lottery = get_conditional_lottery(player, realized_up_to=2)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=2)
-        fields = Play._choice_field_names(lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
+        fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
         return fields
 
@@ -1079,9 +1126,8 @@ class Play3(Page):
         ensure_realized_up_to(player, 2, store=store)
         conditional_lottery = get_conditional_lottery(player, realized_up_to=2)
         full_lottery = get_selected_lottery(player, store=store)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=2)
-        context = build_play_context(player, choice_lottery=conditional_lottery, display_lottery=full_lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(conditional_lottery, start_period=3)
+        context = build_play_context(player, choice_lottery=choice_lottery, display_lottery=full_lottery, base_offset=0)
         realized_nodes = store.get('realized_nodes', {})
         context.update(
             continuation_stage=3,
@@ -1099,9 +1145,8 @@ class Play3(Page):
     def before_next_page(player, timeout_happened):
         store = ensure_payment_setup(player)
         lottery = get_conditional_lottery(player, realized_up_to=2)
-        realized_nodes = store.get('realized_nodes', {})
-        base_offset = compute_realized_offset(realized_nodes, upto_period=2)
-        store_cutoff_choice(player, lottery, base_offset=base_offset)
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
+        store_cutoff_choice(player, choice_lottery, base_offset=0)
         ensure_realized_up_to(player, 3, store=store)
         final_payoff = compute_final_payoff(store)
         if final_payoff is not None:
