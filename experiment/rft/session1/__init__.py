@@ -195,7 +195,10 @@ def parse_payoff_label(label):
     """Convert textual payoff labels such as '+£10' into integers."""
     if not label:
         return None
-    cleaned = label.replace(',', '').replace('£', '').strip()
+    cleaned = label.replace(',', '')
+    for token in ('£', '¶œ', 'Ł', '稖'):
+        cleaned = cleaned.replace(token, '')
+    cleaned = cleaned.strip()
     match = AMOUNT_PATTERN.search(cleaned)
     if not match:
         return None
@@ -204,6 +207,14 @@ def parse_payoff_label(label):
     except ValueError:
         return None
     return int(round(value))
+
+
+def format_payoff_value(value):
+    """Format numeric payoff values using the lottery currency convention."""
+    if value is None:
+        return None
+    sign = '+' if value >= 0 else '-'
+    return f"{sign}£{abs(int(round(value)))}"
 
 
 def _weighted_choice(nodes):
@@ -754,7 +765,15 @@ def build_wheel_context(
     realized_nodes = store.get('realized_nodes', {})
     segments = build_wheel_segments(lottery, period, realized_nodes)
     predetermined = realized_nodes.get(period) or {}
-
+    accumulated_value = 0
+    has_accumulated = False
+    for node in realized_nodes.values():
+        value = parse_payoff_label((node or {}).get('label'))
+        if value is None:
+            continue
+        accumulated_value += value
+        has_accumulated = True
+    accumulated = format_payoff_value(accumulated_value) if has_accumulated else None
     return {
         'wheel_title': title,
         'wheel_description': description,
@@ -777,6 +796,7 @@ def build_wheel_context(
         'continuation_rounds': Constants.continuation_rounds,
         'realized_period1': realized_nodes.get(1),
         'realized_period2': realized_nodes.get(2),
+        'realized_accumulated': accumulated,
         'realized_period3': realized_nodes.get(3),
     }
 
@@ -1129,6 +1149,8 @@ class Play3(Page):
         choice_lottery = with_upcoming_payoff_range(conditional_lottery, start_period=3)
         context = build_play_context(player, choice_lottery=choice_lottery, display_lottery=full_lottery, base_offset=0)
         realized_nodes = store.get('realized_nodes', {})
+        accumulated_value = compute_realized_offset(realized_nodes, upto_period=2)
+        accumulated = format_payoff_value(accumulated_value)
         context.update(
             continuation_stage=3,
             realized_period1=realized_nodes.get(1),
@@ -1136,6 +1158,7 @@ class Play3(Page):
             realized_period3=realized_nodes.get(3),
             selected_round=store.get('selected_round'),
             base_lottery_name=store.get('lottery_name'),
+            realized_accumulated=accumulated,
         )
         base_name = store.get('lottery_name') or context['lottery_name']
         context['lottery_name'] = f"{base_name} – continuation after period 2"

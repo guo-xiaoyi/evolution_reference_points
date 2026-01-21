@@ -504,6 +504,8 @@
     .col.dim-col { fill:#f5f5f7; stroke:#ddd; opacity:0.25; }
     .payout.highlight-node { fill:#b56600; font-weight:600; }
     .prob.highlight-node { fill:#b56600; font-weight:600; }
+    .payout.experienced-node { fill:#0f5f5b; font-weight:600; }
+    .prob.experienced-node { fill:#0f5f5b; font-weight:600; }
     .payout.relevant-node { fill:#a06600; }
     .prob.relevant-node { fill:#c27f00; }
     .payout.dim-node { fill:#777; }
@@ -517,7 +519,8 @@
 
     .link { stroke:#888; stroke-width:2;}
     .link-highlight { stroke:#f0b429; stroke-width:3; }
-    .link-relevant { stroke:#d8aa3e; stroke-width:2.4; }
+    .link-experienced { stroke:#1c7f7a; stroke-width:3; }
+    .link-relevant { stroke:#ee5b18; stroke-width:3; }
     .link-dim { stroke:#c8c8c8; stroke-width:1.6; opacity:0.35; }
 
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
@@ -638,8 +641,8 @@
 
 
         <h1 class="university-title">Random Payoff Tree (Session 2)</h1>
-
-        <p> Please provide your evaluation to this random payoff tree. Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
+        <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments shown on the left-hand side of the pop-out sidebar and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
 
 
               <p style="text-align:right;">
@@ -819,7 +822,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // period titles
 
-  const prettyTitle = i => (i === 0 ? 'Current session' : i === 1 ? 'Next session (Session 2)' : i === 2 ? 'Session 3' : `At the end of Session ${i}`);
+  const prettyTitle = i => (i === 0 ? '3 days ago' : i === 1 ? 'Current session (now)' : i === 2 ? 'In 3 days' : `In 6 days`);
 
   // ---- build normalized periods array (0..max sorted) ----
 
@@ -840,6 +843,15 @@ document.addEventListener('DOMContentLoaded', function () {
   if (realizedPeriod2 && realizedPeriod2.label) {
     realizedLabels.set(2, new Set([realizedPeriod2.label]));
   }
+
+  const experiencedEdges = new Set();
+  Object.entries(realizedNodes).forEach(([periodKey, node]) => {
+    const period = Number(periodKey);
+    if (!Number.isFinite(period) || !node || !node.label) return;
+    const parent = node.from || (period === 1 ? 'Start' : null);
+    if (!parent) return;
+    experiencedEdges.add(`${parent}=>${node.label}`);
+  });
 
   const relevantByPeriod = new Map();
   keys.forEach((key, idx) => {
@@ -1115,7 +1127,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const columnHasRealized = realizedSetForPeriod && realizedSetForPeriod.size > 0;
     const columnHasRelevant = relevantSet.size > 0;
     const isHighlightColumn = highlightPeriod != null && periodKey === highlightPeriod;
-    const columnClass = isHighlightColumn ? 'col highlight-col' : columnHasRelevant ? 'col relevant-col' : 'col dim-col';
+    const isHighlightColumnNext = highlightPeriod != null && periodKey === highlightPeriod + 1;
+    const columnClass = isHighlightColumn ? 'col highlight-col' : isHighlightColumnNext ? 'col highlight-col' : columnHasRelevant ? 'col relevant-col' : 'col dim-col';
 
     layout.colX = x; // left edge of column
 
@@ -1148,9 +1161,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const centerX = x + colW / 2;
         const nodeLabel = node.label;
         const realizedSet = realizedLabels.get(periodKey);
-        const isRealized = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
+        const isExperienced = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
         const isRelevant = relevantSet.has(nodeLabel);
-        const state = isRealized ? 'highlight' : (isRelevant ? 'relevant' : 'dim');
+        const state = isExperienced ? 'experienced' : (isRelevant ? 'relevant' : 'dim');
 
         // Reserve an overlay panel (to be drawn after links)
         overlays.push({
@@ -1208,9 +1221,12 @@ document.addEventListener('DOMContentLoaded', function () {
       const isParentRelevant = currentRelevantSet.has(link.parent);
       const isChildRelevant = nextRelevantSet.has(link.label);
 
+      const edgeKey = `${link.parent}=>${link.label}`;
+      const isExperiencedLink = experiencedEdges.has(edgeKey) || (isParentRealized && isChildRealized);
+
       let linkState;
-      if (isParentRealized && isChildRealized) {
-        linkState = 'highlight';
+      if (isExperiencedLink) {
+        linkState = 'experienced';
       } else if (isParentRelevant && isChildRelevant) {
         linkState = 'relevant';
       } else {
@@ -1218,7 +1234,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const lineClasses = ['link'];
-      if (linkState === 'highlight') lineClasses.push('link-highlight');
+      if (linkState === 'experienced') lineClasses.push('link-experienced');
       else if (linkState === 'relevant') lineClasses.push('link-relevant');
       else lineClasses.push('link-dim');
 
@@ -1241,7 +1257,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
 
       const probClasses = ['prob'];
-      if (linkState === 'highlight') probClasses.push('highlight-node');
+      if (linkState === 'experienced') probClasses.push('experienced-node');
       else if (linkState === 'relevant') probClasses.push('relevant-node');
       else probClasses.push('dim-node');
 
@@ -1264,18 +1280,20 @@ document.addEventListener('DOMContentLoaded', function () {
       width: rectW,
       height: rectH,
       rx: 8,
-      fill: state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
+      fill: state === 'experienced' ? '#e6f4f3' : state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
       opacity: state === 'dim' ? 0.35 : 0.95,
-      stroke: state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
+      stroke: state === 'experienced' ? '#1c7f7a' : state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
     };
-    if (state === 'highlight') {
+    if (state === 'highlight' || state === 'experienced') {
       rectAttrs['stroke-width'] = 2;
     }
     svg.appendChild(mk('rect', rectAttrs));
 
     // Label text
     const labelClasses = ['payout'];
-    if (state === 'highlight') {
+    if (state === 'experienced') {
+      labelClasses.push('experienced-node');
+    } else if (state === 'highlight') {
       labelClasses.push('highlight-node');
     } else if (state === 'relevant') {
       labelClasses.push('relevant-node');

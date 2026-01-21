@@ -504,6 +504,8 @@
     .col.dim-col { fill:#f5f5f7; stroke:#ddd; opacity:0.25; }
     .payout.highlight-node { fill:#b56600; font-weight:600; }
     .prob.highlight-node { fill:#b56600; font-weight:600; }
+    .payout.experienced-node { fill:#0f5f5b; font-weight:600; }
+    .prob.experienced-node { fill:#0f5f5b; font-weight:600; }
     .payout.relevant-node { fill:#a06600; }
     .prob.relevant-node { fill:#c27f00; }
     .payout.dim-node { fill:#777; }
@@ -517,6 +519,7 @@
 
     .link { stroke:#888; stroke-width:2;}
     .link-highlight { stroke:#f0b429; stroke-width:3; }
+    .link-experienced { stroke:#1c7f7a; stroke-width:3; }
     .link-relevant { stroke:#d8aa3e; stroke-width:2.4; }
     .link-dim { stroke:#c8c8c8; stroke-width:1.6; opacity:0.35; }
 
@@ -641,8 +644,7 @@
 
         <h3>Please provide your valuation to this lottery.</h3>
 
-        <p>Please observe this lottery carefully. Consider the following question: suppose you are facing a choice between taking the fixed payment listed at the right side and exit the lottery and staying in the lottery to play, which one would you choose?</p>
-        <p>After you have observed the lottery carefully, you can click the "Start evaluation" button on the right, which will open the sidebar with evaluation table. You can open or close the sidebar and check the whole lottery anytime.</p>
+        <p> Please provide your evaluation to this random payoff tree. The highlighted blue node represents your current gain/loss. You currently have {{ realized_accumulated }}. Please now evaluate the remaining part of the random payoff tree (highlighted by yellow). Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
 
 
               <p style="text-align:right;">
@@ -856,6 +858,15 @@ document.addEventListener('DOMContentLoaded', function () {
   if (realizedPeriod3 && realizedPeriod3.label) {
     realizedLabels.set(3, new Set([realizedPeriod3.label]));
   }
+
+  const experiencedEdges = new Set();
+  Object.entries(realizedNodes).forEach(([periodKey, node]) => {
+    const period = Number(periodKey);
+    if (!Number.isFinite(period) || !node || !node.label) return;
+    const parent = node.from || (period === 1 ? 'Start' : null);
+    if (!parent) return;
+    experiencedEdges.add(`${parent}=>${node.label}`);
+  });
 
   const relevantByPeriod = new Map();
   keys.forEach((key, idx) => {
@@ -1164,9 +1175,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const centerX = x + colW / 2;
         const nodeLabel = node.label;
         const realizedSet = realizedLabels.get(periodKey);
-        const isRealized = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
+        const isExperienced = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
         const isRelevant = relevantSet.has(nodeLabel);
-        const state = isRealized ? 'highlight' : (isRelevant ? 'relevant' : 'dim');
+        const state = isExperienced ? 'experienced' : (isRelevant ? 'relevant' : 'dim');
 
         // Reserve an overlay panel (to be drawn after links)
         overlays.push({
@@ -1224,9 +1235,12 @@ document.addEventListener('DOMContentLoaded', function () {
       const isParentRelevant = currentRelevantSet.has(link.parent);
       const isChildRelevant = nextRelevantSet.has(link.label);
 
+      const edgeKey = `${link.parent}=>${link.label}`;
+      const isExperiencedLink = experiencedEdges.has(edgeKey) || (isParentRealized && isChildRealized);
+
       let linkState;
-      if (isParentRealized && isChildRealized) {
-        linkState = 'highlight';
+      if (isExperiencedLink) {
+        linkState = 'experienced';
       } else if (isParentRelevant && isChildRelevant) {
         linkState = 'relevant';
       } else {
@@ -1234,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const lineClasses = ['link'];
-      if (linkState === 'highlight') lineClasses.push('link-highlight');
+      if (linkState === 'experienced') lineClasses.push('link-experienced');
       else if (linkState === 'relevant') lineClasses.push('link-relevant');
       else lineClasses.push('link-dim');
 
@@ -1257,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
 
       const probClasses = ['prob'];
-      if (linkState === 'highlight') probClasses.push('highlight-node');
+      if (linkState === 'experienced') probClasses.push('experienced-node');
       else if (linkState === 'relevant') probClasses.push('relevant-node');
       else probClasses.push('dim-node');
 
@@ -1280,18 +1294,20 @@ document.addEventListener('DOMContentLoaded', function () {
       width: rectW,
       height: rectH,
       rx: 8,
-      fill: state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
+      fill: state === 'experienced' ? '#e6f4f3' : state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
       opacity: state === 'dim' ? 0.35 : 0.95,
-      stroke: state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
+      stroke: state === 'experienced' ? '#1c7f7a' : state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
     };
-    if (state === 'highlight') {
+    if (state === 'highlight' || state === 'experienced') {
       rectAttrs['stroke-width'] = 2;
     }
     svg.appendChild(mk('rect', rectAttrs));
 
     // Label text
     const labelClasses = ['payout'];
-    if (state === 'highlight') {
+    if (state === 'experienced') {
+      labelClasses.push('experienced-node');
+    } else if (state === 'highlight') {
       labelClasses.push('highlight-node');
     } else if (state === 'relevant') {
       labelClasses.push('relevant-node');
