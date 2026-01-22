@@ -279,6 +279,10 @@ def ensure_payment_lottery_selected(player):
     """Select the paying round/lottery once (after the main evaluation rounds)."""
     store = get_payment_store(player)
     if store.get('selected_round'):
+        if 'selected_lottery_name' not in player.participant.vars:
+            lottery_name = store.get('lottery_name')
+            if lottery_name:
+                player.participant.vars['selected_lottery_name'] = lottery_name
         return store
 
     paying_round = random.randint(1, Constants.initial_evaluation_rounds)
@@ -295,12 +299,12 @@ def ensure_payment_lottery_selected(player):
         selected_choice=get_player_field(paying_player, 'selected_choice'),
         cutoff_index=get_player_field(paying_player, 'cutoff_index'),
     )
+    player.participant.vars['selected_lottery_name'] = store.get('lottery_name')
 
     for round_no in Constants.continuation_rounds:
         future_player = player.in_round(round_no)
         future_player.lottery_id = lottery_id
 
-    ensure_realized_up_to(player, 1, store=store)
     persist_payment_store(player, store)
     return store
 
@@ -900,12 +904,31 @@ def store_cutoff_choice(player, lottery, base_offset=0):
 
 def schedule_session_start(player, prefix, wait_seconds, future_round):
     """Store the scheduled start time for the next session and propagate it."""
+    participant = player.participant
+    existing_ts = participant.vars.get(f'{prefix}_start')
+    existing_readable = participant.vars.get(f'{prefix}_start_readable')
+    if existing_ts is not None:
+        if existing_readable is None:
+            try:
+                existing_readable = datetime.fromtimestamp(existing_ts).strftime('%A, %B %d')
+            except (TypeError, OSError, ValueError):
+                existing_readable = None
+        setattr(player, f'{prefix}_start', existing_ts)
+        if existing_readable is not None:
+            setattr(player, f'{prefix}_start_readable', existing_readable)
+            participant.vars[f'{prefix}_start_readable'] = existing_readable
+        if future_round and future_round <= Constants.num_rounds:
+            future_player = player.in_round(future_round)
+            setattr(future_player, f'{prefix}_start', existing_ts)
+            if existing_readable is not None:
+                setattr(future_player, f'{prefix}_start_readable', existing_readable)
+        return existing_ts, existing_readable
+
     t = datetime.now() + timedelta(seconds=wait_seconds)
     start_ts = t.timestamp()
     readable = t.strftime('%A, %B %d')
     setattr(player, f'{prefix}_start', start_ts)
     setattr(player, f'{prefix}_start_readable', readable)
-    participant = player.participant
     participant.vars[f'{prefix}_start'] = start_ts
     participant.vars[f'{prefix}_start_readable'] = readable
     if future_round and future_round <= Constants.num_rounds:
@@ -1022,7 +1045,7 @@ class Draw(Page):
     # This page is only displayed in the final round to draw the lottery for payment.
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.initial_evaluation_rounds
+        return player.round_number == 15
 
     @staticmethod
     def vars_for_template(player):
@@ -1049,6 +1072,62 @@ class Draw(Page):
     def before_next_page(player, timeout_happened):
         ensure_payment_lottery_selected(player)
 
+class RevisionBeforeDraw(Page):
+    # This page is displayed after welcome session but before the spinning of the lottery to show the selected lottery again.
+    template_name = 'session1/Draw.html'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number in Constants.continuation_rounds
+
+    @staticmethod
+    def vars_for_template(player):
+        store = ensure_payment_lottery_selected(player)
+        full_lottery = get_selected_lottery(player, store=store)
+        realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
+        return {
+            'selected_round': store.get('selected_round'),
+            'selected_choice': store.get('selected_choice'),
+            'selected_option': store.get('selected_option'),
+            'selected_amount': store.get('selected_amount'),
+            'lottery_name': store.get('lottery_name'),
+            'lottery_id': store.get('lottery_id'),
+            'selected_lottery': json.dumps(full_lottery),
+            'continuation_rounds': Constants.continuation_rounds,
+            'is_revision': True,
+            'realized_summary': realized_summary,
+            'realized_nodes_json': json.dumps(realized_nodes),
+            'final_payoff_text': final_payoff_text,
+            'current_session_number': None,
+        }
+
+class RevisionBeforeDraw1(RevisionBeforeDraw):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.continuation_rounds[0]
+
+    @staticmethod
+    def vars_for_template(player):
+        context = RevisionBeforeDraw.vars_for_template(player)
+        context['current_session_number'] = 2
+        context['realized_summary'] = []
+        context['realized_nodes_json'] = json.dumps({})
+        context['final_payoff_text'] = None
+        return context
+
+
+class RevisionBeforeDraw2(RevisionBeforeDraw):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.continuation_rounds[1]
+
+    @staticmethod
+    def vars_for_template(player):
+        context = RevisionBeforeDraw.vars_for_template(player)
+        context['current_session_number'] = 3
+        context['realized_summary'] = []
+        context['realized_nodes_json'] = json.dumps({})
+        context['final_payoff_text'] = None
+        return context
 
 class BridgeSession2(Page):
     @staticmethod
@@ -1061,6 +1140,7 @@ class BridgeSession2(Page):
 
 
 class BridgeSession3(Page):
+
     @staticmethod
     def is_displayed(player):
         return should_show_bridge(player, Constants.continuation_rounds[0], 'session3')
@@ -1186,7 +1266,7 @@ class RevisionSession2(Page):
     template_name = 'session1/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == 16
 
     @staticmethod
     def vars_for_template(player):
@@ -1267,7 +1347,7 @@ class WheelSession3(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == 17
 
     @staticmethod
     def vars_for_template(player):
@@ -1305,6 +1385,7 @@ class Session2(Page):
         return player.round_number == Constants.continuation_rounds[0]
 
 class Session3(Page):
+    template_name = 'session1/session2.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
@@ -1348,18 +1429,19 @@ page_sequence = [
     Check2,
     Failed,
     Introduction3,
-    #Check3,
     Failed,
     Play,
     Draw,
     BridgeSession2,
     WelcomeSession2,
+    RevisionBeforeDraw1,
     WheelSession2,
     RevisionSession1,
     Session2,
     Play2,
     BridgeSession3,
     WelcomeSession3,
+    RevisionBeforeDraw2,
     WheelSession3,
     RevisionSession2,
     Session3,
@@ -1378,3 +1460,131 @@ def creating_session(subsession: Subsession):
     lottery_for_round = lottery_ids[idx]
     for player in subsession.get_players():
         player.lottery_id = lottery_for_round
+
+
+def custom_export(players):
+    """Export key experiment data with minimal columns."""
+    choice_fields = [f'chf_{i}' for i in range(1, Constants.max_choice_count + 1)]
+    yield [
+        'session_code',
+        'participant_code',
+        'participant_id_in_session',
+        'round_number',
+        'lottery_id',
+        'lottery_stake',
+        'lottery_name',
+        'selected_lottery_name',
+        'selected_round',
+        'selected_option',
+        'selected_choice',
+        'selected_amount',
+        'cutoff_index',
+        'cutoff_amount',
+        'fine_cutoff_index',
+        'fine_cutoff_amount',
+        'fine_selected_choice',
+        'fine_selected_amount',
+        'num_failed_attempts',
+        'failed_too_many_1',
+        'failed_too_many_2',
+        'failed_too_many_3',
+        'quiz1',
+        'quiz2',
+        'quiz3',
+        'quiz4',
+        'quiz5',
+        'participant_time_started_utc',
+        'session2_start',
+        'session2_start_readable',
+        'session3_start',
+        'session3_start_readable',
+        'realized_period1_label',
+        'realized_period1_probability',
+        'realized_period1_abs_prob',
+        'realized_period2_label',
+        'realized_period2_probability',
+        'realized_period2_abs_prob',
+        'realized_period3_label',
+        'realized_period3_probability',
+        'realized_period3_abs_prob',
+        'final_outcome_label',
+        'final_payoff',
+    ] + choice_fields
+
+    ordered_players = sorted(
+        players, key=lambda p: (p.session_id, p.participant_id, p.round_number)
+    )
+
+    for player in ordered_players:
+        participant = player.participant
+        store = participant.vars.get(PAYMENT_STORE_KEY) or {}
+        realized_nodes = store.get('realized_nodes') or {}
+        realized_1 = realized_nodes.get(1) or {}
+        realized_2 = realized_nodes.get(2) or {}
+        realized_3 = realized_nodes.get(3) or {}
+        lottery_meta = Constants.lotteries.get(player.lottery_id) or {}
+        lottery_name = lottery_meta.get('name')
+        lottery_stake = lottery_meta.get('stake')
+        selected_lottery_name = (
+            participant.vars.get('selected_lottery_name') or store.get('lottery_name')
+        )
+        session2_start = get_player_field(player, 'session2_start')
+        session2_start_readable = get_player_field(player, 'session2_start_readable')
+        session3_start = get_player_field(player, 'session3_start')
+        session3_start_readable = get_player_field(player, 'session3_start_readable')
+        if session2_start is None:
+            session2_start = participant.vars.get('session2_start')
+        if session2_start_readable is None:
+            session2_start_readable = participant.vars.get('session2_start_readable')
+        if session3_start is None:
+            session3_start = participant.vars.get('session3_start')
+        if session3_start_readable is None:
+            session3_start_readable = participant.vars.get('session3_start_readable')
+
+        row = [
+            player.session.code,
+            participant.code,
+            participant.id_in_session,
+            player.round_number,
+            player.lottery_id,
+            lottery_stake,
+            lottery_name,
+            selected_lottery_name,
+            store.get('selected_round'),
+            get_player_field(player, 'selected_option'),
+            get_player_field(player, 'selected_choice'),
+            get_player_field(player, 'selected_amount'),
+            get_player_field(player, 'cutoff_index'),
+            get_player_field(player, 'cutoff_amount'),
+            get_player_field(player, 'fine_cutoff_index'),
+            get_player_field(player, 'fine_cutoff_amount'),
+            get_player_field(player, 'fine_selected_choice'),
+            get_player_field(player, 'fine_selected_amount'),
+            get_player_field(player, 'num_failed_attempts'),
+            get_player_field(player, 'failed_too_many_1'),
+            get_player_field(player, 'failed_too_many_2'),
+            get_player_field(player, 'failed_too_many_3'),
+            get_player_field(player, 'quiz1'),
+            get_player_field(player, 'quiz2'),
+            get_player_field(player, 'quiz3'),
+            get_player_field(player, 'quiz4'),
+            get_player_field(player, 'quiz5'),
+            participant.time_started_utc,
+            session2_start,
+            session2_start_readable,
+            session3_start,
+            session3_start_readable,
+            realized_1.get('label'),
+            realized_1.get('probability'),
+            realized_1.get('abs_prob'),
+            realized_2.get('label'),
+            realized_2.get('probability'),
+            realized_2.get('abs_prob'),
+            realized_3.get('label'),
+            realized_3.get('probability'),
+            realized_3.get('abs_prob'),
+            store.get('final_outcome_label'),
+            store.get('final_payoff'),
+        ]
+        row.extend(get_player_field(player, field) for field in choice_fields)
+        yield row
