@@ -154,6 +154,18 @@ class Player(BasePlayer):
         label='Please consider the following random payoff tree. Imagine that the random determination of the first outcome (three days from now) yields a loss of £10, as indi-cated by the red arrow to “-£10”. Is it possible that the outcome six days from now yields a gain of £7? ',
         choices=['Yes', 'No'],
     )
+    quiz6 = models.StringField(
+        label='During the decision tasks we asked you to evaluate random payoff trees. How difficult was it for you to understand your task? ',
+        choices=['Not complicated at all', 'A bit complicated', 'Complicated', 'Very complicated', 'Too complicated or extremely complicated'],
+    )
+    quiz7 = models.StringField(
+        label='Which of the following best describes your attention during the experiment?',
+        choices=['I paid attention throughout the entire experiment', 'I paid attention throughout almost the entire experiment', 'I paid attention throughout most of the experiment', 'I paid attention  throughout parts of the experiment', 'I did not pay any attention at all during the experiment' ],
+    )
+    quiz8 = models.StringField(
+        label='3.	Please indicate your highest obtained educational qualification:',
+        choices=['No formal qualification', 'GCSEs or equivalent (e.g., IGCSE, BTEC Firsts)', 'A-levels or equivalent (e.g., BTEC Nationals, T-levels)', 'Bachelor\'s degree or equivalent (e.g., BA, BSc, HND, HNC, foundation degree)', 'Master\'s degree or equivalent (e.g., MA, MSc, MRes, MBA)', 'Doctorate or equivalent (e.g., PhD, DPhil, EdD)'],
+    )
 
     # Lottery assigned per round in creating_session
     lottery_id = models.StringField()
@@ -1124,15 +1136,12 @@ class RevisionBeforeDraw2(RevisionBeforeDraw):
     def vars_for_template(player):
         context = RevisionBeforeDraw.vars_for_template(player)
         context['current_session_number'] = 3
-        context['realized_summary'] = []
-        context['realized_nodes_json'] = json.dumps({})
-        context['final_payoff_text'] = None
         return context
 
 class BridgeSession2(Page):
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, Constants.initial_evaluation_rounds, 'session2')
+        return should_show_bridge(player, 16, 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -1143,7 +1152,7 @@ class BridgeSession3(Page):
 
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, Constants.continuation_rounds[0], 'session3')
+        return should_show_bridge(player, 17, 'session3')
 
     @staticmethod
     def vars_for_template(player):
@@ -1193,7 +1202,6 @@ class Play2(Page):
         lottery = get_conditional_lottery(player, realized_up_to=1)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
-        ensure_realized_up_to(player, 2, store=store)
         if player.round_number == Constants.continuation_rounds[0]:
             schedule_session_start(
                 player,
@@ -1363,6 +1371,15 @@ class WheelSession3(Page):
         )
 
 
+
+
+class Post(Page):
+    form_model = 'player'
+    form_fields = ['quiz6', 'quiz7', 'quiz8']
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.continuation_rounds[1]
+
 class Thankyou(Page):
     @staticmethod
     def is_displayed(player):
@@ -1443,10 +1460,10 @@ page_sequence = [
     WelcomeSession3,
     RevisionBeforeDraw2,
     WheelSession3,
-    RevisionSession2,
+    RevisionSession3,
     Session3,
     Play3,
-    #Revision_session3,
+    Post,
     Thankyou,
 ]
 
@@ -1493,6 +1510,9 @@ def custom_export(players):
         'quiz3',
         'quiz4',
         'quiz5',
+        'quiz6',
+        'quiz7',
+        'quiz8',
         'participant_time_started_utc',
         'session2_start',
         'session2_start_readable',
@@ -1569,6 +1589,9 @@ def custom_export(players):
             get_player_field(player, 'quiz3'),
             get_player_field(player, 'quiz4'),
             get_player_field(player, 'quiz5'),
+            get_player_field(player, 'quiz6'),
+            get_player_field(player, 'quiz7'),
+            get_player_field(player, 'quiz8'),
             participant.time_started_utc,
             session2_start,
             session2_start_readable,

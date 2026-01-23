@@ -252,12 +252,12 @@
     <div class="jumbotron">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-8">
             <h1 class="university-title">
               {{ if is_revision }}
-              Review 'your' previously drawn random payoff tree
+              Review the random payoff tree
               {{ else }}
-              Draw 'your' random payoff tree
+              Draw the random payoff tree
               {{ endif }}
             </h1>
             <p>
@@ -269,12 +269,7 @@
             </p>
 
           </div>
-          <div class="col-md-6">
-            <!-- This div will be filled with the background image via CSS -->
-            <div class="content-image"> 
-              <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzZcL2Fzc2V0c1wvMWFcLzEyNjYzXC9iZmUyZDJhZmZjNWE3NmFmNTU2N2UxM2JiMzc4ZmRiMC0xNjU1ODk5NjA1LnRpZiJ9:unisg:WKEVB3Kabw70PIT5qJe7svkCSkRpdqmD6pGJFM_Ex4k?width=2400" alt="Experiment Image" class="img-fluid">
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -303,7 +298,6 @@
               {{ endif }}
               <div class="draw-summary" id="draw-summary" {{ if is_revision }}{{ else }}hidden{{ endif }}>
                 {{ if selected_round }}
-                <p>You evaluated this random payoff tree with <strong>{{ selected_amount }}</strong>.</p>
                 {{ endif }}
                 {{ if is_revision }}
                 <p>The following random payoff tree has been randomly determined for the continuation. In the next two sessions, we will only ask you about this lottery.</p>
@@ -847,18 +841,10 @@
       }
 
       function buildFinalCardText() {
-        var baseText = 'Below is your random payoff tree';
+        var baseText = 'Below is your random payoff tree:';
         var lines = [baseText];
-        if (hasValue(selectedAmount)) {
-          lines.push('Your evaluation in this session: ' + String(selectedAmount));
-          return lines.join('\n');
-        }
         if (hasValue(finalPayoffText)) {
           lines.push('Accumulated payoff: ' + String(finalPayoffText));
-          return lines.join('\n');
-        }
-        if (lotteryCount) {
-          lines.push('Selected from ' + String(lotteryCount) + ' payoff trees');
           return lines.join('\n');
         }
         return lines.join('\n');
