@@ -1403,7 +1403,7 @@ class Session2(Page):
         return player.round_number == Constants.continuation_rounds[0]
 
 class Session3(Page):
-    template_name = 'rp_game/session3.html'
+    template_name = 'rp_game/session2.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
