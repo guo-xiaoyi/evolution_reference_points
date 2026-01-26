@@ -1,4 +1,3 @@
-from matplotlib.dviread import Page
 from otree.api import *
 import copy
 import json
@@ -526,6 +525,7 @@ class Welcome(Page):
     pass
 
 class Session1(Page):
+    template_name = 'rp_game/session1.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -1057,7 +1057,7 @@ class Draw(Page):
     # This page is only displayed in the final round to draw the lottery for payment.
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 15
+        return player.round_number == Constants.initial_evaluation_rounds
 
     @staticmethod
     def vars_for_template(player):
@@ -1086,7 +1086,7 @@ class Draw(Page):
 
 class RevisionBeforeDraw(Page):
     # This page is displayed after welcome session but before the spinning of the lottery to show the selected lottery again.
-    template_name = 'session1/Draw.html'
+    template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number in Constants.continuation_rounds
@@ -1141,7 +1141,7 @@ class RevisionBeforeDraw2(RevisionBeforeDraw):
 class BridgeSession2(Page):
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, 16, 'session2')
+        return should_show_bridge(player, Constants.continuation_rounds[0], 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -1152,7 +1152,7 @@ class BridgeSession3(Page):
 
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, 17, 'session3')
+        return should_show_bridge(player, Constants.continuation_rounds[1], 'session3')
 
     @staticmethod
     def vars_for_template(player):
@@ -1212,7 +1212,7 @@ class Play2(Page):
 
 class Play3(Page):
     form_model = 'player'
-    template_name = 'session1/Play3.html'
+    template_name = 'rp_game/Play3.html'
 
     @staticmethod
     def is_displayed(player):
@@ -1271,10 +1271,10 @@ class Play3(Page):
 
 class RevisionSession2(Page):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
-    template_name = 'session1/Draw.html'
+    template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 16
+        return player.round_number == Constants.continuation_rounds[0]
 
     @staticmethod
     def vars_for_template(player):
@@ -1300,7 +1300,7 @@ class RevisionSession2(Page):
 
 class RevisionSession3(Page):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
-    template_name = 'session1/Draw.html'
+    template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
@@ -1329,7 +1329,7 @@ class RevisionSession3(Page):
 
 class WheelSession2(Page):
     """Fortune wheel to realize the first continuation outcome (for Session 2)."""
-    template_name = 'session1/fortune_wheel.html'
+    template_name = 'rp_game/fortune_wheel.html'
 
     @staticmethod
     def is_displayed(player):
@@ -1351,11 +1351,11 @@ class WheelSession2(Page):
 
 class WheelSession3(Page):
     """Fortune wheel to realize the second continuation outcome (for Session 3)."""
-    template_name = 'session1/fortune_wheel.html'
+    template_name = 'rp_game/fortune_wheel.html'
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 17
+        return player.round_number == Constants.continuation_rounds[1]
 
     @staticmethod
     def vars_for_template(player):
@@ -1397,18 +1397,19 @@ class WelcomeSession3(Page):
         return player.round_number == Constants.continuation_rounds[1]
 
 class Session2(Page):
+    template_name = 'rp_game/session2.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[0]
 
 class Session3(Page):
-    template_name = 'session1/session2.html'
+    template_name = 'rp_game/session3.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
 
 class RevisionSession1(Page):
-    template_name = 'session1/Draw.html'
+    template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[0]
@@ -1485,6 +1486,7 @@ def custom_export(players):
     yield [
         'session_code',
         'participant_code',
+        'participant_label',
         'participant_id_in_session',
         'round_number',
         'lottery_id',
@@ -1564,6 +1566,7 @@ def custom_export(players):
         row = [
             player.session.code,
             participant.code,
+            participant.label,
             participant.id_in_session,
             player.round_number,
             player.lottery_id,

@@ -1,5 +1,6 @@
 {{ block content }}
 <!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -67,94 +68,35 @@
     .feature-box {
       margin-bottom: 2rem;
     }
-    .demo-popup {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1050;
-    }
-    .demo-popup__backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-    }
-    .demo-popup__card {
-      position: relative;
-      z-index: 1;
-      background: #ffffff;
-      color: #333;
-      padding: 1.5rem 2rem;
-      border-radius: 12px;
-      max-width: 520px;
-      width: calc(100% - 2rem);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-      text-align: center;
-    }
-    .demo-popup__title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .demo-popup__text {
-      margin: 0;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-    .demo-popup__count {
-      font-weight: 700;
-    }
-    .demo-popup__close {
-      margin-top: 1rem;
-      background: #007095;
-      border: none;
-      color: #fff;
-      padding: 0.5rem 1.25rem;
-      border-radius: 999px;
-      font-size: 0.95rem;
-    }
-    .demo-popup__close:hover {
-      background: #005a79;
-    }
   </style>
 </head>
 
 <body>
-  <div id="demo-popup" class="demo-popup" role="dialog" aria-modal="true" aria-labelledby="demo-popup-title">
-    <div class="demo-popup__backdrop" aria-hidden="true"></div>
-    <div class="demo-popup__card">
-      <div id="demo-popup-title" class="demo-popup__title">Demo version</div>
-      <p class="demo-popup__text">
-        This is only a demo version. You will be redirected to the next session in 1 minute.
-      </p>
-      <button type="button" class="demo-popup__close" id="demo-popup-close">Close</button>
-    </div>
-  </div>
   <main role="main">
     <!-- Main jumbotron for primary marketing message -->
     <div class="jumbotron">
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h1 class="university-title">Time for a cup of coffee: This is the end of Session {{this_session}}.</h1>
+            <h1 class="university-title">Time for another cup of coffee: This is the end of Session {{this_session}}.</h1>
             <p>Thank you very much for participating in this session.</p>
             {{ if next_session }}
             <p>Please return for session {{ next_session }}{{ if wait_readable }} on {{ wait_readable }}{{ endif }} using the same link. We will send you reminders.</p>
             {{ endif }}
-            <p>You may close this tab.</p>
-
+                        <p>Please click the following button to finish your participation. You will be redirected to Prolific to record your participation. We cannot match you with your Prolific ID unless you click the button.</p>
+            <a class="btn btn-primary btn-lg" href="https://app.prolific.com/submissions/complete?cc=CP80SZ7T" role="button">Finish Session {{this_session}}</a>
           </div>
           <div class="col-md-6">
             <!-- This div will be filled with the background image via CSS -->
             <div class="content-image"> 
-              <img src="https://unsplash.com/photos/RFHFV7lVQBY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzYxMjAzMzgwfA&force=true" alt="Experiment Image" class="img-fluid">
+              <img src="https://unsplash.com/photos/KixfBEdyp64/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzYxMjAzNTAyfA&force=true" alt="Experiment Image" class="img-fluid">
             </div>
           </div>
         </div>
       </div>
     </div>
 
+  </main>
 
   <footer class="footer">
     <div class="container">
@@ -181,18 +123,9 @@
     (function () {
       const waitTimestamp = {{ wait_timestamp|json }};
       const serverNow = {{ server_timestamp|json }};
-      const form = document.querySelector('form');
-      const popup = document.getElementById('demo-popup');
-      const popupClose = document.getElementById('demo-popup-close');
-
-      if (popupClose && popup) {
-        popupClose.addEventListener('click', () => {
-          popup.style.display = 'none';
-        });
-      }
-
       if (waitTimestamp) {
         const skew = serverNow - (Date.now() / 1000);
+        const form = document.querySelector('form');
 
         function submitWhenReady() {
           if (!form || form.dataset.autosubmitted === 'true') {
@@ -200,10 +133,8 @@
           }
           const adjustedNow = (Date.now() / 1000) + skew;
           if (adjustedNow >= waitTimestamp) {
-            if (form && form.dataset.autosubmitted !== 'true') {
-              form.dataset.autosubmitted = 'true';
-              form.submit();
-            }
+            form.dataset.autosubmitted = 'true';
+            form.submit();
           } else {
             window.setTimeout(submitWhenReady, 1000);
           }

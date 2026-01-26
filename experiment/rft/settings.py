@@ -2,8 +2,8 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='session1',
-        app_sequence=['session1'],
+        name='rp_game',
+        app_sequence=['rp_game'],
         num_demo_participants=3,
     )
 
@@ -38,3 +38,12 @@ DEMO_PAGE_INTRO_HTML = """ """
 OTREE_AUTH_LEVEL = 'STUDY'  # for adding participants from the admin interface
 
 SECRET_KEY = '6053408606911'
+
+
+ROOMS = [
+    dict(
+        name='rp_game_room',
+        display_name='RP Game Room',
+    ),
+]
+

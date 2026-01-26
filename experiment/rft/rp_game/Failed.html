@@ -48,7 +48,7 @@
     }
     .university-title {
       font-size: 3rem;
-      font-weight: 500;
+      font-weight: 300;
       margin-bottom: 0.5rem;
     }
     .footer {
@@ -78,17 +78,17 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h1 class="university-title">Time for another cup of coffee: This is the end of Session {{this_session}}.</h1>
-            <p>Thank you very much for participating in this session.</p>
-            {{ if next_session }}
-            <p>Please return for session {{ next_session }}{{ if wait_readable }} on {{ wait_readable }}{{ endif }} using the same link. We will send you reminders.</p>
-            {{ endif }}
-            <p>You may close this tab.</p>
+            <h1 class="university-title">Unfortunately, you cannot proceed to the experiment.</h1>
+            <p>You have failed the comprehension check, because you answered at least one question incorrectly too many times. Please return your submission by closing this tab and clicking 'Cancel Participation' on Prolific. You will be excluded for further sessions.</p>
+            <p>Thank you for your participation and we wish you all the best.</p>
+            <p>You may close this tab now.</p>
+
+
           </div>
           <div class="col-md-6">
             <!-- This div will be filled with the background image via CSS -->
             <div class="content-image"> 
-              <img src="https://unsplash.com/photos/KixfBEdyp64/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzYxMjAzNTAyfA&force=true" alt="Experiment Image" class="img-fluid">
+              <img src="https://unsplash.com/photos/KkEj7OysI8o/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mzl8fHNvcnJ5fGRlfDB8fHx8MTc2MTIwMzI0OHww&force=true" alt="Experiment Image" class="img-fluid">
             </div>
           </div>
         </div>
@@ -118,31 +118,6 @@
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
   <script src="../../assets/js/vendor/popper.min.js"></script>
   <script src="../../dist/js/bootstrap.min.js"></script>
-  <script>
-    (function () {
-      const waitTimestamp = {{ wait_timestamp|json }};
-      const serverNow = {{ server_timestamp|json }};
-      if (waitTimestamp) {
-        const skew = serverNow - (Date.now() / 1000);
-        const form = document.querySelector('form');
-
-        function submitWhenReady() {
-          if (!form || form.dataset.autosubmitted === 'true') {
-            return;
-          }
-          const adjustedNow = (Date.now() / 1000) + skew;
-          if (adjustedNow >= waitTimestamp) {
-            form.dataset.autosubmitted = 'true';
-            form.submit();
-          } else {
-            window.setTimeout(submitWhenReady, 1000);
-          }
-        }
-
-        submitWhenReady();
-      }
-    })();
-  </script>
 </body>
 </html>
 {{ endblock }}
