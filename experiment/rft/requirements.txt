@@ -4,3 +4,4 @@ otree==6.0.1
 psycopg2>=2.8.4
 sentry-sdk>=0.7.9
 numpy>=1.19.2
+pathlib >=1.0.1

@@ -1,0 +1,250 @@
+{
+  "lottery_1": {
+    "name": "Apple",
+    "outcome_number": 4,
+    "stake": "lo",
+    "max_payoff": 42,
+    "min_payoff": -46,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£2",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "£26",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        }
+      ],
+      "2": [
+        {
+          "label": "+£6",
+          "probability": 1,
+          "from": "+£2",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "-£29",
+          "probability": 1,
+          "from": "£26",
+          "abs_prob": 0.5
+        }
+      ],
+      "3": [
+        {
+          "label": "+£36",
+          "probability": 0.4,
+          "from": "+£6",
+          "parent": "+£2",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "-£30",
+          "probability": 0.6,
+          "from": "+£6",
+          "parent": "+£2",
+          "abs_prob": 0.3
+        },
+        {
+          "label": "+£39",
+          "probability": 0.5,
+          "from": "-£29",
+          "parent": "£26",
+          "abs_prob": 0.25
+        },
+        {
+          "label": "-£43",
+          "probability": 0.5,
+          "from": "-£29",
+          "parent": "£26",
+          "abs_prob": 0.25
+        }
+      ]
+    }
+  },
+  "lottery_3": {
+    "name": "Lychee",
+    "outcome_number": 4,
+    "stake": "hi",
+    "max_payoff": 335,
+    "min_payoff": -725,
+    "description": "Example lottery with four final outcomes",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£120",
+          "probability": 0.8,
+          "from": "Start",
+          "abs_prob": 0.8
+        },
+        {
+          "label": "-£250",
+          "probability": 0.2,
+          "from": "Start",
+          "abs_prob": 0.2
+        }
+      ],
+      "2": [
+        {
+          "label": "-£115",
+          "probability": 1,
+          "from": "+£120",
+          "abs_prob": 0.8
+        },
+        {
+          "label": "£120",
+          "probability": 1,
+          "from": "-£250",
+          "abs_prob": 0.2
+        }
+      ],
+      "3": [
+        {
+          "label": "+£210",
+          "probability": 0.8,
+          "from": "-£115",
+          "parent": "+£120",
+          "abs_prob": 0.64
+        },
+        {
+          "label": "-£625",
+          "probability": 0.2,
+          "from": "-£115",
+          "parent": "+£120",
+          "abs_prob": 0.16
+        },
+        {
+          "label": "-£595",
+          "probability": 0.5,
+          "from": "£120",
+          "parent": "-£250",
+          "abs_prob": 0.1
+        },
+        {
+          "label": "+£465",
+          "probability": 0.5,
+          "from": "£120",
+          "parent": "-£250",
+          "abs_prob": 0.1
+        }
+      ]
+    }
+  },
+  "lottery_2": {
+    "name": "Banana",
+    "outcome_number": 6,
+    "stake": "hi",
+    "max_payoff": 825,
+    "min_payoff": -1245,
+    "description": "Example lottery with four final outcomes",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£610",
+          "probability": 0.7,
+          "from": "Start",
+          "abs_prob": 0.6
+        },
+        {
+          "label": "+£645",
+          "probability": 0.3,
+          "from": "Start",
+          "abs_prob": 0.4
+        }
+      ],
+      "2": [
+        {
+          "label": "-£665",
+          "probability": 1,
+          "from": "+£610",
+          "abs_prob": 0.6
+        },
+        {
+          "label": "-£895",
+          "probability": 0.6,
+          "from": "+£645",
+          "abs_prob": 0.4
+        },
+        {
+          "label": "-£800",
+          "probability": 0.4,
+          "from": "+£645",
+          "abs_prob": 0.4
+        }
+      ],
+      "3": [
+        {
+          "label": "+£865",
+          "probability": 0.3,
+          "from": "-£665",
+          "parent": "+£610",
+          "abs_prob": 0.48
+        },
+        {
+          "label": "-£925",
+          "probability": 0.7,
+          "from": "-£665",
+          "parent": "+£610",
+          "abs_prob": 0.12
+        },
+        {
+          "label": "+£940",
+          "probability": 0.6,
+          "from": "-£895",
+          "parent": "+£645",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "-£995",
+          "probability": 0.4,
+          "from": "-£895",
+          "parent": "+£645",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "-£860",
+          "probability": 0.6,
+          "from": "-£800",
+          "parent": "+£645",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "+£980",
+          "probability": 0.4,
+          "from": "-£800",
+          "parent": "+£645",
+          "abs_prob": 0.2
+        }
+      ]
+    }
+  }
+}

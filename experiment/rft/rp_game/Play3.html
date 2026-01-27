@@ -10,7 +10,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+  <meta name="description" content="random payoff tree Valuation Tasks - University of St. Gallen">
 
   <meta name="author" content="University of St. Gallen">
 
@@ -33,6 +33,7 @@
 <style>
 
 .otree-body{
+        
 
         max-width: 1480px;
 
@@ -223,6 +224,7 @@
     /* CSS for the framework */
 
     body {
+      font-family: 'Arial', sans-serif;
 
 
 
@@ -496,7 +498,7 @@
 
     }
 
-    .lotto { font-family:  sans-serif; }
+    .lotto { font-family: 'Arial', sans-serif; }
 
     .col { fill:#f5f5f7; stroke:#ddd; }
     .col.highlight-col { fill:#fff1b8; stroke:#f0b429; stroke-width:2; }
@@ -640,11 +642,12 @@
 
     <div class="row">
 
-        <h1 class="university-title">Lottery Valuation Task (Session 3)</h1>
+        <h1 class="university-title">Decision task</h1>
 
-        <h3>Please provide your valuation to this lottery.</h3>
+        <h3>Please provide your valuation to this random payoff tree.</h3>
 
         <p> Please provide your evaluation to this random payoff tree. The highlighted blue node represents your current gain/loss. You currently have {{ realized_accumulated }}. Please now evaluate the remaining part of the random payoff tree (highlighted by yellow). Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p>If you need had forgot how to evaluate the payoff tree, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
 
 
               <p style="text-align:right;">
@@ -693,14 +696,11 @@
  
 
 
+    <h2><span style=" color:white; margin-left: 1em; margin-right: 2em;">↓</span></h2>
 
-      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please use the following table to indicate your evaluation to this lottery.</h4>
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree. </h4>
 
-      <p style="color: white; margin-left: 2em; margin-right: 2em;">
 
-        We now offer a series of fixed payments. You can either accept the fixed payment and exit the lottery or stay in the lottery to play. Each of your decisions is independent with each other. At this session, we do not reveal the result of the lottery. After you complete all of the valuation tasks, the system will randomly pick one lottery and realize it. You will receive the payment based on the result of the lottery you picked plus the completion fee.
-
-      </p>
 
       <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
         <colgroup>
@@ -722,13 +722,13 @@
             data-refinement-series='{{ row.refinement_series|json }}'
           >
             {{if row.amount < 0}}
-            <td class="cut-left">...pay £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...pay £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ elif row.amount == 0 }}
-            <td class="cut-left">...neither pay or receive<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...neither pay nor receive anything.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{else}}
-            <td class="cut-left">...receive £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...receive £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ endif }}
-            <td class="cut-right">...obtain the outcomes of the random payoff tree</td>
+            <td class="cut-right">...obtain the outcomes of the random payoff tree.</td>
           </tr>
           {{ endfor }}
         </tbody>
@@ -1164,7 +1164,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const nodes = group.outcomes.map(o => o.node);
       if (!isDeterministic(nodes)) {
         const labelY = group.wheelCy;
-        const labelText = group.parent === 'Start' ? 'From 0:' : `From ${group.parent}:`;
+        const labelText = group.parent === 'Start' ? ':' : ``;
         // Show label and draw wheel only when the transition is not deterministic
         svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
         drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
@@ -1424,12 +1424,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!Number.isFinite(amount)) return '';
       const formatted = amountFormatter.format(Math.abs(amount));
       if (amount < 0) {
-        return `...pay £${formatted}`;
+        return `...pay £${formatted}.`;
       }
       if (amount === 0) {
-        return '...neither pay or receive';
+        return '...neither pay nor receive anything.';
       }
-      return `...receive £${formatted}`;
+      return `...receive £${formatted}.`;
     }
 
     function resetFinePanel() {
@@ -1487,7 +1487,7 @@ document.addEventListener('DOMContentLoaded', function () {
         radio.className = 'fine-cutoff-input';
         const right = document.createElement('td');
         right.className = 'cut-right';
-        right.textContent = '...obtain the outcomes of the random payoff tree';
+        right.textContent = '...obtain the outcomes of the random payoff tree.';
         left.appendChild(radio);
         tr.appendChild(left);
         tr.appendChild(right);

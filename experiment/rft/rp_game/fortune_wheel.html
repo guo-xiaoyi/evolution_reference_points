@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+  <meta name="description" content="Random payoff tree Valuation Tasks - University of St. Gallen">
   <meta name="author" content="University of St. Gallen">
   <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
@@ -16,10 +16,11 @@
 
   <style>
     .otree-body {
+      
       max-width: 1280px;
     }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       background-color: #f5f5f5;
     }
     .jumbotron {
@@ -123,7 +124,7 @@
       text-align: center;
     }
     .wheel-actions button {
-      background-color: #007095;
+      background-color: #e76e4f;
       border: none;
       color: #ffffff;
       font-size: 1.1rem;
@@ -286,7 +287,7 @@
               {{ if wheel_description }}
               {{ wheel_description }}
               {{ else }}
-              We now realize the next stage of your lottery. The result of this wheel will determine the branch you face in the following task.
+              We now realize the next stage of your Random payoff tree. The result of this wheel will determine the branch you face in the following task.
               {{ endif }}
             </p>
           </div>
@@ -349,7 +350,7 @@
             <div class="wheel-outcomes">
               <h3>Possible outcomes</h3>
               <ul class="wheel-outcomes-list" id="wheel-outcomes-list">
-                <li>No lottery data provided.</li>
+                <li>No Random payoff tree data provided.</li>
               </ul>
             </div>
 
@@ -598,7 +599,7 @@
         outcomesListEl.innerHTML = '';
         if (!slices.length) {
           var fallback = document.createElement('li');
-          fallback.textContent = 'No lottery data provided.';
+          fallback.textContent = 'No Random payoff tree data provided.';
           outcomesListEl.appendChild(fallback);
           return;
         }
@@ -743,7 +744,7 @@
           return;
         }
         if (!segmentsPrepared.length) {
-          setStatus('No lottery data available for spinning.');
+          setStatus('No Random payoff tree data available for spinning.');
           return;
         }
         if (spinButton) {
@@ -780,7 +781,7 @@
       renderOutcomesList(segmentsPrepared);
 
       if (!segmentsPrepared.length) {
-        setStatus('Lottery data missing. Please inform the experimenter.');
+        setStatus('Random payoff tree data missing. Please inform the experimenter.');
         if (spinButton) {
           spinButton.disabled = true;
         }

@@ -10,7 +10,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <meta name="description" content="Lottery Valuation Tasks - University of St. Gallen">
+  <meta name="description" content="random payoff tree Valuation Tasks - University of St. Gallen">
 
   <meta name="author" content="University of St. Gallen">
 
@@ -33,6 +33,7 @@
 <style>
 
 .otree-body{
+        
 
         max-width: 1480px;
 
@@ -223,6 +224,7 @@
     /* CSS for the framework */
 
     body {
+      font-family: 'Arial', sans-serif;
 
 
 
@@ -496,7 +498,7 @@
 
     }
 
-    .lotto { font-family:  sans-serif; }
+    .lotto { font-family: 'Arial', sans-serif; }
 
     .col { fill:#f5f5f7; stroke:#ddd; }
     .col.highlight-col { fill:#fff1b8; stroke:#f0b429; stroke-width:2; }
@@ -640,9 +642,10 @@
     <div class="row">
 
 
-        <h1 class="university-title">Random Payoff Tree (Session 2)</h1>
+        <h1 class="university-title">Decision task</h1>
         <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
         <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments shown on the left-hand side of the pop-out sidebar and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p>If you need had forgot how to evaluate the payoff tree, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
 
 
               <p style="text-align:right;">
@@ -715,13 +718,13 @@
             data-refinement-series='{{ row.refinement_series|json }}'
           >
             {{if row.amount < 0}}
-            <td class="cut-left">...pay £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...pay £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ elif row.amount == 0 }}
-            <td class="cut-left">...neither pay or receive<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...neither pay nor receive anything.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{else}}
-            <td class="cut-left">...receive £{{ row.abs_amount }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            <td class="cut-left">...receive £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             {{ endif }}
-            <td class="cut-right">...obtain the outcomes of the random payoff tree</td>
+            <td class="cut-right">...obtain the outcomes of the random payoff tree.</td>
           </tr>
           {{ endfor }}
         </tbody>
@@ -1150,7 +1153,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const nodes = group.outcomes.map(o => o.node);
       if (!isDeterministic(nodes)) {
         const labelY = group.wheelCy;
-        const labelText = group.parent === 'Start' ? 'From 0:' : `From ${group.parent}:`;
+        const labelText = group.parent === '' ? '' : ``;
         // Show label and draw wheel only when the transition is not deterministic
         svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
         drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
@@ -1410,12 +1413,12 @@ if (table) {
       if (!Number.isFinite(amount)) return '';
       const formatted = amountFormatter.format(Math.abs(amount));
       if (amount < 0) {
-        return `...pay £${formatted}`;
+        return `...pay £${formatted}.`;
       }
       if (amount === 0) {
-        return '...neither pay or receive';
+        return '...neither pay nor receive anything.';
       }
-      return `...receive £${formatted}`;
+      return `...receive £${formatted}.`;
     }
 
     function resetFinePanel() {
@@ -1473,7 +1476,7 @@ if (table) {
         radio.className = 'fine-cutoff-input';
         const right = document.createElement('td');
         right.className = 'cut-right';
-        right.textContent = '...obtain the outcomes of the random payoff tree';
+        right.textContent = '...obtain the outcomes of the random payoff tree.';
         left.appendChild(radio);
         tr.appendChild(left);
         tr.appendChild(right);

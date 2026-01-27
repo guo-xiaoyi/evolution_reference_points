@@ -5,7 +5,7 @@
  2. Changing wording of time in lotteries to In X Days (Session X)
  3. Rewrite the CE selection screen:
  > clickable options (so instead of clicking in the middle, subjects click on the fields, which fill automatically all above or below as well, so that we do not get dominated choices).
-Left: „I would prefer to receive XX“ OR „I would prefer to pay YY“. Right: „I would prefer to obtain the outcomes of the random payoff tree.“ We also need to adjust the text that goes with it. I would suggest writing only the following: „Please click in the table below to indicate your valuation of the random payoff tree“
+Left: „I would prefer to receive XX“ OR „I would prefer to pay YY“. Right: „I would prefer to obtain the outcomes of the random payoff tree..“ We also need to adjust the text that goes with it. I would suggest writing only the following: „Please click in the table below to indicate your valuation of the random payoff tree“
 4. Rephrase further CE selection screen:
 > Rephrase: „We would like to ask for more detail about your choice.“ [in bold, followed by] „Please indicate your valuation of the same random payoff tree below.“
 5. Add a lottery review page before and after the spin.

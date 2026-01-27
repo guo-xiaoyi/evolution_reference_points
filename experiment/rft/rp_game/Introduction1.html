@@ -18,10 +18,12 @@
   
   <style>
       .otree-body{
+        
         max-width: 1280px;
     }
     /* CSS for the framework */
     body {
+      font-family: 'Arial', sans-serif;
       
       background-color: #f5f5f5;
     }
@@ -204,9 +206,9 @@
         <span class="tooltip">When you participate in our experiment once, it counts as a session. We have three sessions at all (so you will need to participate three times.)</span> </span>, that is, starting from now, your final payoff will be determined individually three times and you can know the final result at the end of the third session. Your task is to provide a valuation some of the risky prospects in your first session.
     </span>   After the first session, we will randomly pick one time-variant risky prospect and <span class="definition-term">realize
         <span class="tooltip">A realization of a risky prospect indicates that we roll the fortune wheel and determine your payoff according to that.
-    </span> </span> it. At Session 2 and 3, you will valuate the rest of this risky prospect until it has been fully played. Note that you will have to evaluate 15 (fifteen) risky prospects in this session, and the system will only pick one of the fifteen for your subsequent sessions.</p>
+    </span> </span> it. At Session 2 and 3, you will valuate the rest of this risky prospect until it has been fully played. Note that you will have to evaluate {{ evaluation_rounds }} risky prospects in this session, and the system will only pick one of the {{ evaluation_rounds }} for your subsequent sessions.</p>
 
-    <div> <img src= "{{ static 'global/example_risky_prospect.png' }}" alt="Lottery" width="100%"></div>
+    <div> <img src= "{{ static 'global/example_risky_prospect.png' }}" alt="Random payoff tree" width="100%"></div>
 
 
 
@@ -245,9 +247,9 @@
     <p> You click that corresponding white circle to make it highlighted. You can see that all risky options before your selected one are now highlighted in red. This means you prefer to let the risky prospect to determine your accumulated wealth, comparing with the safe option. You can also see that all safe options after (and including your selected one) your selected circle one are now highlighed in green. This means you prefer the safe option to determine your accumulated wealth, comparing with the risky prospect. You can only select one circle per table but you can change as many times as you want before you submit.</p>
 
 
-    <p>After your consideration and evaluation, you can submit your selection by clicking the "Submit" button at the end, in order to proceed to the next lottery. You have to evaluate 15 lotteries like this in this session. You cannot submit until you select one circle, and when you have submitted your selection, you cannot go back and change.</p>
+    <p>After your consideration and evaluation, you can submit your selection by clicking the "Submit" button at the end, in order to proceed to the next random payoff tree. You have to evaluate {{ evaluation_rounds }} lotteries like this in this session. You cannot submit until you select one circle, and when you have submitted your selection, you cannot go back and change.</p>
 
-    <p>Please note that the decision you made here is irrelevant to your final payoff: You can consider yourself only providing insights of your valuation to us; you will neither really receive the money nor being expelled from playing the lottery by providing your evaluation to us. You will be provided with more information about your <span class="definition-term">financial compensation<span class="tooltip">We will provide you money to compensate your participation.</span></span> at later sections.</p>
+    <p>Please note that the decision you made here is irrelevant to your final payoff: You can consider yourself only providing insights of your valuation to us; you will neither really receive the money nor being expelled from playing the random payoff tree by providing your evaluation to us. You will be provided with more information about your <span class="definition-term">financial compensation<span class="tooltip">We will provide you money to compensate your participation.</span></span> at later sections.</p>
 
 
 

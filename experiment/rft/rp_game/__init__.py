@@ -5,6 +5,7 @@ import numpy as np
 import random
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 import time
 
 doc = """
@@ -17,12 +18,31 @@ AMOUNT_PATTERN = re.compile(r'[-+]?\d+(?:\.\d+)?') # Regex to extract numeric am
 
 rng = random.SystemRandom()  # independent RNG to avoid external seeding effects
 
+LOTTERIES_PATH = Path(__file__).with_name('lotteries.json')
+
+def load_lotteries():
+    with LOTTERIES_PATH.open(encoding='utf-8') as handle:
+        data = json.load(handle)
+    for lottery in data.values():
+        periods = lottery.get('periods')
+        if not isinstance(periods, dict):
+            continue
+        converted = {}
+        for key, value in periods.items():
+            try:
+                key = int(key)
+            except (TypeError, ValueError):
+                pass
+            converted[key] = value
+        lottery['periods'] = converted
+    return data
+
 class Constants(BaseConstants):
     name_in_url = 'compound_lottery_session1'
     players_per_group = None
-    num_rounds = 17
-    initial_evaluation_rounds = 15
-    continuation_rounds = (16, 17)
+    num_rounds = 16
+    initial_evaluation_rounds = 14
+    continuation_rounds = (15, 16)
     
     
     options = ['Safe option', 'Risky option']
@@ -31,90 +51,8 @@ class Constants(BaseConstants):
     max_choice_count = long_choice_count
     high_refinement_count = 5
     
-    # Dictionary of lottery structures
-    lotteries = {
-        'lottery_1': {
-            'name': 'Apple',
-            'outcome_number': 4,
-            'stake': 'lo',
-            'max_payoff': 40,
-            'min_payoff': -12,
-            'description': 'Example lottery with four final outcomes',
-            'periods': {
-                0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
-                1: [
-                    {'label': '+£10', 'probability': 0.6, 'from': 'Start', 'abs_prob' : 0.6},
-                    {'label': '-£10', 'probability': 0.4, 'from': 'Start', 'abs_prob' : 0.4}
-                ],
-                2: [
-                    {'label': '+£7', 'probability': 1, 'from': '+£10', 'abs_prob' : 0.6},
-                    {'label': '-£12', 'probability': 1, 'from': '-£10', 'abs_prob' : 0.4}
-                ],
-                3: [
-                    {'label': '+£8', 'probability': 0.8, 'from': '+£7', 'parent': '+£10', 'abs_prob' : 0.48},
-                    {'label': '+£0', 'probability': 0.2, 'from': '+£7', 'parent': '+£10', 'abs_prob' : 0.12},
-                    {'label': '+£2', 'probability': 0.5, 'from': '-£12', 'parent': '-£10', 'abs_prob' : 0.2},
-                    {'label': '+£5', 'probability': 0.5, 'from': '-£12', 'parent': '-£10', 'abs_prob' : 0.2},
-                ]
-            }
-        },
-
-        'lottery_3': {
-            'name': 'Lychee',
-            'outcome_number': 4,
-            'stake': 'hi',
-            'max_payoff': 335,
-            'min_payoff': -725,
-            'description': 'Example lottery with four final outcomes',
-            'periods': {
-                0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
-                1: [
-                    {'label': '+£120', 'probability': 0.8, 'from': 'Start', 'abs_prob' : 0.8},
-                    {'label': '-£250', 'probability': 0.2, 'from': 'Start', 'abs_prob' : 0.2}
-                ],
-                2: [
-                    {'label': '-£115', 'probability': 1, 'from': '+£120', 'abs_prob' : 0.8},
-                    {'label': '£120', 'probability': 1, 'from': '-£250', 'abs_prob' : 0.2}
-                ],
-                3: [
-                    {'label': '+£210', 'probability': 0.8, 'from': '-£115', 'parent': '+£120', 'abs_prob' : 0.64},
-                    {'label': '-£625', 'probability': 0.2, 'from': '-£115', 'parent': '+£120', 'abs_prob' : 0.16},
-                    {'label': '-£595', 'probability': 0.5, 'from': '£120', 'parent': '-£250', 'abs_prob' : 0.1},
-                    {'label': '+£465', 'probability': 0.5, 'from': '£120', 'parent': '-£250', 'abs_prob' : 0.1},
-                ]
-            }
-        },
-
-
-        'lottery_2': {
-            'name': 'Banana',
-            'outcome_number': 6,
-            'stake': 'hi',
-            'max_payoff': 825,
-            'min_payoff': -1245,
-            'description': 'Example lottery with four final outcomes',
-            'periods': {
-                0: [{'label': 'Start', 'probability': 1, 'from': None, 'abs_prob' : 1}],
-                1: [
-                    {'label': '+£610', 'probability': 0.7, 'from': 'Start', 'abs_prob' : 0.6},
-                    {'label': '+£645', 'probability': 0.3, 'from': 'Start', 'abs_prob' : 0.4}
-                ],
-                2: [
-                    {'label': '-£665', 'probability': 1, 'from': '+£610', 'abs_prob' : 0.6},
-                    {'label': '-£895', 'probability': 0.6, 'from': '+£645', 'abs_prob' : 0.4},
-                    {'label': '-£800', 'probability': 0.4, 'from': '+£645', 'abs_prob' : 0.4}
-                ],
-                3: [
-                    {'label': '+£865', 'probability': 0.3, 'from': '-£665', 'parent': '+£610', 'abs_prob' : 0.48},
-                    {'label': '-£925', 'probability': 0.7, 'from': '-£665', 'parent': '+£610', 'abs_prob' : 0.12},
-                    {'label': '+£940', 'probability': 0.6, 'from': '-£895', 'parent': '+£645', 'abs_prob' : 0.2},
-                    {'label': '-£995', 'probability': 0.4, 'from': '-£895', 'parent': '+£645', 'abs_prob' : 0.2},
-                    {'label': '-£860', 'probability': 0.6, 'from': '-£800', 'parent': '+£645', 'abs_prob' : 0.2},
-                    {'label': '+£980', 'probability': 0.4, 'from': '-£800', 'parent': '+£645', 'abs_prob' : 0.2}
-                ]
-            }
-        },
-    }
+    # Dictionary of lottery structures (loaded from external JSON)
+    lotteries = load_lotteries()
 
     # Default lottery to use
     default_lottery = 'lottery_1'
@@ -127,6 +65,24 @@ class Subsession(BaseSubsession):
 class Group(BaseGroup):
     pass
 
+
+
+
+def determine_lottery_blank(lottery):
+        stake = lottery.get('stake') or 0
+        return True if stake == 'hi' else False
+
+def is_high_stake(lottery):
+    return (lottery or {}).get('stake') == 'hi'
+
+def cutoff_validation_errors(values, lottery):
+    errors = {}
+    if values.get('cutoff_index') in (None, ''):
+        errors['cutoff_index'] = 'Please select a cutoff.'
+    if is_high_stake(lottery):
+        if values.get('fine_cutoff_index') in (None, ''):
+            errors['fine_cutoff_index'] = 'Please select a refined cutoff.'
+    return errors or None
 
 class Player(BasePlayer):
     num_failed_attempts = models.IntegerField(initial=0)
@@ -150,7 +106,7 @@ class Player(BasePlayer):
         choices=['Yes', 'No'],
     )
     quiz5 = models.StringField(
-        label='Please consider the following random payoff tree. Imagine that the random determination of the first outcome (three days from now) yields a loss of £10, as indi-cated by the red arrow to “-£10”. Is it possible that the outcome six days from now yields a gain of £7? ',
+        label='Please consider the following random payoff tree. Imagine that the random determination of the first outcome (three days from now) yields a loss of £10, as indicated by the red arrow to “-£10”. Is it possible that the outcome six days from now yields a gain of £7? ',
         choices=['Yes', 'No'],
     )
     quiz6 = models.StringField(
@@ -159,7 +115,11 @@ class Player(BasePlayer):
     )
     quiz7 = models.StringField(
         label='Which of the following best describes your attention during the experiment?',
-        choices=['I paid attention throughout the entire experiment', 'I paid attention throughout almost the entire experiment', 'I paid attention throughout most of the experiment', 'I paid attention  throughout parts of the experiment', 'I did not pay any attention at all during the experiment' ],
+        choices=['I paid attention throughout the entire experiment.', 
+                 'I paid attention throughout almost the entire experiment.', 
+                 'I paid attention throughout most of the experiment.', 
+                 'I paid attention  throughout parts of the experiment.', 
+                 'I did not pay any attention at all during the experiment.' ],
     )
     quiz8 = models.StringField(
         label='3.	Please indicate your highest obtained educational qualification:',
@@ -167,7 +127,8 @@ class Player(BasePlayer):
     )
 
     # Lottery assigned per round in creating_session
-    lottery_id = models.StringField()
+    lottery_id = models.StringField(blank=True)
+
 
     # Store the index of the cutoff selected in the UI
     cutoff_index = models.IntegerField(blank=True)
@@ -185,7 +146,7 @@ class Player(BasePlayer):
     fine_selected_choice = models.IntegerField(blank=True)
     fine_selected_amount = models.IntegerField(blank=True)
     fine_cutoff_amount = models.IntegerField(blank=True)
-    
+
     # Store the schedule start for session 2 and 3
     session2_start = models.FloatField(blank=True)
     session2_start_readable = models.StringField(blank=True)
@@ -200,6 +161,8 @@ for i in range(1, Constants.max_choice_count + 1):
         f'chf_{i}',
         models.StringField(choices=Constants.options, blank=True)
     )
+
+
 
 
 def parse_payoff_label(label):
@@ -526,24 +489,38 @@ class Welcome(Page):
 
 class Session1(Page):
     template_name = 'rp_game/session1.html'
+    allow_back_button = True
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
     pass
 
 class Introduction1(Page):
+    allow_back_button = True
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
+        }
     pass
 
 class Introduction2(Page):
+    allow_back_button = True
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
+        }
     pass
 
 class Introduction3(Page):
+    allow_back_button = True
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -557,7 +534,7 @@ class Play(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number in range(1, 16)
+        return player.round_number in range(1, Constants.initial_evaluation_rounds + 1)
 
     @staticmethod
     def _choice_amounts(lottery, base_offset=0):
@@ -610,8 +587,14 @@ class Play(Page):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
         fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
-        fields.append('fine_cutoff_index')
+        if is_high_stake(lottery):
+            fields.append('fine_cutoff_index')
         return fields
+
+    @staticmethod
+    def error_message(player, values):
+        lottery = Constants.lotteries[player.lottery_id]
+        return cutoff_validation_errors(values, lottery)
 
     @staticmethod
     def vars_for_template(player):
@@ -628,7 +611,7 @@ class Play(Page):
             schedule_session_start(
                 player,
                 prefix='session2',
-                wait_seconds=15,
+                wait_seconds=259200, # 3 days
                 future_round=Constants.continuation_rounds[0],
             )
             ensure_payment_lottery_selected(player)
@@ -712,6 +695,7 @@ def build_play_context(player, choice_lottery, display_lottery=None, base_offset
         'display_lottery': json.dumps(display_lottery),
         'choice_lottery': json.dumps(choice_lottery),
         'base_offset': base_offset,
+        'evaluation_rounds': Constants.initial_evaluation_rounds,
     }
 
 
@@ -1025,26 +1009,6 @@ class Check2(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
-    
-class Check3(Page):
-    allow_back_button = True
-    form_model = 'player'
-    form_fields = ['quiz1']
-    # This is for comprehension check
-    @staticmethod
-    def error_message(player: Player, values):
-        solutions = dict(quiz1= 'Ottawa')
-        errors = {name : "Incorrect answer. Please try again." for name in solutions.keys()}
-        if errors:
-            player.num_failed_attempts += 1
-            if player.num_failed_attempts >= 5:
-                player.failed_too_many_3 = True
-            else:
-                return errors
-    
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 1
 
 class Failed(Page):
     # This is for failed comprehension check
@@ -1078,6 +1042,7 @@ class Draw(Page):
             'realized_nodes_json': json.dumps(realized_nodes),
             'final_payoff_text': final_payoff_text,
             'current_session_number': None,
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
     @staticmethod
@@ -1110,6 +1075,7 @@ class RevisionBeforeDraw(Page):
             'realized_nodes_json': json.dumps(realized_nodes),
             'final_payoff_text': final_payoff_text,
             'current_session_number': None,
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
 class RevisionBeforeDraw1(RevisionBeforeDraw):
@@ -1174,7 +1140,16 @@ class Play2(Page):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
+        if is_high_stake(lottery):
+            fields.append('fine_cutoff_index')
         return fields
+
+    @staticmethod
+    def error_message(player, values):
+        store = ensure_payment_setup(player)
+        ensure_realized_up_to(player, 1, store=store)
+        lottery = get_conditional_lottery(player, realized_up_to=1)
+        return cutoff_validation_errors(values, lottery)
 
     @staticmethod
     def vars_for_template(player):
@@ -1206,7 +1181,7 @@ class Play2(Page):
             schedule_session_start(
                 player,
                 prefix='session3',
-                wait_seconds=15,
+                wait_seconds=259200,  # 3 days
                 future_round=Constants.continuation_rounds[1],
             )
 
@@ -1226,7 +1201,16 @@ class Play3(Page):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
         fields = Play._choice_field_names(choice_lottery, base_offset=0)
         fields.append('cutoff_index')
+        if is_high_stake(lottery):
+            fields.append('fine_cutoff_index')
         return fields
+
+    @staticmethod
+    def error_message(player, values):
+        store = ensure_payment_setup(player)
+        ensure_realized_up_to(player, 2, store=store)
+        lottery = get_conditional_lottery(player, realized_up_to=2)
+        return cutoff_validation_errors(values, lottery)
 
     @staticmethod
     def vars_for_template(player):
@@ -1296,6 +1280,7 @@ class RevisionSession2(Page):
             'continuation_rounds': Constants.continuation_rounds,
             'is_revision': True,
             'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
 class RevisionSession3(Page):
@@ -1325,6 +1310,7 @@ class RevisionSession3(Page):
             'continuation_rounds': Constants.continuation_rounds,
             'is_revision': True,
             'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
 class WheelSession2(Page):
@@ -1340,11 +1326,11 @@ class WheelSession2(Page):
         return build_wheel_context(
             player,
             period=1,
-            title='Spin for Session 2',
-            description='We now realize the first period of your lottery. The outcome applies to Session 2 (Play2).',
-            stage_label='Period 1 outcome',
-            status_text='Click the button to reveal the branch you will face today.',
-            button_label='Spin for Session 2',
+            title='Determination of the first outcome',
+            description='Now the first outcome of your random payoff tree will be determined.',
+            stage_label='Outcome determination (first outcome, Session 2)',
+            status_text='Click the button to spin the wheel of fortune determining the first outcome.',
+            button_label='>> Click here to spin the wheel <<',
             next_step='This outcome determines the branch you will evaluate today.',
         )
 
@@ -1362,14 +1348,13 @@ class WheelSession3(Page):
         return build_wheel_context(
             player,
             period=2,
-            title='Spin for Session 3',
-            description='We now realize the second period of your lottery. The outcome applies to Session 3 (Play3).',
-            stage_label='Period 2 outcome',
-            status_text='Click the button to reveal the branch you will face in Session 3 (Play3).',
-            button_label='Spin for Session 3',
-            next_step='This outcome determines the branch you will evaluate in Session 3 (Play3).',
+            title='Determination of the second outcome',
+            description='Now the second outcome of your random payoff tree will be determined.',
+            stage_label='Outcome determination (second outcome, Session 3)',
+            status_text='Click the button to spin the wheel of fortune determining the second outcome.',
+            button_label='>> Click here to spin the wheel <<',
+            next_step='This outcome determines the branch you will evaluate today.',
         )
-
 
 
 
@@ -1434,6 +1419,7 @@ class RevisionSession1(Page):
             'continuation_rounds': Constants.continuation_rounds,
             'is_revision': True,
             'current_session_number': 2 if player.round_number == Constants.continuation_rounds[0] else 3,
+            'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
 
