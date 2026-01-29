@@ -312,7 +312,7 @@
               <div class="wheel-centre"></div>
             </div>
             <div class="wheel-actions">
-              <button type="button" id="spin-button">
+              <button type="button" id="spin-button" {{ if wheel_spin_disabled }}disabled{{ endif }}>
                 {{ if wheel_spin_button }}
                 {{ wheel_spin_button }}
                 {{ else }}
@@ -654,18 +654,7 @@
             return seg.label === predeterminedLabel;
           });
         }
-        if (match) {
-          return match;
-        }
-        var draw = Math.random();
-        var cumulative = 0;
-        for (var i = 0; i < slices.length; i += 1) {
-          cumulative += slices[i].normalized;
-          if (draw <= cumulative || i === slices.length - 1) {
-            return slices[i];
-          }
-        }
-        return slices[slices.length - 1];
+        return match || null;
       }
 
       function setStatus(message) {
@@ -757,7 +746,10 @@
           window.requestAnimationFrame(function () {
             var outcome = findSegmentForOutcome(segmentsPrepared);
             if (!outcome) {
-              setStatus('Unable to resolve outcome. Please contact the experimenter.');
+              setStatus('Outcome data missing. Please contact the experimenter.');
+              if (spinButton) {
+                spinButton.disabled = true;
+              }
               return;
             }
             var turns = 4 + Math.floor(Math.random() * 2); // 4 or 5 full spins
@@ -778,6 +770,12 @@
 
       var segmentsPrepared = prepareSlices(segments);
       renderWheel(segmentsPrepared);
+      if (predeterminedId == null && predeterminedLabel == null) {
+        setStatus('Outcome data missing. Please contact the experimenter.');
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+      }
       renderOutcomesList(segmentsPrepared);
 
       if (!segmentsPrepared.length) {

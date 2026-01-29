@@ -301,7 +301,7 @@
                 {{ if selected_round }}
                 {{ endif }}
                 {{ if is_revision }}
-                <p>The following random payoff tree has been randomly determined for the continuation. In session 2 and 3, we will only ask you about this lottery.</p>
+                <p>The following random payoff tree has been randomly determined for the continuation. In session 2 and 3, we only ask you about this random payoff tree.</p>
                 {{ if realized_summary }}
                 <p>You have realized the following stages so far:</p>
                 <ul>
@@ -480,17 +480,36 @@
             return Object.assign({}, node);
           });
         });
+        var nodeKey = function (node, fallback) {
+          if (node && node.id != null) {
+            return String(node.id);
+          }
+          if (node && node.label != null) {
+            return String(node.label);
+          }
+          return fallback != null ? String(fallback) : '';
+        };
+        var labelKeyMapByPeriod = new Map();
+        keys.forEach(function (periodKey, idx) {
+          var nodes = periods[idx] || [];
+          var map = new Map();
+          nodes.forEach(function (node, nIdx) {
+            var key = nodeKey(node, periodKey + ':' + nIdx);
+            node._key = key;
+            var label = node && node.label != null ? String(node.label) : '';
+            if (!map.has(label)) {
+              map.set(label, []);
+            }
+            map.get(label).push(key);
+          });
+          labelKeyMapByPeriod.set(periodKey, map);
+        });
         var realizedSetByPeriod = new Map();
-        Object.keys(realizedNodesData || {}).forEach(function (key) {
-          var period = Number(key);
-          if (!Number.isFinite(period)) {
+        function addRealized(period, node) {
+          if (!Number.isFinite(period) || !node) {
             return;
           }
           if (keys.indexOf(period) === -1) {
-            return;
-          }
-          var node = realizedNodesData[key];
-          if (!node || !node.label) {
             return;
           }
           var set = realizedSetByPeriod.get(period);
@@ -498,10 +517,33 @@
             set = new Set();
             realizedSetByPeriod.set(period, set);
           }
-          set.add(node.label);
+          if (node.id != null) {
+            set.add(String(node.id));
+            return;
+          }
+          if (node.label != null) {
+            var map = labelKeyMapByPeriod.get(period);
+            var keysForLabel = map && map.get(String(node.label));
+            if (keysForLabel && keysForLabel.length) {
+              keysForLabel.forEach(function (k) { set.add(k); });
+            }
+          }
+        }
+        Object.keys(realizedNodesData || {}).forEach(function (key) {
+          var period = Number(key);
+          var node = realizedNodesData[key];
+          addRealized(period, node);
         });
         if (realizedSetByPeriod.size && keys.indexOf(0) !== -1 && !realizedSetByPeriod.has(0)) {
-          realizedSetByPeriod.set(0, new Set(['Start']));
+          var startSet = new Set();
+          var startMap = labelKeyMapByPeriod.get(0);
+          var startKeys = startMap && startMap.get('Start');
+          if (startKeys && startKeys.length) {
+            startKeys.forEach(function (k) { startSet.add(k); });
+          } else {
+            startSet.add('Start');
+          }
+          realizedSetByPeriod.set(0, startSet);
         }
         var H = 640;
         var colW = 260;
@@ -591,13 +633,13 @@
           var span = innerBottom - innerTop;
           nodes.forEach(function (node, idx) {
             var y = innerTop + (idx + 0.5) * (span / count);
-            layout.nodeAnchors.set(node.label, { y: y });
+            layout.nodeAnchors.set(node._key, { y: y });
           });
           groupByParent(nodes).forEach(function (entry) {
             var parent = entry[0];
             var children = entry[1];
             var outcomes = children.map(function (child) {
-              var anchor = layout.nodeAnchors.get(child.label);
+              var anchor = layout.nodeAnchors.get(child._key);
               var y = anchor ? anchor.y : innerTop;
               return { node: child, y: y };
             });
@@ -665,7 +707,7 @@
               var node = outcome.node;
               var y = outcome.y;
               var centerX = x + colW / 2;
-              var isRealizedNode = realizedSet && realizedSet.has(node.label);
+              var isRealizedNode = realizedSet && realizedSet.has(node._key);
               overlays.push({
                 xLeft: centerX - 50,
                 xRight: centerX + 50,
@@ -676,7 +718,7 @@
                 probText: fmtProb(node.probability),
                 state: isRealizedNode ? 'highlight' : 'normal'
               });
-              layout.nodeAnchors.set(node.label, {
+              layout.nodeAnchors.set(node._key, {
                 y: y,
                 inX: centerX,
                 outX: centerX,
@@ -728,7 +770,7 @@
           var x2 = cx + r * Math.cos(end);
           var y2 = cy + r * Math.sin(end);
           var path = 'M ' + cx + ',' + cy + ' L ' + x1 + ',' + y1 + ' A ' + r + ',' + r + ' 0 ' + large + ',1 ' + x2 + ',' + y2 + ' Z';
-          var isHighlightedSlice = highlightSet && highlightSet.has(seg.slice.node.label);
+          var isHighlightedSlice = highlightSet && highlightSet.has(seg.slice.node._key);
           var sliceFill = isHighlightedSlice ? '#f0b429' : pick(idx);
           var sliceStroke = isHighlightedSlice ? '#b56600' : '#333';
           target.appendChild(mk('path', { d: path, fill: sliceFill, stroke: sliceStroke, 'stroke-width': isHighlightedSlice ? 2 : 1.5 }));
@@ -756,26 +798,33 @@
           if (!current.length || !next.length) {
             return [];
           }
-          var validParents = new Set(current.map(function (n) {
-            return n.label;
-          }));
-          return next.filter(function (child) {
-            return validParents.has(child.from);
-          }).map(function (child) {
-            return {
-              parent: child.from,
-              label: child.label,
-              prob: num(child.probability)
-            };
+          var currentPeriodKey = keys[periodIdx];
+          var labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
+          var links = [];
+          next.forEach(function (child) {
+            var parentLabel = child.from;
+            var parentKeys = labelMap.get(parentLabel) || [];
+            if (!parentKeys.length) {
+              return;
+            }
+            var childKey = child._key;
+            parentKeys.forEach(function (parentKey) {
+              links.push({
+                parentKey: parentKey,
+                childKey: childKey,
+                prob: num(child.probability)
+              });
+            });
           });
+          return links;
         };
         for (var i = 0; i < periods.length - 1; i++) {
           var links = buildLinks(i);
           var current = columnLayouts[i];
           var next = columnLayouts[i + 1];
           links.forEach(function (link) {
-            var fromAnchor = current.nodeAnchors.get(link.parent);
-            var toAnchor = next.nodeAnchors.get(link.label);
+            var fromAnchor = current.nodeAnchors.get(link.parentKey);
+            var toAnchor = next.nodeAnchors.get(link.childKey);
             if (!fromAnchor || !toAnchor) {
               return;
             }
@@ -783,7 +832,7 @@
             var toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
             var fromSet = current.realizedSet;
             var toSet = next.realizedSet;
-            var isHighlightLink = !!(fromSet && fromSet.has(link.parent) && toSet && toSet.has(link.label));
+            var isHighlightLink = !!(fromSet && fromSet.has(link.parentKey) && toSet && toSet.has(link.childKey));
             var lineClass = 'link';
             if (isHighlightLink) {
               lineClass += ' link-highlight';

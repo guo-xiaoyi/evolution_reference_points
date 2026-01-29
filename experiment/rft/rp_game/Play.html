@@ -626,7 +626,7 @@
 
     <div class="row">
 
-        <h1 class="university-title">Decision task ({{ player.round_number }}/{{ evaluation_rounds }})</h1>
+        <h1 class="university-title">Decision task ({{player.round_number}}/14)</h1>
 
         <p> Please provide your evaluation to this random payoff tree. Consider the following question: suppose you are facing a choice between the fixed payment shown on the left-hand side and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
         <p>If you need had forgot how to evaluate the payoff tree, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
@@ -806,6 +806,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const periods = keys.map(k => lottery.periods[k]);
 
+  const nodeKey = (node, fallback) => {
+    if (node && node.id != null) return String(node.id);
+    if (fallback != null) return String(fallback);
+    if (node && node.label != null) return String(node.label);
+    return '';
+  };
+
+  const labelKeyMapByPeriod = new Map();
+  keys.forEach((periodKey, idx) => {
+    const nodes = periods[idx] || [];
+    const map = new Map();
+    nodes.forEach((node, nIdx) => {
+      const key = nodeKey(node, `${periodKey}:${nIdx}`);
+      node._key = key;
+      const label = node && node.label != null ? String(node.label) : '';
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(key);
+    });
+    labelKeyMapByPeriod.set(periodKey, map);
+  });
+
   const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
 
   // ---- helpers ----
@@ -953,21 +974,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!cur || !nxt) return [];
 
-    const validParents = new Set(cur.map(n => n.label));
-
-    return nxt
-
-      .filter(child => validParents.has(child.from))
-
-      .map(child => ({
-
-        parent: child.from,
-
-        label: child.label,
-
-        prob: num(child.probability)
-
-      }));
+    const currentPeriodKey = keys[periodIdx];
+    const labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
+    const links = [];
+    nxt.forEach(child => {
+      const parentLabel = child.from;
+      const parentKeys = labelMap.get(parentLabel) || [];
+      if (!parentKeys.length) return;
+      const childKey = child._key;
+      parentKeys.forEach(parentKey => {
+        links.push({
+          parentKey,
+          childKey,
+          prob: num(child.probability)
+        });
+      });
+    });
+    return links;
 
   }
 
@@ -985,13 +1008,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Assign evenly spaced y-positions to each node in this period
     nodes.forEach((node, idx) => {
       const y = innerTop + (idx + 0.5) * (span / count);
-      nodeAnchors.set(node.label, { y });
+      nodeAnchors.set(node._key, { y });
     });
 
     // Build groups and set wheel at the average outcome position for that group
     groupByParent(nodes).forEach(([parent, children]) => {
       const outcomes = children.map(child => {
-        const anchor = nodeAnchors.get(child.label);
+        const anchor = nodeAnchors.get(child._key);
         const y = anchor ? anchor.y : innerTop;
         return { node: child, y };
       });
@@ -1081,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Update anchors to be centered horizontally
-        layout.nodeAnchors.set(node.label, {
+        layout.nodeAnchors.set(node._key, {
           y: y,
           inX: centerX,
           outX: centerX
@@ -1103,9 +1126,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     links.forEach(link => {
 
-      const fromAnchor = current.nodeAnchors.get(link.parent);
+      const fromAnchor = current.nodeAnchors.get(link.parentKey);
 
-      const toAnchor = next.nodeAnchors.get(link.label);
+      const toAnchor = next.nodeAnchors.get(link.childKey);
 
       if (!fromAnchor || !toAnchor) return;
 
@@ -1466,6 +1489,16 @@ document.addEventListener('DOMContentLoaded', function () {
       openNav();
     });
   }
+
+  const sidebar = document.getElementById('mySidebar');
+  document.addEventListener('click', event => {
+    if (!sidebar || !sidebar.classList.contains('open')) return;
+    const clickInsideSidebar = sidebar.contains(event.target);
+    const clickOnOpenBtn = openBtn && (event.target === openBtn || openBtn.contains(event.target));
+    if (!clickInsideSidebar && !clickOnOpenBtn) {
+      closeNav();
+    }
+  });
 
 });
 

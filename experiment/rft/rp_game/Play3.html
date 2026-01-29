@@ -848,58 +848,122 @@ document.addEventListener('DOMContentLoaded', function () {
   const periodsByKey = new Map();
   keys.forEach((key, idx) => periodsByKey.set(key, periods[idx]));
 
-  const realizedLabels = new Map();
-  if (realizedPeriod1 && realizedPeriod1.label) {
-    realizedLabels.set(1, new Set([realizedPeriod1.label]));
+  const nodeKey = (node, fallback) => {
+    if (node && node.id != null) return String(node.id);
+    if (fallback != null) return String(fallback);
+    if (node && node.label != null) return String(node.label);
+    return '';
+  };
+
+  const labelKeyMapByPeriod = new Map();
+  const fromLabelKeyMapByPeriod = new Map();
+  keys.forEach((periodKey, idx) => {
+    const nodes = periods[idx] || [];
+    const map = new Map();
+    const fromMap = new Map();
+    nodes.forEach((node, nIdx) => {
+      const key = nodeKey(node, `${periodKey}:${nIdx}`);
+      node._key = key;
+      const label = node && node.label != null ? String(node.label) : '';
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(key);
+      const parentLabel = node && node.from != null ? String(node.from) : 'Start';
+      let byFrom = fromMap.get(parentLabel);
+      if (!byFrom) {
+        byFrom = new Map();
+        fromMap.set(parentLabel, byFrom);
+      }
+      if (!byFrom.has(label)) byFrom.set(label, []);
+      byFrom.get(label).push(key);
+    });
+    labelKeyMapByPeriod.set(periodKey, map);
+    fromLabelKeyMapByPeriod.set(periodKey, fromMap);
+  });
+
+  const realizedKeys = new Map();
+  function resolveNodeKeys(periodKey, node) {
+    if (!Number.isFinite(periodKey) || !node) return [];
+    if (node.id != null) return [String(node.id)];
+    const label = node.label != null ? String(node.label) : '';
+    const parentLabel = node.from != null ? String(node.from) : 'Start';
+    const fromMap = fromLabelKeyMapByPeriod.get(periodKey);
+    const byFrom = fromMap && fromMap.get(parentLabel);
+    const keysForLabel = byFrom && byFrom.get(label);
+    if (keysForLabel && keysForLabel.length) {
+      return [...keysForLabel];
+    }
+    const labelMap = labelKeyMapByPeriod.get(periodKey);
+    const fallbackKeys = labelMap && labelMap.get(label);
+    return fallbackKeys ? [...fallbackKeys] : [];
   }
-  if (realizedPeriod2 && realizedPeriod2.label) {
-    realizedLabels.set(2, new Set([realizedPeriod2.label]));
+  function addRealized(periodKey, node) {
+    if (!Number.isFinite(periodKey) || !node) return;
+    const set = realizedKeys.get(periodKey) || new Set();
+    resolveNodeKeys(periodKey, node).forEach(k => set.add(k));
+    if (set.size) {
+      realizedKeys.set(periodKey, set);
+    }
   }
-  if (realizedPeriod3 && realizedPeriod3.label) {
-    realizedLabels.set(3, new Set([realizedPeriod3.label]));
-  }
+  if (realizedPeriod1) addRealized(1, realizedPeriod1);
+  if (realizedPeriod2) addRealized(2, realizedPeriod2);
+  if (realizedPeriod3) addRealized(3, realizedPeriod3);
 
   const experiencedEdges = new Set();
   Object.entries(realizedNodes).forEach(([periodKey, node]) => {
     const period = Number(periodKey);
-    if (!Number.isFinite(period) || !node || !node.label) return;
-    const parent = node.from || (period === 1 ? 'Start' : null);
-    if (!parent) return;
-    experiencedEdges.add(`${parent}=>${node.label}`);
+    if (!Number.isFinite(period) || !node) return;
+    const parentLabel = node.from || (period === 1 ? 'Start' : null);
+    if (!parentLabel) return;
+    const parentMap = labelKeyMapByPeriod.get(period - 1);
+    const parentKeys = parentMap && parentMap.get(String(parentLabel));
+    if (!parentKeys || !parentKeys.length) return;
+    const childKeys = new Set(resolveNodeKeys(period, node));
+    if (!childKeys.size) return;
+    parentKeys.forEach(parentKey => {
+      childKeys.forEach(childKey => {
+        experiencedEdges.add(`${parentKey}=>${childKey}`);
+      });
+    });
   });
 
   const relevantByPeriod = new Map();
+  const relevantLabelsByPeriod = new Map();
   keys.forEach((key, idx) => {
     const nodes = periodsByKey.get(key) || [];
     if (idx === 0) {
-      relevantByPeriod.set(key, new Set(nodes.map(n => n.label)));
+      relevantByPeriod.set(key, new Set(nodes.map(n => n._key)));
+      relevantLabelsByPeriod.set(key, new Set(nodes.map(n => n.label)));
       return;
     }
     const prevKey = keys[idx - 1];
-    const prevRelevant = relevantByPeriod.get(prevKey) || new Set();
-    const prevRelevantHasEntries = prevRelevant.size > 0;
-    const realizedSet = realizedLabels.get(key);
+    const prevRelevantLabels = relevantLabelsByPeriod.get(prevKey) || new Set();
+    const prevRelevantHasEntries = prevRelevantLabels.size > 0;
+    const realizedSet = realizedKeys.get(key);
     const relevantSet = new Set();
+    const relevantLabels = new Set();
     nodes.forEach(node => {
       const parent = node.from || 'Start';
-      const parentRelevant = !prevRelevantHasEntries || prevRelevant.has(parent);
+      const parentRelevant = !prevRelevantHasEntries || prevRelevantLabels.has(parent);
       if (!parentRelevant) {
         return;
       }
-      if (realizedSet && !realizedSet.has(node.label)) {
+      if (realizedSet && !realizedSet.has(node._key)) {
         return;
       }
-      relevantSet.add(node.label);
+      relevantSet.add(node._key);
+      relevantLabels.add(node.label);
     });
     if (!realizedSet) {
       nodes.forEach(node => {
         const parent = node.from || 'Start';
-        if (!prevRelevantHasEntries || prevRelevant.has(parent)) {
-          relevantSet.add(node.label);
+        if (!prevRelevantHasEntries || prevRelevantLabels.has(parent)) {
+          relevantSet.add(node._key);
+          relevantLabels.add(node.label);
         }
       });
     }
     relevantByPeriod.set(key, relevantSet);
+    relevantLabelsByPeriod.set(key, relevantLabels);
   });
 
   const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
@@ -1049,21 +1113,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!cur || !nxt) return [];
 
-    const validParents = new Set(cur.map(n => n.label));
-
-    return nxt
-
-      .filter(child => validParents.has(child.from))
-
-      .map(child => ({
-
-        parent: child.from,
-
-        label: child.label,
-
-        prob: num(child.probability)
-
-      }));
+    const currentPeriodKey = keys[periodIdx];
+    const labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
+    const links = [];
+    nxt.forEach(child => {
+      const parentLabel = child.from;
+      const parentKeys = labelMap.get(parentLabel) || [];
+      if (!parentKeys.length) return;
+      const childKey = child._key;
+      parentKeys.forEach(parentKey => {
+        links.push({
+          parentKey,
+          childKey,
+          prob: num(child.probability)
+        });
+      });
+    });
+    return links;
 
   }
 
@@ -1081,13 +1147,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Assign evenly spaced y-positions to each node in this period
     nodes.forEach((node, idx) => {
       const y = innerTop + (idx + 0.5) * (span / count);
-      nodeAnchors.set(node.label, { y });
+      nodeAnchors.set(node._key, { y });
     });
 
     // Build groups and set wheel at the average outcome position for that group
     groupByParent(nodes).forEach(([parent, children]) => {
       const outcomes = children.map(child => {
-        const anchor = nodeAnchors.get(child.label);
+        const anchor = nodeAnchors.get(child._key);
         const y = anchor ? anchor.y : innerTop;
         return { node: child, y };
       });
@@ -1137,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const x = leftPad + i * (colW + colGap);
     const periodKey = keys[i];
     const realizedNode = realizedNodes[periodKey];
-    const realizedSetForPeriod = realizedLabels.get(periodKey);
+    const realizedSetForPeriod = realizedKeys.get(periodKey);
     const relevantSet = relevantByPeriod.get(periodKey) || new Set();
     const columnHasRealized = realizedSetForPeriod && realizedSetForPeriod.size > 0;
     const columnHasRelevant = relevantSet.size > 0;
@@ -1173,10 +1239,10 @@ document.addEventListener('DOMContentLoaded', function () {
       group.outcomes.forEach(outcome => {
         const { node, y } = outcome;
         const centerX = x + colW / 2;
-        const nodeLabel = node.label;
-        const realizedSet = realizedLabels.get(periodKey);
-        const isExperienced = (realizedSet && realizedSet.has(nodeLabel)) || (realizedNode && realizedNode.label === nodeLabel);
-        const isRelevant = relevantSet.has(nodeLabel);
+        const nodeKeyValue = node._key;
+        const realizedSet = realizedKeys.get(periodKey);
+        const isExperienced = (realizedSet && realizedSet.has(nodeKeyValue)) || (realizedNode && realizedNode.id && String(realizedNode.id) === nodeKeyValue);
+        const isRelevant = relevantSet.has(nodeKeyValue);
         const state = isExperienced ? 'experienced' : (isRelevant ? 'relevant' : 'dim');
 
         // Reserve an overlay panel (to be drawn after links)
@@ -1192,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Update anchors to be centered horizontally
-        layout.nodeAnchors.set(node.label, {
+        layout.nodeAnchors.set(node._key, {
           y: y,
           inX: centerX,
           outX: centerX
@@ -1214,15 +1280,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentKey = keys[i];
     const nextKey = keys[i + 1];
     const currentRelevantSet = relevantByPeriod.get(currentKey) || new Set();
-    const currentRealizedSet = realizedLabels.get(currentKey) || new Set();
+    const currentRealizedSet = realizedKeys.get(currentKey) || new Set();
     const nextRelevantSet = relevantByPeriod.get(nextKey) || new Set();
-    const nextRealizedSet = realizedLabels.get(nextKey) || new Set();
+    const nextRealizedSet = realizedKeys.get(nextKey) || new Set();
 
     links.forEach(link => {
 
-      const fromAnchor = current.nodeAnchors.get(link.parent);
+      const fromAnchor = current.nodeAnchors.get(link.parentKey);
 
-      const toAnchor = next.nodeAnchors.get(link.label);
+      const toAnchor = next.nodeAnchors.get(link.childKey);
 
       if (!fromAnchor || !toAnchor) return;
 
@@ -1230,12 +1296,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
 
-      const isParentRealized = currentRealizedSet.has(link.parent);
-      const isChildRealized = nextRealizedSet.has(link.label);
-      const isParentRelevant = currentRelevantSet.has(link.parent);
-      const isChildRelevant = nextRelevantSet.has(link.label);
+      const isParentRealized = currentRealizedSet.has(link.parentKey);
+      const isChildRealized = nextRealizedSet.has(link.childKey);
+      const isParentRelevant = currentRelevantSet.has(link.parentKey);
+      const isChildRelevant = nextRelevantSet.has(link.childKey);
 
-      const edgeKey = `${link.parent}=>${link.label}`;
+      const edgeKey = `${link.parentKey}=>${link.childKey}`;
       const isExperiencedLink = experiencedEdges.has(edgeKey) || (isParentRealized && isChildRealized);
 
       let linkState;
@@ -1626,6 +1692,16 @@ document.addEventListener('DOMContentLoaded', function () {
       openNav();
     });
   }
+
+  const sidebar = document.getElementById('mySidebar');
+  document.addEventListener('click', event => {
+    if (!sidebar || !sidebar.classList.contains('open')) return;
+    const clickInsideSidebar = sidebar.contains(event.target);
+    const clickOnOpenBtn = openBtn && (event.target === openBtn || openBtn.contains(event.target));
+    if (!clickInsideSidebar && !clickOnOpenBtn) {
+      closeNav();
+    }
+  });
 
 });
 

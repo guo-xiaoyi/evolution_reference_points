@@ -20,10 +20,26 @@ rng = random.SystemRandom()  # independent RNG to avoid external seeding effects
 
 LOTTERIES_PATH = Path(__file__).with_name('lotteries.json')
 
+def _assign_lottery_node_ids(lottery_id, lottery):
+    """Attach stable node ids for rendering, without changing labels."""
+    periods = (lottery or {}).get('periods', {})
+    if not isinstance(periods, dict):
+        return
+    for period_key, nodes in periods.items():
+        if not isinstance(nodes, list):
+            continue
+        for idx, node in enumerate(nodes):
+            if not isinstance(node, dict):
+                continue
+            if node.get('id'):
+                continue
+            node['id'] = f"{lottery_id}:{period_key}:{idx}"
+
+
 def load_lotteries():
     with LOTTERIES_PATH.open(encoding='utf-8') as handle:
         data = json.load(handle)
-    for lottery in data.values():
+    for lottery_id, lottery in data.items():
         periods = lottery.get('periods')
         if not isinstance(periods, dict):
             continue
@@ -35,7 +51,50 @@ def load_lotteries():
                 pass
             converted[key] = value
         lottery['periods'] = converted
+        _assign_lottery_node_ids(lottery_id, lottery)
     return data
+
+
+def _lottery_outcome_count(lottery):
+    """Return outcome count as int when possible."""
+    try:
+        return int((lottery or {}).get('outcome_number'))
+    except (TypeError, ValueError):
+        return None
+
+
+def _is_low_stake(lottery):
+    return (lottery or {}).get('stake') == 'lo'
+
+
+def build_lottery_order(lotteries):
+    """Randomize lottery order while forcing a low-stake 4-outcome first round."""
+    lottery_ids = list((lotteries or {}).keys())
+    if not lottery_ids:
+        return []
+
+    first_candidates = [
+        lottery_id
+        for lottery_id, meta in (lotteries or {}).items()
+        if _is_low_stake(meta) and _lottery_outcome_count(meta) == 4
+    ]
+    if first_candidates:
+        first_id = rng.choice(first_candidates)
+    else:
+        first_id = rng.choice(lottery_ids)
+
+    remaining = [lottery_id for lottery_id in lottery_ids if lottery_id != first_id]
+    rng.shuffle(remaining)
+    return [first_id] + remaining
+
+
+def get_participant_lottery_order(participant):
+    """Return (and store) a participant-specific lottery order."""
+    order = participant.vars.get('lottery_order')
+    if not order:
+        order = build_lottery_order(Constants.lotteries)
+        participant.vars['lottery_order'] = order
+    return order
 
 class Constants(BaseConstants):
     name_in_url = 'compound_lottery_session1'
@@ -259,7 +318,7 @@ def ensure_payment_lottery_selected(player):
                 player.participant.vars['selected_lottery_name'] = lottery_name
         return store
 
-    paying_round = random.randint(1, Constants.initial_evaluation_rounds)
+    paying_round = rng.randint(1, Constants.initial_evaluation_rounds)
     paying_player = player.in_round(paying_round)
     lottery_id = paying_player.lottery_id or Constants.default_lottery
     base_lottery = Constants.lotteries.get(lottery_id, Constants.lotteries[Constants.default_lottery])
@@ -703,6 +762,9 @@ def _wheel_node_identifier(period, node):
     """Build a stable identifier for a lottery node used in the fortune wheel."""
     if not isinstance(node, dict):
         return None
+    node_id = node.get('id')
+    if node_id:
+        return str(node_id)
     label = node.get('label') or f'Outcome_{period}'
     parent = node.get('from') or 'Start'
     return f'{period}:{parent}:{label}'
@@ -765,6 +827,9 @@ def build_wheel_context(
     realized_nodes = store.get('realized_nodes', {})
     segments = build_wheel_segments(lottery, period, realized_nodes)
     predetermined = realized_nodes.get(period) or {}
+    missing_outcome = not predetermined or not segments
+    if missing_outcome:
+        status_text = 'Outcome data missing. Please inform the experimenter.'
     accumulated_value = 0
     has_accumulated = False
     for node in realized_nodes.values():
@@ -785,6 +850,7 @@ def build_wheel_context(
         'wheel_result_label': predetermined.get('label'),
         'wheel_result_id': _wheel_node_identifier(period, predetermined),
         'wheel_result_value': predetermined.get('label'),
+        'wheel_spin_disabled': missing_outcome,
         'auto_spin': auto_spin,
         'auto_submit': auto_submit,
         'auto_submit_delay': auto_submit_delay,
@@ -962,7 +1028,7 @@ class Check1(Page):
     def error_message(player: Player, values):
         solutions = dict(quiz1= 'Yes', quiz2= 'No')
         error_messages = {
-            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this experiment if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 10 minutes each).',
+            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this experiment if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 7-15 minutes each).',
             'quiz2': 'You should have chosen “No” for this question.  We are interested in your personal preferences (there are no right or wrong answers). Therefore, please do not use AI during the experiment.',
         }
         errors = {
@@ -1330,7 +1396,7 @@ class WheelSession2(Page):
             description='Now the first outcome of your random payoff tree will be determined.',
             stage_label='Outcome determination (first outcome, Session 2)',
             status_text='Click the button to spin the wheel of fortune determining the first outcome.',
-            button_label='>> Click here to spin the wheel <<',
+            button_label='Click here to spin the wheel',
             next_step='This outcome determines the branch you will evaluate today.',
         )
 
@@ -1352,7 +1418,7 @@ class WheelSession3(Page):
             description='Now the second outcome of your random payoff tree will be determined.',
             stage_label='Outcome determination (second outcome, Session 3)',
             status_text='Click the button to spin the wheel of fortune determining the second outcome.',
-            button_label='>> Click here to spin the wheel <<',
+            button_label='Click here to spin the wheel',
             next_step='This outcome determines the branch you will evaluate today.',
         )
 
@@ -1457,13 +1523,12 @@ page_sequence = [
 
 def creating_session(subsession: Subsession):
     """Assign lotteries by round so each round uses a different definition."""
-    lottery_ids = list(Constants.lotteries.keys())
-    if not lottery_ids:
-        return
-    idx = (subsession.round_number - 1) % len(lottery_ids)
-    lottery_for_round = lottery_ids[idx]
     for player in subsession.get_players():
-        player.lottery_id = lottery_for_round
+        lottery_order = get_participant_lottery_order(player.participant)
+        if not lottery_order:
+            continue
+        idx = (subsession.round_number - 1) % len(lottery_order)
+        player.lottery_id = lottery_order[idx]
 
 
 def custom_export(players):
