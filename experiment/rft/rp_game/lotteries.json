@@ -39,7 +39,7 @@
         {
           "label": "-£29",
           "probability": 1,
-          "from": "£26",
+          "from": "+£26",
           "abs_prob": 0.5
         }
       ],
