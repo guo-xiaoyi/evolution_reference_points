@@ -258,14 +258,14 @@
               {{ if is_revision }}
               Review the random payoff tree
               {{ else }}
-              Draw the random payoff tree
+              Draw one random payoff tree
               {{ endif }}
             </h1>
             <p>
               {{ if is_revision }}
               The random payoff tree below was drawn at the end of Session&nbsp;1 and carries over to the continuation sessions. Please review it before you proceed.
               {{ else }}
-              Thank you for providing your evaluations. Now we pick your random payoff tree that you will evaluate in the subsequent two sessions. Please click the following button to draw one from your previously evaluated {{ evaluation_rounds }} random payoff trees. This will be 'your' random payoff tree for the continuation sessions.
+              Thank you for providing your evaluations. Now one random payoff tree will be drawn. This will be ‘your’ random payoff tree, which you will evaluate in the next two sessions Please click the following button to draw one from your previously evaluated {{ evaluation_rounds }} random payoff trees.
               {{ endif }}
             </p>
 
@@ -359,6 +359,7 @@
             <p style="text-align:right;">
               <button class="otree-btn-next btn btn-primary">Next &raquo;</button>
             </p>
+            <strong>Please review this random payoff tree carefully (you may also write it down or take a screenshot) before finalizing the session.</strong>
             {{ endif }}
               </div>
               <noscript>

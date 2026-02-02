@@ -107,7 +107,7 @@
       margin: auto;
       width: 38%;
       height: 38%;
-      background: radial-gradient(circle at 30% 30%, #007095, #003f59);
+      background: radial-gradient(circle at 30% 30%, #71bcd6, #205b6f);
       border-radius: 50%;
       box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.3);
       z-index: 2;
@@ -422,7 +422,8 @@
       var formEl = document.querySelector('form');
       var hasSpun = false;
       var latestOutcome = null;
-      var palette = ['#007095', '#0096c7', '#48bfe3', '#64dfdf', '#80ffdb', '#56cfe1', '#5e60ce', '#6930c3', '#ff9f1c', '#ff4d6d', '#d1495b'];
+      var palette = ['#205b6f', '#71bcd6', '#2e829e', '#90cbdf', '#276f86', '#59b1cf', '#3596b6', '#81c4da', '#226277', '#69b9d3', '#3089a6', '#88c8dd'];
+      var colorParser = null;
       var realizedEntries = [];
       var realizedMap = new Map();
       if (realizedPeriod1) realizedMap.set(1, realizedPeriod1);
@@ -440,6 +441,120 @@
         }
         var decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
         return pct.toFixed(decimals) + '%';
+      }
+
+      function getColorParser() {
+        if (colorParser) {
+          return colorParser;
+        }
+        var canvas = document.createElement('canvas');
+        colorParser = canvas.getContext('2d');
+        return colorParser;
+      }
+
+      function hexToRgb(hex) {
+        if (!hex) {
+          return null;
+        }
+        var trimmed = hex.replace('#', '');
+        if (trimmed.length === 3) {
+          trimmed = trimmed.split('').map(function (ch) { return ch + ch; }).join('');
+        }
+        if (trimmed.length !== 6) {
+          return null;
+        }
+        var num = parseInt(trimmed, 16);
+        if (!Number.isFinite(num)) {
+          return null;
+        }
+        return {
+          r: (num >> 16) & 255,
+          g: (num >> 8) & 255,
+          b: num & 255
+        };
+      }
+
+      function rgbStringToRgb(value) {
+        if (!value) {
+          return null;
+        }
+        var matches = value.match(/rgba?\(([^)]+)\)/i);
+        if (!matches || !matches[1]) {
+          return null;
+        }
+        var parts = matches[1].split(',').map(function (item) { return item.trim(); });
+        if (parts.length < 3) {
+          return null;
+        }
+        var r = Number(parts[0]);
+        var g = Number(parts[1]);
+        var b = Number(parts[2]);
+        if (![r, g, b].every(function (n) { return Number.isFinite(n); })) {
+          return null;
+        }
+        return { r: r, g: g, b: b };
+      }
+
+      function colorToRgb(color) {
+        if (!color) {
+          return null;
+        }
+        var ctx = getColorParser();
+        if (!ctx) {
+          return null;
+        }
+        ctx.fillStyle = '#000';
+        ctx.fillStyle = color;
+        var computed = ctx.fillStyle;
+        if (computed.startsWith('#')) {
+          return hexToRgb(computed);
+        }
+        if (computed.startsWith('rgb')) {
+          return rgbStringToRgb(computed);
+        }
+        return null;
+      }
+
+      function relativeLuminance(rgb) {
+        if (!rgb) {
+          return 0;
+        }
+        function channel(value) {
+          var v = value / 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        }
+        return 0.2126 * channel(rgb.r) + 0.7152 * channel(rgb.g) + 0.0722 * channel(rgb.b);
+      }
+
+      function isColorTooLight(color) {
+        var rgb = colorToRgb(color);
+        if (!rgb) {
+          return false;
+        }
+        return relativeLuminance(rgb) > 0.82;
+      }
+
+      function pickTextColors(bgColor) {
+        var fallback = {
+          label: '#0f3c56',
+          prob: '#325b6b',
+          stroke: 'rgba(255,255,255,0.45)',
+          strokeWidth: 1.6,
+          probStrokeWidth: 1.2
+        };
+        var rgb = colorToRgb(bgColor);
+        if (!rgb) {
+          return fallback;
+        }
+        var lum = relativeLuminance(rgb);
+        var isDark = lum < 0.5;
+        return {
+          label: isDark ? '#f7fbff' : '#0f3c56',
+          prob: isDark ? 'rgba(247,251,255,0.88)' : '#325b6b',
+          stroke: isDark ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.55)',
+          strokeWidth: isDark ? 2.2 : 1.6,
+          probStrokeWidth: isDark ? 1.6 : 1.2
+        };
       }
 
       function ensureSegments(data) {
@@ -474,6 +589,12 @@
         sanitized.forEach(function (seg) {
           seg.normalized = seg.probability / totalProb;
         });
+        if (sanitized.length === 1) {
+          var solo = sanitized[0];
+          if (isColorTooLight(solo.color)) {
+            solo.color = '#2e829e';
+          }
+        }
         return sanitized;
       }
 
@@ -521,7 +642,8 @@
         }
         entries.forEach(function (entry) {
           var li = document.createElement('li');
-          var text = 'Period ' + entry.period + ': ' + entry.label;
+          var session_entry = entry.period + 1;
+          var text = 'Session ' + session_entry + ': ' + entry.label;
           if (entry.probabilityText) {
             text += ' (' + entry.probabilityText + ')';
           }
@@ -558,39 +680,66 @@
         if (!wheelSvg) return;
         wheelSvg.innerHTML = '';
         var radius = 240;
-        var labelRadius = radius * 0.66;
+        var labelRadius = radius * 0.62;
+        var probRadius = radius * 0.8;
         slices.forEach(function (seg, idx) {
-          var path = document.createElementNS(svgNS, 'path');
-          path.setAttribute('d', describeSlice(radius, seg.startDeg, seg.endDeg));
-          path.setAttribute('fill', seg.color);
-          path.setAttribute('class', 'segment-slice');
-          path.dataset.index = idx;
-          wheelSvg.appendChild(path);
+          var sweep = seg.endDeg - seg.startDeg;
+          if (sweep < 0) {
+            sweep += 360;
+          }
+          var isFullCircle = sweep >= 359.5;
+          var sliceEl;
+          if (isFullCircle) {
+            sliceEl = document.createElementNS(svgNS, 'circle');
+            sliceEl.setAttribute('cx', '0');
+            sliceEl.setAttribute('cy', '0');
+            sliceEl.setAttribute('r', radius);
+          } else {
+            sliceEl = document.createElementNS(svgNS, 'path');
+            sliceEl.setAttribute('d', describeSlice(radius, seg.startDeg, seg.endDeg));
+          }
+          sliceEl.setAttribute('fill', seg.color);
+          sliceEl.setAttribute('class', 'segment-slice');
+          sliceEl.dataset.index = idx;
+          wheelSvg.appendChild(sliceEl);
 
           var midRad = (seg.midDeg) * Math.PI / 180;
+          var labelX = (labelRadius * Math.cos(midRad)).toFixed(2);
+          var labelY = (labelRadius * Math.sin(midRad)).toFixed(2);
+          var probX = (probRadius * Math.cos(midRad)).toFixed(2);
+          var probY = (probRadius * Math.sin(midRad)).toFixed(2);
+          var textColors = pickTextColors(seg.color);
           var text = document.createElementNS(svgNS, 'text');
-          text.setAttribute('x', (labelRadius * Math.cos(midRad)).toFixed(2));
-          text.setAttribute('y', (labelRadius * Math.sin(midRad)).toFixed(2));
-          text.setAttribute('fill', '#0f3c56');
-          text.setAttribute('font-size', '22');
+          text.setAttribute('x', labelX);
+          text.setAttribute('y', labelY);
+          text.setAttribute('fill', textColors.label);
+          text.setAttribute('font-size', '30');
           text.setAttribute('font-weight', '600');
           text.setAttribute('text-anchor', 'middle');
           text.setAttribute('alignment-baseline', 'middle');
+          text.style.paintOrder = 'stroke';
+          text.style.stroke = textColors.stroke;
+          text.style.strokeWidth = textColors.strokeWidth + 'px';
+          text.style.strokeLinejoin = 'round';
           text.textContent = seg.label;
           wheelSvg.appendChild(text);
 
           var probText = document.createElementNS(svgNS, 'text');
-          probText.setAttribute('x', (labelRadius * 0.72 * Math.cos(midRad)).toFixed(2));
-          probText.setAttribute('y', (labelRadius * 0.72 * Math.sin(midRad)).toFixed(2));
-          probText.setAttribute('fill', '#37474f');
-          probText.setAttribute('font-size', '18');
+          probText.setAttribute('x', probX);
+          probText.setAttribute('y', probY);
+          probText.setAttribute('fill', textColors.prob);
+          probText.setAttribute('font-size', '22');
           probText.setAttribute('text-anchor', 'middle');
           probText.setAttribute('alignment-baseline', 'middle');
+          probText.style.paintOrder = 'stroke';
+          probText.style.stroke = textColors.stroke;
+          probText.style.strokeWidth = textColors.probStrokeWidth + 'px';
+          probText.style.strokeLinejoin = 'round';
           var probLabel = formatProb(seg.normalized);
           probText.textContent = probLabel || '';
           wheelSvg.appendChild(probText);
 
-          seg.pathEl = path;
+          seg.pathEl = sliceEl;
         });
       }
 

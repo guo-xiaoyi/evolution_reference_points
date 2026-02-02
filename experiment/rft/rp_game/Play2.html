@@ -644,8 +644,8 @@
 
         <h1 class="university-title">Decision task</h1>
         <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
-        <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments shown on the left-hand side of the pop-out sidebar and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
-        <p>If you need had forgot how to evaluate the payoff tree, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
+        <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p>If you want to re-read the instructions, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
 
 
               <p style="text-align:right;">
@@ -1038,6 +1038,12 @@ document.addEventListener('DOMContentLoaded', function () {
       offset = weighted / totalSize;
     }
 
+    const labelQueue = [];
+    const labelFontSize = 12;
+    const approxCharWidth = labelFontSize * 0.6;
+    const pointerAngle = -Math.PI / 2;
+    const pointerGuard = Math.PI / 12;
+
     segments.forEach((seg, idx) => {
       const start = seg.start + offset;
       const end = seg.end + offset;
@@ -1049,20 +1055,70 @@ document.addEventListener('DOMContentLoaded', function () {
       g.appendChild(mk('path', { d: path, fill: pick(idx), stroke: '#333', 'stroke-width': 1.5 }));
 
       if (seg.p > 0.07) {
-        const lx = cx + (r * 0.55) * Math.cos(mid);
-        const ly = cy + (r * 0.55) * Math.sin(mid);
-        g.appendChild(mk('text', {
+        const label = fmtProb(seg.p);
+        const arcLen = seg.size * r * 0.55;
+        const textWidth = label.length * approxCharWidth;
+        let labelRadius = r * 0.55;
+        let anchor = 'middle';
+        let offsetX = 0;
+        let useLeader = false;
+
+        if (arcLen < textWidth) {
+          labelRadius = r + 12;
+          anchor = Math.cos(mid) >= 0 ? 'start' : 'end';
+          offsetX = anchor === 'start' ? 4 : -4;
+          useLeader = true;
+        } else if (Math.abs(normalizeAngle(mid - pointerAngle)) < pointerGuard) {
+          labelRadius = r * 0.42;
+        }
+
+        const lx = cx + (labelRadius * Math.cos(mid)) + offsetX;
+        const ly = cy + labelRadius * Math.sin(mid);
+
+        if (useLeader) {
+          labelQueue.push({
+            type: 'line',
+            x1: cx + (r * 0.8) * Math.cos(mid),
+            y1: cy + (r * 0.8) * Math.sin(mid),
+            x2: lx + 4,
+            y2: ly,
+          });
+        }
+
+        labelQueue.push({
+          type: 'text',
           x: lx,
           y: ly,
-          'text-anchor': 'middle',
-          'dominant-baseline': 'middle',
-          'font-size': 12,
-        }, fmtProb(seg.p)));
+          anchor,
+          text: label,
+        });
       }
     });
 
     const tri = `M ${cx},${cy - (r + 14)} l 8,12 l -16,0 z`;
     g.appendChild(mk('path', { d: tri, fill: '#333' }));
+
+    labelQueue.forEach(item => {
+      if (item.type === 'line') {
+        g.appendChild(mk('line', {
+          x1: item.x1,
+          y1: item.y1,
+          x2: item.x2,
+          y2: item.y2,
+          stroke: '#666',
+          'stroke-width': 1,
+          'stroke-linecap': 'round',
+        }));
+        return;
+      }
+      g.appendChild(mk('text', {
+        x: item.x,
+        y: item.y,
+        'text-anchor': item.anchor,
+        'dominant-baseline': 'middle',
+        'font-size': labelFontSize,
+      }, item.text));
+    });
   }
 
   // Determine if a wheel is deterministic (i.e., one outcome with ~100% probability)
@@ -1174,6 +1230,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // ---- draw ----
 
   const svg = mk('svg', { width: W, height: H, class: 'lotto' });
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+  svg.style.width = '100%';
+  svg.style.height = 'auto';
+  svg.style.maxWidth = `${W}px`;
 
   const defs = mk('defs');
 

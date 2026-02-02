@@ -3,7 +3,7 @@
     "name": "Apple",
     "outcome_number": 4,
     "stake": "lo",
-    "max_payoff": 42,
+    "max_payoff": 44,
     "min_payoff": -46,
     "description": "n/a",
     "periods": {
@@ -79,8 +79,8 @@
   "name": "Banana",
   "outcome_number": 4,
   "stake": "lo",
-  "max_payoff": 41,
-  "min_payoff": -47,
+  "max_payoff": 61,
+  "min_payoff": -45,
   "description": "n/a",
   "periods": {
     "0": [
@@ -156,8 +156,8 @@
   "name": "Orange",
   "outcome_number": 4,
   "stake": "lo",
-  "max_payoff": 32,
-  "min_payoff": -37,
+  "max_payoff": 49,
+  "min_payoff": -47,
   "description": "n/a",
   "periods": {
     "0": [
@@ -232,8 +232,8 @@
   "name": "Pineapple",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 530,
-  "min_payoff": -690,
+  "max_payoff": 495,
+  "min_payoff": -685,
   "description": "n/a",
   "periods": {
     "0": [
@@ -308,8 +308,8 @@
   "name": "Melon",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 425,
-  "min_payoff": -565,
+  "max_payoff": 395,
+  "min_payoff": -715,
   "description": "n/a",
   "periods": {
     "0": [
@@ -384,8 +384,8 @@
   "name": "Coconut",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 465,
-  "min_payoff": -625,
+  "max_payoff": 335,
+  "min_payoff": -725,
   "description": "n/a",
   "periods": {
     "0": [
@@ -460,8 +460,8 @@
   "name": "Dragonfruit",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 865,
-  "min_payoff": -825,
+  "max_payoff": 905,
+  "min_payoff": -930,
   "description": "n/a",
   "periods": {
     "0": [
@@ -536,8 +536,8 @@
   "name": "Plum",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 920,
-  "min_payoff": -985,
+  "max_payoff": 755,
+  "min_payoff": -1315,
   "description": "n/a",
   "periods": {
     "0": [
@@ -612,8 +612,8 @@
   "name": "Durian",
   "outcome_number": 4,
   "stake": "hi",
-  "max_payoff": 715,
-  "min_payoff": -735,
+  "max_payoff": 821,
+  "min_payoff": -560,
   "description": "n/a",
   "periods": {
     "0": [
@@ -689,8 +689,8 @@
   "name": "Pomegranate",
   "outcome_number": 6,
   "stake": "lo",
-  "max_payoff": 47,
-  "min_payoff": -40,
+  "max_payoff": 45,
+  "min_payoff": -42,
   "description": "n/a",
   "periods": {
     "0": [
@@ -785,8 +785,8 @@
   "name": "Avocado",
   "outcome_number": 6,
   "stake": "lo",
-  "max_payoff": 32,
-  "min_payoff": -38,
+  "max_payoff": 42,
+  "min_payoff": -34,
   "description": "n/a",
   "periods": {
     "0": [
@@ -882,8 +882,8 @@
   "name": "Raspberry",
   "outcome_number": 6,
   "stake": "lo",
-  "max_payoff": 35,
-  "min_payoff": -43,
+  "max_payoff": 36,
+  "min_payoff": -49,
   "description": "n/a",
   "periods": {
     "0": [
@@ -978,8 +978,8 @@
   "name": "Fig",
   "outcome_number": 6,
   "stake": "lo",
-  "max_payoff": 42,
-  "min_payoff": -47,
+  "max_payoff": 47,
+  "min_payoff": -40,
   "description": "n/a",
   "periods": {
     "0": [
@@ -1075,8 +1075,8 @@
   "name": "Papaya",
   "outcome_number": 6,
   "stake": "lo",
-  "max_payoff": 47,
-  "min_payoff": -31,
+  "max_payoff": 44,
+  "min_payoff": -39,
   "description": "n/a",
   "periods": {
     "0": [
