@@ -57,9 +57,20 @@
 
     }
 
-    #lottery-visualization { display: flex; justify-content: center; }
+    #lottery-visualization {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
 
-    #lottery-visualization svg { display: block; margin: 0 auto; }
+    #lottery-visualization svg {
+        display: block;
+        margin: 0;
+        width: 100%;
+        height: auto;
+    }
 
     .lottery-container {
 
@@ -501,17 +512,6 @@
     .lotto { font-family: 'Arial', sans-serif; }
 
     .col { fill:#f5f5f7; stroke:#ddd; }
-    .col.highlight-col { fill:#fff1b8; stroke:#f0b429; stroke-width:2; }
-    .col.relevant-col { fill:#fff5c7; stroke:#f0d27c; }
-    .col.dim-col { fill:#f5f5f7; stroke:#ddd; opacity:0.25; }
-    .payout.highlight-node { fill:#b56600; font-weight:600; }
-    .prob.highlight-node { fill:#b56600; font-weight:600; }
-    .payout.experienced-node { fill:#0f5f5b; font-weight:600; }
-    .prob.experienced-node { fill:#0f5f5b; font-weight:600; }
-    .payout.relevant-node { fill:#a06600; }
-    .prob.relevant-node { fill:#c27f00; }
-    .payout.dim-node { fill:#777; }
-    .prob.dim-node { fill:#999; }
 
     .title {font-weight:800px; font-size:16px; }
 
@@ -520,15 +520,11 @@
     .prob { font-size:16px; fill:#2a8f2a; }
 
     .link { stroke:#888; stroke-width:2;}
-    .link-highlight { stroke:#f0b429; stroke-width:3; }
-    .link-experienced { stroke:#1c7f7a; stroke-width:3; }
-    .link-relevant { stroke:#ee5b18; stroke-width:3; }
-    .link-dim { stroke:#c8c8c8; stroke-width:1.6; opacity:0.35; }
 
     .ring { fill:none; stroke:#f0a500; stroke-width:8; }
 
     /* Selection table styles */
-     .cut-table { table-layout: fixed; width: 100%; }
+    .cut-table { table-layout: fixed; width: 100%; }
     .cut-table col { width: 50%; }
     .cut-table th, .cut-table td { text-align: center; vertical-align: middle; }
     .cut-left.shaded { background-color: #e7f7ec; }
@@ -553,7 +549,7 @@
     }
 
     :root {
-      --sidebar-width: 650px; /* increase this value to make the sidebar wider */
+      --sidebar-width: 750px; /* increase this value to make the sidebar wider */
     }
 
     .sidebar {
@@ -631,6 +627,145 @@
       margin: 0 auto;
       padding: 0 60px;
     }
+
+    /* Guided tour */
+    .tour-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 2000;
+    }
+
+    .tour-overlay.hidden {
+      display: none;
+    }
+
+    .tour-tooltip {
+      position: fixed;
+      max-width: 360px;
+      background: #ffffff;
+      color: #111111;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      font-size: 15px;
+      z-index: 2002;
+      cursor: move;
+    }
+
+    .tour-tooltip.hidden {
+      display: none;
+    }
+
+    .tour-tooltip.dragging {
+      cursor: grabbing;
+    }
+
+    .tour-tooltip button,
+    .tour-tooltip a {
+      cursor: pointer;
+    }
+
+    .tour-spotlight {
+      position: fixed;
+      border: 3px solid #ffc107;
+      box-shadow: 0 0 0 6px rgba(255, 193, 7, 0.35);
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 2001;
+    }
+
+    .tour-spotlight.hidden {
+      display: none;
+    }
+
+    /* Submit confirmation modal */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+
+    .confirm-overlay.active {
+      display: flex;
+    }
+
+    .confirm-modal {
+      background: #ffffff;
+      color: #111111;
+      border-radius: 12px;
+      max-width: 520px;
+      width: 100%;
+      padding: 20px 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .confirm-modal h5 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tour-tooltip h5 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+
+    .tour-step-counter {
+      font-size: 12px;
+      color: #666666;
+      margin-bottom: 6px;
+    }
+
+    .tour-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tour-controls button {
+      flex: 1;
+    }
+
+    .tour-highlight {
+      position: relative;
+      z-index: 2001;
+      box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.85), 0 0 0 10px rgba(255, 193, 7, 0.35);
+      border-radius: 6px;
+    }
+
+    svg .tour-highlight {
+      filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.85));
+    }
+
+    svg .tour-highlight.ring {
+      stroke: #ffc107;
+      stroke-width: 10;
+    }
+
+    .tour-range-highlight {
+      position: relative;
+      z-index: 2001;
+    }
+
+    .tour-range-highlight td {
+      box-shadow: inset 0 0 0 2px rgba(255, 193, 7, 0.9);
+    }
+
+    body.tour-active #mySidebar {
+      z-index: 2002;
+    }
 </style>
 
  <!-- Main jumbotron for primary marketing message -->
@@ -641,15 +776,16 @@
 
     <div class="row">
 
+        <h1 class="university-title">Practice task</h1>
 
-        <h1 class="university-title">Decision task</h1>
-        <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
-        <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p> In this page, you will evaluate a practice random payoff tree, you results will not be recorded. You will be asked to make a choice between a fixed payment and the outcomes of the random payoff tree. Please consider the following question: suppose you are facing a choice between the fixed payment  and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with the evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p> We will provide you step-by-step guide about this interface.</p>
         <p>If you want to re-read the instructions, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
 
 
-              <p style="text-align:right;">
+      <p style="text-align:right;">
 
+        <button type="button" id="start-tour-btn" class="btn btn-secondary" style="margin-right: 10px;">Start guided tour</button>
         <button type="button" id="open-sidebar-btn" class="btn btn-primary">Start evaluation &raquo;</button>
 
       </p>
@@ -698,6 +834,7 @@
 
       <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree. </h4>
 
+      
       <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
         <colgroup>
           <col>
@@ -768,10 +905,38 @@
 
       </p>
 
-
 </div>
 
 </div> <!-- end main -->
+
+<div id="tour-overlay" class="tour-overlay hidden" aria-hidden="true"></div>
+<div id="tour-tooltip" class="tour-tooltip hidden" role="dialog" aria-modal="true" aria-live="polite">
+  <div id="tour-step-counter" class="tour-step-counter"></div>
+  <h5 id="tour-title"></h5>
+  <div id="tour-text"></div>
+  <div class="tour-controls">
+    <button type="button" id="tour-back" class="btn btn-secondary btn-sm">Back</button>
+    <button type="button" id="tour-next" class="btn btn-primary btn-sm">Next</button>
+  </div>
+  <div style="text-align:right; margin-top:8px;">
+    <button type="button" id="tour-skip" class="btn btn-link btn-sm">Skip tour</button>
+  </div>
+</div>
+<div id="tour-spotlight" class="tour-spotlight hidden" aria-hidden="true"></div>
+
+<div id="submit-confirm-overlay" class="confirm-overlay" aria-hidden="true">
+  <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="submit-confirm-title">
+    <h5 id="submit-confirm-title">Submit practice round?</h5>
+    <p>
+      Are you sure you want to submit? After this, you will see the real decision task
+      and your decisions will be recorded.
+    </p>
+    <div class="confirm-actions">
+      <button type="button" id="submit-confirm-cancel" class="btn btn-secondary btn-sm">Cancel</button>
+      <button type="button" id="submit-confirm-yes" class="btn btn-primary btn-sm">Yes, submit</button>
+    </div>
+  </div>
+</div>
 
 
 
@@ -798,33 +963,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Django injects a JSON string; parse it
 
   const lottery = JSON.parse('{{ display_lottery|safe }}');
-  const continuationStage = {{ continuation_stage|json }};
-  const realizedPeriod1 = {{ realized_period1|json }};
-  const realizedPeriod2 = {{ realized_period2|json }};
-  const realizedNodes = {};
-  if (realizedPeriod1) {
-    realizedNodes[1] = realizedPeriod1;
-  }
-  if (realizedPeriod2) {
-    realizedNodes[2] = realizedPeriod2;
-  }
-  const highlightPeriod = Number.isFinite(continuationStage) ? continuationStage : null;
 
   // ---- layout constants ----
 
   const H = 750;
-
   const colW = 300, colGap = 22, leftPad = 16, topPad = 16;
-
   const wheelR = 35;
-
   const wheelCxOffset = colW / 2;
-
   const groupTopPad = 48, groupGap = 28, outcomeGap = 120;
 
   // period titles
 
-  const prettyTitle = i => (i === 0 ? '3 days ago' : i === 1 ? 'Current session (now)' : i === 2 ? 'In 3 days' : `In 6 days`);
+  const prettyTitle = i => (i === 0 ? 'Today [Session 1]' : i === 1 ? 'In 3 days [Session 2]' : i === 2 ? 'In 6 days [Session 3]' : `In 9 days`);
 
   // ---- build normalized periods array (0..max sorted) ----
 
@@ -835,8 +985,6 @@ document.addEventListener('DOMContentLoaded', function () {
     .sort((a, b) => a - b);
 
   const periods = keys.map(k => lottery.periods[k]);
-  const periodsByKey = new Map();
-  keys.forEach((key, idx) => periodsByKey.set(key, periods[idx]));
 
   const nodeKey = (node, fallback) => {
     if (node && node.id != null) return String(node.id);
@@ -846,113 +994,17 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   const labelKeyMapByPeriod = new Map();
-  const fromLabelKeyMapByPeriod = new Map();
   keys.forEach((periodKey, idx) => {
     const nodes = periods[idx] || [];
     const map = new Map();
-    const fromMap = new Map();
     nodes.forEach((node, nIdx) => {
       const key = nodeKey(node, `${periodKey}:${nIdx}`);
       node._key = key;
       const label = node && node.label != null ? String(node.label) : '';
       if (!map.has(label)) map.set(label, []);
       map.get(label).push(key);
-      const parentLabel = node && node.from != null ? String(node.from) : 'Start';
-      let byFrom = fromMap.get(parentLabel);
-      if (!byFrom) {
-        byFrom = new Map();
-        fromMap.set(parentLabel, byFrom);
-      }
-      if (!byFrom.has(label)) byFrom.set(label, []);
-      byFrom.get(label).push(key);
     });
     labelKeyMapByPeriod.set(periodKey, map);
-    fromLabelKeyMapByPeriod.set(periodKey, fromMap);
-  });
-
-  const realizedKeys = new Map();
-  function resolveNodeKeys(periodKey, node) {
-    if (!Number.isFinite(periodKey) || !node) return [];
-    if (node.id != null) return [String(node.id)];
-    const label = node.label != null ? String(node.label) : '';
-    const parentLabel = node.from != null ? String(node.from) : 'Start';
-    const fromMap = fromLabelKeyMapByPeriod.get(periodKey);
-    const byFrom = fromMap && fromMap.get(parentLabel);
-    const keysForLabel = byFrom && byFrom.get(label);
-    if (keysForLabel && keysForLabel.length) {
-      return [...keysForLabel];
-    }
-    const labelMap = labelKeyMapByPeriod.get(periodKey);
-    const fallbackKeys = labelMap && labelMap.get(label);
-    return fallbackKeys ? [...fallbackKeys] : [];
-  }
-  function addRealized(periodKey, node) {
-    if (!Number.isFinite(periodKey) || !node) return;
-    const set = realizedKeys.get(periodKey) || new Set();
-    resolveNodeKeys(periodKey, node).forEach(k => set.add(k));
-    if (set.size) {
-      realizedKeys.set(periodKey, set);
-    }
-  }
-  if (realizedPeriod1) addRealized(1, realizedPeriod1);
-  if (realizedPeriod2) addRealized(2, realizedPeriod2);
-
-  const experiencedEdges = new Set();
-  Object.entries(realizedNodes).forEach(([periodKey, node]) => {
-    const period = Number(periodKey);
-    if (!Number.isFinite(period) || !node) return;
-    const parentLabel = node.from || (period === 1 ? 'Start' : null);
-    if (!parentLabel) return;
-    const parentMap = labelKeyMapByPeriod.get(period - 1);
-    const parentKeys = parentMap && parentMap.get(String(parentLabel));
-    if (!parentKeys || !parentKeys.length) return;
-    const childKeys = new Set(resolveNodeKeys(period, node));
-    if (!childKeys.size) return;
-    parentKeys.forEach(parentKey => {
-      childKeys.forEach(childKey => {
-        experiencedEdges.add(`${parentKey}=>${childKey}`);
-      });
-    });
-  });
-
-  const relevantByPeriod = new Map();
-  const relevantLabelsByPeriod = new Map();
-  keys.forEach((key, idx) => {
-    const nodes = periodsByKey.get(key) || [];
-    if (idx === 0) {
-      relevantByPeriod.set(key, new Set(nodes.map(n => n._key)));
-      relevantLabelsByPeriod.set(key, new Set(nodes.map(n => n.label)));
-      return;
-    }
-    const prevKey = keys[idx - 1];
-    const prevRelevantLabels = relevantLabelsByPeriod.get(prevKey) || new Set();
-    const prevRelevantHasEntries = prevRelevantLabels.size > 0;
-    const realizedSet = realizedKeys.get(key);
-    const relevantSet = new Set();
-    const relevantLabels = new Set();
-    nodes.forEach(node => {
-      const parent = node.from || 'Start';
-      const parentRelevant = !prevRelevantHasEntries || prevRelevantLabels.has(parent);
-      if (!parentRelevant) {
-        return;
-      }
-      if (realizedSet && !realizedSet.has(node._key)) {
-        return;
-      }
-      relevantSet.add(node._key);
-      relevantLabels.add(node.label);
-    });
-    if (!realizedSet) {
-      nodes.forEach(node => {
-        const parent = node.from || 'Start';
-        if (!prevRelevantHasEntries || prevRelevantLabels.has(parent)) {
-          relevantSet.add(node._key);
-          relevantLabels.add(node.label);
-        }
-      });
-    }
-    relevantByPeriod.set(key, relevantSet);
-    relevantLabelsByPeriod.set(key, relevantLabels);
   });
 
   const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
@@ -1005,9 +1057,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   // Draw a wheel at (cx,cy) with radius r and slices [{ node, y, targetAngle }]
-  function drawWheel(g, cx, cy, r, slices) {
+  function drawWheel(g, cx, cy, r, slices, attrs = null) {
 
-    g.appendChild(mk('circle', { cx, cy, r: r + 4, class: 'ring' }));
+    const ring = mk('circle', { cx, cy, r: r + 4, class: 'ring' });
+    if (attrs && typeof attrs === 'object') {
+      Object.keys(attrs).forEach(key => {
+        if (attrs[key] != null) ring.setAttribute(key, attrs[key]);
+      });
+    }
+    g.appendChild(ring);
 
     let tot = slices.reduce((sum, s) => sum + num(s.node.probability), 0);
     if (!tot) tot = 1;
@@ -1079,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'line',
             x1: cx + (r * 0.8) * Math.cos(mid),
             y1: cy + (r * 0.8) * Math.sin(mid),
-            x2: lx + 4,
+            x2: lx+4,
             y2: ly,
           });
         }
@@ -1251,15 +1309,6 @@ document.addEventListener('DOMContentLoaded', function () {
   columnLayouts.forEach((layout, i) => {
 
     const x = leftPad + i * (colW + colGap);
-    const periodKey = keys[i];
-    const realizedNode = realizedNodes[periodKey];
-    const realizedSetForPeriod = realizedKeys.get(periodKey);
-    const relevantSet = relevantByPeriod.get(periodKey) || new Set();
-    const columnHasRealized = realizedSetForPeriod && realizedSetForPeriod.size > 0;
-    const columnHasRelevant = relevantSet.size > 0;
-    const isHighlightColumn = highlightPeriod != null && periodKey === highlightPeriod;
-    const isHighlightColumnNext = highlightPeriod != null && periodKey === highlightPeriod + 1;
-    const columnClass = isHighlightColumn ? 'col highlight-col' : isHighlightColumnNext ? 'col highlight-col' : columnHasRelevant ? 'col relevant-col' : 'col dim-col';
 
     layout.colX = x; // left edge of column
 
@@ -1268,33 +1317,34 @@ document.addEventListener('DOMContentLoaded', function () {
     layout.lineEndX = x + 16; // left edge plus padding
 
     // column box
-    const columnRectAttrs = { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: columnClass };
 
-    svg.appendChild(mk('rect', columnRectAttrs));
+    svg.appendChild(mk('rect', { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: 'col' }));
 
     // title
 
     svg.appendChild(mk('text', { x: leftPad + x, y: topPad + 18, class: 'title' }, prettyTitle(i)));
 
     const wheelCx = x + wheelCxOffset;
-    layout.groups.forEach(group => {
+    layout.groups.forEach((group, groupIndex) => {
       const nodes = group.outcomes.map(o => o.node);
       if (!isDeterministic(nodes)) {
         const labelY = group.wheelCy;
-        const labelText = group.parent === '' ? '' : ``;
+        const labelText = group.parent === 'Start' ? '' : ``;
         // Show label and draw wheel only when the transition is not deterministic
         svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
-        drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
+        drawWheel(
+          svg,
+          wheelCx,
+          group.wheelCy,
+          wheelR,
+          group.outcomes,
+          { 'data-ring-col': String(i), 'data-ring-group': String(groupIndex) }
+        );
       }
 
       group.outcomes.forEach(outcome => {
         const { node, y } = outcome;
         const centerX = x + colW / 2;
-        const nodeKeyValue = node._key;
-        const realizedSet = realizedKeys.get(periodKey);
-        const isExperienced = (realizedSet && realizedSet.has(nodeKeyValue)) || (realizedNode && realizedNode.id && String(realizedNode.id) === nodeKeyValue);
-        const isRelevant = relevantSet.has(nodeKeyValue);
-        const state = isExperienced ? 'experienced' : (isRelevant ? 'relevant' : 'dim');
 
         // Reserve an overlay panel (to be drawn after links)
         overlays.push({
@@ -1304,8 +1354,7 @@ document.addEventListener('DOMContentLoaded', function () {
           labelX: centerX,
           probX: centerX + 30,
           label: node.label,
-          prob: fmtProb(node.probability),
-          state: state
+          prob: fmtProb(node.probability)
         });
 
         // Update anchors to be centered horizontally
@@ -1326,14 +1375,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const links = buildLinks(i);
 
     const current = columnLayouts[i];
-    const next = columnLayouts[i + 1];
 
-    const currentKey = keys[i];
-    const nextKey = keys[i + 1];
-    const currentRelevantSet = relevantByPeriod.get(currentKey) || new Set();
-    const currentRealizedSet = realizedKeys.get(currentKey) || new Set();
-    const nextRelevantSet = relevantByPeriod.get(nextKey) || new Set();
-    const nextRealizedSet = realizedKeys.get(nextKey) || new Set();
+    const next = columnLayouts[i + 1];
 
     links.forEach(link => {
 
@@ -1347,28 +1390,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
 
-      const isParentRealized = currentRealizedSet.has(link.parentKey);
-      const isChildRealized = nextRealizedSet.has(link.childKey);
-      const isParentRelevant = currentRelevantSet.has(link.parentKey);
-      const isChildRelevant = nextRelevantSet.has(link.childKey);
-
-      const edgeKey = `${link.parentKey}=>${link.childKey}`;
-      const isExperiencedLink = experiencedEdges.has(edgeKey) || (isParentRealized && isChildRealized);
-
-      let linkState;
-      if (isExperiencedLink) {
-        linkState = 'experienced';
-      } else if (isParentRelevant && isChildRelevant) {
-        linkState = 'relevant';
-      } else {
-        linkState = 'dim';
-      }
-
-      const lineClasses = ['link'];
-      if (linkState === 'experienced') lineClasses.push('link-experienced');
-      else if (linkState === 'relevant') lineClasses.push('link-relevant');
-      else lineClasses.push('link-dim');
-
       svg.appendChild(mk('line', {
 
         x1: fromX,
@@ -1379,7 +1400,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         y2: toAnchor.y,
 
-        class: lineClasses.join(' '),
+        class: 'link',
 
       }));
 
@@ -1387,12 +1408,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
 
-      const probClasses = ['prob'];
-      if (linkState === 'experienced') probClasses.push('experienced-node');
-      else if (linkState === 'relevant') probClasses.push('relevant-node');
-      else probClasses.push('dim-node');
-
-      svg.appendChild(mk('text', { x: midX, y: midY, class: probClasses.join(' '), 'text-anchor': 'middle' }, fmtProb(link.prob)));
+      svg.appendChild(mk('text', { x: midX, y: midY, class: 'prob', 'text-anchor': 'middle' }, fmtProb(link.prob)));
 
     });
 
@@ -1404,41 +1420,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const rectX = Math.min(o.xLeft, o.xRight); // ensure rect covers both label and prob
     const rectW = Math.abs(o.xRight - o.xLeft); // width to cover both label and prob
     const rectY = o.y - rectH + padY; // position so text baseline sits nicely
-    const state = o.state || 'relevant';
-    const rectAttrs = {
+    svg.appendChild(mk('rect', {
       x: rectX,
       y: rectY,
       width: rectW,
       height: rectH,
       rx: 8,
-      fill: state === 'experienced' ? '#e6f4f3' : state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
-      opacity: state === 'dim' ? 0.35 : 0.95,
-      stroke: state === 'experienced' ? '#1c7f7a' : state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
-    };
-    if (state === 'highlight' || state === 'experienced') {
-      rectAttrs['stroke-width'] = 2;
-    }
-    svg.appendChild(mk('rect', rectAttrs));
+      fill: '#ffffff',
+      opacity: 0.95,
+      stroke: '#dddddd'
+    }));
 
     // Label text
-    const labelClasses = ['payout'];
-    if (state === 'experienced') {
-      labelClasses.push('experienced-node');
-    } else if (state === 'highlight') {
-      labelClasses.push('highlight-node');
-    } else if (state === 'relevant') {
-      labelClasses.push('relevant-node');
-    } else if (state === 'dim') {
-      labelClasses.push('dim-node');
-    }
-    const labelAttrs = {
+    svg.appendChild(mk('text', {
       x: o.labelX,
       y: o.y,
-      class: labelClasses.join(' '),
+      class: 'payout',
       'text-anchor': 'middle',
       'dominant-baseline': 'top'
-    };
-    svg.appendChild(mk('text', labelAttrs, o.label));
+    }, o.label));
 
     // Probability text
   });
@@ -1451,7 +1451,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ----- selection table shading and mapping -----
   const table = document.getElementById('choice-table');
-if (table) {
+  if (table) {
     const rows = Array.from(table.querySelectorAll('tbody tr'));
     const radios = Array.from(table.querySelectorAll('input[name="cutoff"]'));
     const hiddenInputs = new Map();
@@ -1734,6 +1734,52 @@ if (table) {
         }
       });
     }
+
+    if (form) {
+      const submitOverlay = document.getElementById('submit-confirm-overlay');
+      const submitYes = document.getElementById('submit-confirm-yes');
+      const submitCancel = document.getElementById('submit-confirm-cancel');
+      let allowSubmit = false;
+
+      function openSubmitConfirm() {
+        if (!submitOverlay) return;
+        submitOverlay.classList.add('active');
+        submitOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeSubmitConfirm() {
+        if (!submitOverlay) return;
+        submitOverlay.classList.remove('active');
+        submitOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      form.addEventListener('submit', event => {
+        if (event.defaultPrevented) return;
+        if (allowSubmit) return;
+        event.preventDefault();
+        openSubmitConfirm();
+      });
+
+      if (submitYes) {
+        submitYes.addEventListener('click', () => {
+          allowSubmit = true;
+          closeSubmitConfirm();
+          form.submit();
+        });
+      }
+
+      if (submitCancel) {
+        submitCancel.addEventListener('click', () => {
+          closeSubmitConfirm();
+        });
+      }
+
+      if (submitOverlay) {
+        submitOverlay.addEventListener('click', event => {
+          if (event.target === submitOverlay) closeSubmitConfirm();
+        });
+      }
+    }
   }
 
   const openBtn = document.getElementById('open-sidebar-btn');
@@ -1746,6 +1792,7 @@ if (table) {
 
   const sidebar = document.getElementById('mySidebar');
   document.addEventListener('click', event => {
+    if (document.body.classList.contains('tour-active')) return;
     if (!sidebar || !sidebar.classList.contains('open')) return;
     const clickInsideSidebar = sidebar.contains(event.target);
     const clickOnOpenBtn = openBtn && (event.target === openBtn || openBtn.contains(event.target));
@@ -1753,6 +1800,498 @@ if (table) {
       closeNav();
     }
   });
+
+  // Guided tour
+  const tourStartBtn = document.getElementById('start-tour-btn');
+  const tourOverlay = document.getElementById('tour-overlay');
+  const tourTooltip = document.getElementById('tour-tooltip');
+  const tourTitle = document.getElementById('tour-title');
+  const tourText = document.getElementById('tour-text');
+  const tourNext = document.getElementById('tour-next');
+  const tourBack = document.getElementById('tour-back');
+  const tourSkip = document.getElementById('tour-skip');
+  const tourCounter = document.getElementById('tour-step-counter');
+  const tourSpotlight = document.getElementById('tour-spotlight');
+
+  const tourSteps = [
+    {
+      selector: '.university-title',
+      title: 'Welcome to the practice task',
+      text: 'This is a practice round. Your answers here are not recorded. Take your time to understand the instructions. You will experience a guided tour of the decision task to help you navigate the interface. You can exit the tour at any time by clicking outside the tour box. When you are ready, click \'Next\' to start the tour. You can move the tour box by dragging it.',
+      position: 'bottom'
+    },
+    {
+      selector: '#lottery-visualization',
+      title: 'Random payoff tree',
+      text: 'This diagram shows possible outcomes and their probabilities over time.',
+      position: 'left'
+    },    
+    {
+      selector: '#lottery-visualization',
+      title: 'Three periods',
+      text: 'The four columns here represent the three periods of the game and the final outcome.',
+      position: 'undertop'
+    },
+        {
+      selector: '#lottery-visualization',
+      title: 'Lines and wheels',
+      text: 'Lines connect possible outcomes between periods. Wheels show the probabilities of different outcomes in the next period.',
+      position: 'middleright'
+    },
+    {
+      selector: '#open-sidebar-btn',
+      title: 'Open the decision table',
+      text: 'Use this button to open the sidebar with the choice table.',
+      position: 'top'
+    },
+    {
+      selector: '#choice-table',
+      title: 'Choice table',
+      text: 'Each row compares a fixed amount (left) to the random payoff tree outcomes (right).',
+      position: 'right',
+      openSidebar: true
+    },
+    {
+      selector: '#choice-table tbody tr:nth-child(7)',
+      title: 'Please select this row.',
+      text: ' ',
+      position: 'right',
+      openSidebar: true
+    },
+    {
+      range: { selector: '#choice-table tbody tr', start: 0, end: 5 },
+      focusIndex: 5,
+      title: 'You prefer to obtain the outcomes of the random payoff tree in this range.',
+      text: 'In this range, you prefer to obtain the outcomes of the random payoff tree rather than accepting the fixed amount (on the left-hand side).',
+      position: 'right',
+      openSidebar: true
+    },
+    {
+      range: { selector: '#choice-table tbody tr', start: 6, end: 19 },
+      focusIndex: 6,
+      title: 'You prefer the fixed amount of money.',
+      text: 'In this range, you prefer to accept the fixed amount (on the left-hand side) rather than obtaining the outcomes of the random payoff tree.',
+      position: 'right',
+      openSidebar: true
+    },
+    {
+      selector: '#fine-choice-panel',
+      title: 'Fine detail (high stake only)',
+      text: 'If a refinement panel appears, choose a more precise cutoff.',
+      position: 'right',
+      openSidebar: true,
+      optional: true
+    },
+    {
+      selector: '#lottery-visualization',
+      title: 'Think one more time',
+      text: 'You can always close the sidebar to review the random payoff tree before submitting your choice. The question is: Suppose you are facing a choice between the fixed payment  and the random outcomes of the random payoff tree, which one would you choose?',
+      position: 'left',
+      openSidebar: false
+    },
+
+  {
+      selector: '#choice-table',
+      title: 'Change your choice if needed',
+      text: 'What is your choice? You can change the selected row in the choice table if you want to.',
+      position: 'top',
+      openSidebar: true
+    },
+    {
+      selector: '.otree-btn-next',
+      title: 'Submit',
+      text: 'When you are ready, submit to finish the practice round. If you still want to experience the tour, click anywhere outside this box to exit the tour and continue exploring.',
+      position: 'top',
+      openSidebar: true
+    }
+  ];
+
+  let tourIndex = -1;
+  let highlighted = null;
+
+  function clearHighlight() {
+    if (highlighted) {
+      highlighted.classList.remove('tour-highlight');
+      highlighted = null;
+    }
+    clearRangeHighlight();
+    if (tourSpotlight) {
+      tourSpotlight.classList.add('hidden');
+    }
+  }
+
+  function updateSpotlight(target) {
+    if (!tourSpotlight) return;
+    const targets = Array.isArray(target) ? target.filter(Boolean) : (target ? [target] : []);
+    if (!targets.length) {
+      tourSpotlight.classList.add('hidden');
+      return;
+    }
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+    const visibleRects = [];
+    targets.forEach(el => {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const outOfView = rect.bottom < 0 || rect.top > viewportH || rect.right < 0 || rect.left > viewportW;
+      if (!outOfView) {
+        visibleRects.push(rect);
+      }
+    });
+    if (!visibleRects.length) {
+      tourSpotlight.classList.add('hidden');
+      return;
+    }
+    const union = visibleRects.reduce((acc, rect) => {
+      return {
+        left: Math.min(acc.left, rect.left),
+        top: Math.min(acc.top, rect.top),
+        right: Math.max(acc.right, rect.right),
+        bottom: Math.max(acc.bottom, rect.bottom),
+      };
+    }, {
+      left: visibleRects[0].left,
+      top: visibleRects[0].top,
+      right: visibleRects[0].right,
+      bottom: visibleRects[0].bottom,
+    });
+
+    const isRing = targets.length === 1 && targets[0].classList && targets[0].classList.contains('ring');
+    const pad = isRing ? 10 : 6;
+    const left = union.left - pad;
+    const top = union.top - pad;
+    const width = (union.right - union.left) + pad * 2;
+    const height = (union.bottom - union.top) + pad * 2;
+    tourSpotlight.style.left = `${Math.max(4, left)}px`;
+    tourSpotlight.style.top = `${Math.max(4, top)}px`;
+    tourSpotlight.style.width = `${Math.max(0, width)}px`;
+    tourSpotlight.style.height = `${Math.max(0, height)}px`;
+    tourSpotlight.style.borderRadius = isRing ? '50%' : '6px';
+    tourSpotlight.classList.remove('hidden');
+  }
+
+  function isElementVisible(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (el.classList && el.classList.contains('hidden')) return false;
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  }
+
+  let rangeHighlighted = [];
+
+  function clearRangeHighlight() {
+    if (!rangeHighlighted.length) return;
+    rangeHighlighted.forEach(el => el.classList.remove('tour-range-highlight'));
+    rangeHighlighted = [];
+  }
+
+  function applyRangeHighlight(elements) {
+    clearRangeHighlight();
+    if (!elements || !elements.length) return;
+    elements.forEach(el => el.classList.add('tour-range-highlight'));
+    rangeHighlighted = elements.slice();
+  }
+
+  function getStepTargets(step) {
+    if (!step) return [];
+    if (typeof step.getElements === 'function') {
+      const els = step.getElements() || [];
+      return Array.isArray(els) ? els.filter(isElementVisible) : [];
+    }
+    if (typeof step.getElement === 'function') {
+      const el = step.getElement();
+      return el && isElementVisible(el) ? [el] : [];
+    }
+    if (step.range && step.range.selector) {
+      const all = Array.from(document.querySelectorAll(step.range.selector));
+      const start = Number.isInteger(step.range.start) ? step.range.start : 0;
+      const end = Number.isInteger(step.range.end) ? step.range.end : all.length - 1;
+      return all.slice(Math.max(0, start), Math.min(all.length, end + 1)).filter(isElementVisible);
+    }
+    if (!step.selector) return [];
+    const el = document.querySelector(step.selector);
+    return el && isElementVisible(el) ? [el] : [];
+  }
+
+  function resolveFocusTarget(step, targets) {
+    if (!targets.length) return null;
+    if (Number.isInteger(step && step.focusIndex) && targets[step.focusIndex]) {
+      return targets[step.focusIndex];
+    }
+    return targets[0];
+  }
+
+
+  let tooltipPinned = false;
+
+  function positionTooltip(target, position, force = false) {
+    if (!tourTooltip || !tourOverlay) return;
+    if (tooltipPinned && !force) return;
+    const pad = 12;
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+    const ttRect = tourTooltip.getBoundingClientRect();
+    let top = (viewportH - ttRect.height) / 2;
+    let left = (viewportW - ttRect.width) / 2;
+
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      switch (position) {
+        case 'left':
+          top = rect.top + rect.height / 2 - ttRect.height / 2;
+          left = rect.left - ttRect.width - pad;
+          break;
+        case 'right':
+          top = rect.top + rect.height / 2 - ttRect.height / 2;
+          left = rect.right + pad;
+          break;
+        case 'bottom':
+          top = rect.bottom + pad;
+          left = rect.left + rect.width / 2 - ttRect.width / 2;
+          break;
+        case 'middleright':
+          top = rect.top + rect.height / 2 - ttRect.height / 2;
+          left = rect.left + rect.width / 2;
+          break;
+        case 'top':
+        default:
+          top = rect.top - ttRect.height - pad;
+          left = rect.left + rect.width / 2 - ttRect.width / 2;
+          break;
+        case 'undertop':
+          top = rect.top + 5 * pad;
+          left = rect.left + rect.width / 2 - ttRect.width / 2;
+          break;
+      }
+    }
+
+    top = Math.max(pad, Math.min(top, viewportH - ttRect.height - pad));
+    left = Math.max(pad, Math.min(left, viewportW - ttRect.width - pad));
+    tourTooltip.style.top = `${top}px`;
+    tourTooltip.style.left = `${left}px`;
+  }
+
+  function syncTourPosition(forceTooltip = false) {
+    const step = tourSteps[tourIndex];
+    const targets = step ? getStepTargets(step) : [];
+    const focusTarget = step ? resolveFocusTarget(step, targets) : null;
+    positionTooltip(focusTarget, step ? step.position : 'top', forceTooltip);
+    updateSpotlight(targets.length ? targets : focusTarget);
+  }
+
+  function showStep(index) {
+    const step = tourSteps[index];
+    if (step.openSidebar === true) {
+      openNav();
+    } else if (step.openSidebar === false) {
+      closeNav();
+    }
+    const targets = getStepTargets(step);
+    const focusTarget = resolveFocusTarget(step, targets);
+    if (!targets.length && step.optional) {
+      moveStep(index + 1);
+      return;
+    }
+
+    tourIndex = index;
+    if (tourOverlay) {
+      tourOverlay.classList.remove('hidden');
+      tourOverlay.setAttribute('aria-hidden', 'false');
+    }
+    if (tourTooltip) {
+      tourTooltip.classList.remove('hidden');
+    }
+    if (tourTitle) tourTitle.textContent = step.title || '';
+    if (tourText) tourText.textContent = step.text || '';
+    if (tourCounter) tourCounter.textContent = `Step ${index + 1} of ${tourSteps.length}`;
+    if (tourBack) tourBack.disabled = index <= 0;
+    if (tourNext) tourNext.textContent = index >= tourSteps.length - 1 ? 'Finish' : 'Next';
+
+    clearHighlight();
+    const isRangeStep = !!step.range || typeof step.getElements === 'function';
+    if (isRangeStep && targets.length) {
+      applyRangeHighlight(targets);
+    }
+    if (!isRangeStep && focusTarget) {
+      highlighted = focusTarget;
+      highlighted.classList.add('tour-highlight');
+    }
+    if (focusTarget) {
+      focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+
+    tooltipPinned = false;
+    requestAnimationFrame(() => syncTourPosition(true));
+    setTimeout(() => syncTourPosition(true), 350);
+  }
+
+  function moveStep(nextIndex) {
+    if (nextIndex < 0) {
+      showStep(0);
+      return;
+    }
+    if (nextIndex >= tourSteps.length) {
+      endTour();
+      return;
+    }
+    showStep(nextIndex);
+  }
+
+  function startTour() {
+    document.body.classList.add('tour-active');
+    showStep(0);
+  }
+
+  function endTour() {
+    clearHighlight();
+    if (tourOverlay) {
+      tourOverlay.classList.add('hidden');
+      tourOverlay.setAttribute('aria-hidden', 'true');
+    }
+    if (tourTooltip) {
+      tourTooltip.classList.add('hidden');
+    }
+    if (tourSpotlight) {
+      tourSpotlight.classList.add('hidden');
+    }
+    document.body.classList.remove('tour-active');
+  }
+
+  if (tourStartBtn) {
+    tourStartBtn.addEventListener('click', event => {
+      event.preventDefault();
+      startTour();
+    });
+  }
+
+  // Draggable tour tooltip
+  let isDraggingTour = false;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  function canDragTour(target) {
+    if (!target) return false;
+    if (target.closest('button, a, input, textarea, select, label')) return false;
+    return true;
+  }
+
+  function startDrag(clientX, clientY) {
+    if (!tourTooltip) return;
+    const rect = tourTooltip.getBoundingClientRect();
+    dragOffsetX = clientX - rect.left;
+    dragOffsetY = clientY - rect.top;
+    isDraggingTour = true;
+    tooltipPinned = true;
+    tourTooltip.classList.add('dragging');
+  }
+
+  function moveDrag(clientX, clientY) {
+    if (!isDraggingTour || !tourTooltip) return;
+    const pad = 8;
+    const maxLeft = window.innerWidth - tourTooltip.offsetWidth - pad;
+    const maxTop = window.innerHeight - tourTooltip.offsetHeight - pad;
+    let left = clientX - dragOffsetX;
+    let top = clientY - dragOffsetY;
+    left = Math.max(pad, Math.min(left, maxLeft));
+    top = Math.max(pad, Math.min(top, maxTop));
+    tourTooltip.style.left = `${left}px`;
+    tourTooltip.style.top = `${top}px`;
+  }
+
+  function endDrag() {
+    if (!isDraggingTour || !tourTooltip) return;
+    isDraggingTour = false;
+    tourTooltip.classList.remove('dragging');
+  }
+
+  if (tourTooltip) {
+    tourTooltip.addEventListener('mousedown', event => {
+      if (event.button !== 0) return;
+      if (!canDragTour(event.target)) return;
+      event.preventDefault();
+      startDrag(event.clientX, event.clientY);
+    });
+
+    tourTooltip.addEventListener('touchstart', event => {
+      if (!canDragTour(event.target)) return;
+      const touch = event.touches[0];
+      if (!touch) return;
+      event.preventDefault();
+      startDrag(touch.clientX, touch.clientY);
+    }, { passive: false });
+  }
+
+  document.addEventListener('mousemove', event => {
+    if (!isDraggingTour) return;
+    event.preventDefault();
+    moveDrag(event.clientX, event.clientY);
+  });
+
+  document.addEventListener('touchmove', event => {
+    if (!isDraggingTour) return;
+    const touch = event.touches[0];
+    if (!touch) return;
+    event.preventDefault();
+    moveDrag(touch.clientX, touch.clientY);
+  }, { passive: false });
+
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchcancel', endDrag);
+
+  if (tourNext) {
+    tourNext.addEventListener('click', () => moveStep(tourIndex + 1));
+  }
+
+  if (tourBack) {
+    tourBack.addEventListener('click', () => moveStep(tourIndex - 1));
+  }
+
+  if (tourSkip) {
+    tourSkip.addEventListener('click', endTour);
+  }
+
+  if (tourOverlay) {
+    tourOverlay.addEventListener('click', event => {
+      if (event.target === tourOverlay) endTour();
+    });
+  }
+
+  if (tourTooltip) {
+    tourTooltip.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') endTour();
+  });
+
+  window.addEventListener('resize', () => {
+    if (tourOverlay && !tourOverlay.classList.contains('hidden')) {
+      syncTourPosition();
+    }
+  });
+
+  let scrollTicking = false;
+  document.addEventListener('scroll', () => {
+    if (!tourOverlay || tourOverlay.classList.contains('hidden')) return;
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      scrollTicking = false;
+      syncTourPosition();
+    });
+  }, true);
+
+  // Auto-start the guided tour on page load.
+  setTimeout(() => {
+    if (tourOverlay && tourOverlay.classList.contains('hidden')) {
+      startTour();
+    }
+  }, 300);
 
 });
 

@@ -376,7 +376,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12 text-center">
-          <p class="mt-3 text-muted">&copy; 2025 University of St. Gallen. All rights reserved.</p>
+          
         </div>
       </div>
     </div>
@@ -895,7 +895,7 @@
           window.requestAnimationFrame(function () {
             var outcome = findSegmentForOutcome(segmentsPrepared);
             if (!outcome) {
-              setStatus('Outcome data missing. Please contact the experimenter.');
+              setStatus('Outcome data missing. Please contact the admin.');
               if (spinButton) {
                 spinButton.disabled = true;
               }
@@ -920,7 +920,7 @@
       var segmentsPrepared = prepareSlices(segments);
       renderWheel(segmentsPrepared);
       if (predeterminedId == null && predeterminedLabel == null) {
-        setStatus('Outcome data missing. Please contact the experimenter.');
+        setStatus('Outcome data missing. Please contact the admin.');
         if (spinButton) {
           spinButton.disabled = true;
         }
@@ -928,7 +928,7 @@
       renderOutcomesList(segmentsPrepared);
 
       if (!segmentsPrepared.length) {
-        setStatus('Random payoff tree data missing. Please inform the experimenter.');
+        setStatus('Random payoff tree data missing. Please inform the admin.');
         if (spinButton) {
           spinButton.disabled = true;
         }

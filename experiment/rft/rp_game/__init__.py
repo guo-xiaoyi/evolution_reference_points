@@ -42,12 +42,14 @@ from .helpers import (
     get_session_start_info,
     is_high_stake,
     load_lotteries,
+    load_test_lotteries,
     parse_payoff_label,
     persist_payment_store,
     populate_fine_cutoff,
     schedule_session_start,
     should_show_bridge,
     store_cutoff_choice,
+    verify_turnstile_token,
     with_upcoming_payoff_range,
 )
 
@@ -75,6 +77,13 @@ class Constants(BaseConstants):
     
     # Dictionary of lottery structures (loaded from external JSON)
     lotteries = load_lotteries()
+    practice_lotteries = load_test_lotteries()
+    practice_lottery_id = next(iter(practice_lotteries), None)
+    practice_lottery = (
+        practice_lotteries[practice_lottery_id]
+        if practice_lottery_id
+        else None
+    )
 
     # Default lottery to use
     default_lottery = 'lottery_1'
@@ -93,12 +102,13 @@ class Player(BasePlayer):
     failed_too_many_1 = models.BooleanField(initial=False)
     failed_too_many_2 = models.BooleanField(initial=False)
     failed_too_many_3 = models.BooleanField(initial=False)
+    turnstile_token = models.StringField(blank=True)
     quiz1 = models.StringField(
-        label='Do you need to be able to participate in all three sessions to participate in this experiment?',
+        label='Do you need to be able to participate in all three sessions to participate in this study?',
         choices=['Yes', 'No'],
     )
     quiz2 = models.StringField(
-        label='Is it fine to use AI in the experiment?',
+        label='Is it fine to use AI in the study?',
         choices=['Yes', 'No'],
     )
     quiz3 = models.StringField(
@@ -118,12 +128,12 @@ class Player(BasePlayer):
         choices=['Not complicated at all', 'A bit complicated', 'Complicated', 'Very complicated', 'Too complicated or extremely complicated'],
     )
     quiz7 = models.StringField(
-        label='Which of the following best describes your attention during the experiment?',
-        choices=['I paid attention throughout the entire experiment.', 
-                 'I paid attention throughout almost the entire experiment.', 
-                 'I paid attention throughout most of the experiment.', 
-                 'I paid attention  throughout parts of the experiment.', 
-                 'I did not pay any attention at all during the experiment.' ],
+        label='Which of the following best describes your attention during the study?',
+        choices=['I paid attention throughout the entire study.', 
+                 'I paid attention throughout almost the entire study.', 
+                 'I paid attention throughout most of the study.', 
+                 'I paid attention  throughout parts of the study.', 
+                 'I did not pay any attention at all during the study.' ],
     )
     quiz8 = models.StringField(
         label='3.	Please indicate your highest obtained educational qualification:',
@@ -171,9 +181,19 @@ for i in range(1, Constants.max_choice_count + 1):
 
 # PAGES
 class Welcome(Page):
+    form_model = 'player'
+    form_fields = ['turnstile_token']
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+
+    @staticmethod
+    def error_message(player, values):
+        token = values.get('turnstile_token')
+        ok, _ = verify_turnstile_token(token)
+        if not ok:
+            return 'Please complete the verification to proceed.'
     pass
 
 class Session1(Page):
@@ -215,6 +235,60 @@ class Introduction3(Page):
         return player.round_number == 1
     pass
 
+
+
+
+class PracticePlay(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+
+    @staticmethod
+    def _choice_amounts(player, lottery, base_offset=0):
+        return choice_amounts(player, lottery, base_offset)
+
+    @staticmethod
+    def _choice_field_names(player, lottery, base_offset=0):
+        return choice_field_names(player, lottery, base_offset)
+
+    @staticmethod
+    def _choice_rows(player, lottery, base_offset=0):
+        return choice_rows(player, lottery, base_offset)
+
+    @staticmethod
+    def get_form_fields(player):
+        lottery = Constants.practice_lottery
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
+        fields = Play._choice_field_names(player, choice_lottery, base_offset=0)
+        fields.append('cutoff_index')
+        if is_high_stake(lottery):
+            fields.append('fine_cutoff_index')
+        return fields
+
+    @staticmethod
+    def error_message(player, values):
+        lottery = Constants.practice_lottery
+        return cutoff_validation_errors(values, lottery)
+
+    @staticmethod
+    def vars_for_template(player):
+        lottery = Constants.practice_lottery
+        choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
+        return build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        # Do not persist practice responses into the real round.
+        for i in range(1, Constants.max_choice_count + 1):
+            setattr(player, f'chf_{i}', None)
+        player.cutoff_index = None
+        player.cutoff_amount = None
+        player.selected_choice = None
+        player.selected_amount = None
+        player.selected_option = None
+        clear_fine_cutoff(player)
 
 class Play(Page):
     form_model = 'player'
@@ -290,8 +364,8 @@ class Check1(Page):
     def error_message(player: Player, values):
         solutions = dict(quiz1= 'Yes', quiz2= 'No')
         error_messages = {
-            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this experiment if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 7-15 minutes each).',
-            'quiz2': 'You should have chosen “No” for this question.  We are interested in your personal preferences (there are no right or wrong answers). Therefore, please do not use AI during the experiment.',
+            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this study if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 7-15 minutes each).',
+            'quiz2': 'You should have chosen “No” for this question.  We are interested in your personal preferences (there are no right or wrong answers). Therefore, please do not use AI during the study.',
         }
         errors = {
             name: error_messages.get(name, 'Incorrect answer. Please try again.')
@@ -700,14 +774,31 @@ class Thankyou(Page):
 
 
 class WelcomeSession2(Page):
+    form_model = 'player'
+    form_fields = ['turnstile_token']
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[0]
+
+    @staticmethod
+    def error_message(player, values):
+        token = values.get('turnstile_token')
+        ok, _ = verify_turnstile_token(token)
+        if not ok:
+            return 'Please complete the verification to proceed.'
     
 class WelcomeSession3(Page):
+    form_model = 'player'
+    form_fields = ['turnstile_token']
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1]
+    @staticmethod
+    def error_message(player, values):
+        token = values.get('turnstile_token')
+        ok, _ = verify_turnstile_token(token)
+        if not ok:
+            return 'Please complete the verification to proceed.'
 
 class Session2(Page):
     template_name = 'rp_game/session2.html'
@@ -762,6 +853,7 @@ page_sequence = [
     Failed,
     Introduction3,
     Failed,
+    PracticePlay,
     Play,
     Draw,
     BridgeSession2,
@@ -795,7 +887,7 @@ def creating_session(subsession: Subsession):
 
 
 def custom_export(players):
-    """Export key experiment data with minimal columns."""
+    """Export key study data with minimal columns."""
     choice_fields = [f'chf_{i}' for i in range(1, Constants.max_choice_count + 1)]
     yield [
         'session_code',

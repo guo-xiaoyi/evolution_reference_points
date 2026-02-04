@@ -11,6 +11,7 @@
   <title>Uni St.Gallen - Intergrated Page</title>
 
   <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
   <!-- Bootstrap core CSS -->
   <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
@@ -81,7 +82,7 @@
         <div class="row">
           <div class="col-md-6">
             <h1 class="university-title">Welcome back!</h1>
-                        <p>This experiment consists of three sessions. This is the third session; it will take about 7-15 minutes. The third session will take place in three days and also take about 7-15 minutes. When you open this session, you have 24 hours to complete it. If you complete all three sessions you will receive an extra payment of £10 in addition to the regular payments of £10 for the first session, £5 for the second session, and £5 for the third session. Furthermore, you will be eligible to win a prize of £300 upon careful completion of all three sessions. </p>
+                        <p>This study consists of three sessions. This is the third session; it will take about 7-15 minutes. The third session will take place in three days and also take about 7-15 minutes. When you open this session, you have 24 hours to complete it. If you complete all three sessions you will receive an extra payment of £10 in addition to the regular payments of £10 for the first session, £5 for the second session, and £5 for the third session. Furthermore, you will be eligible to win a prize of £300 upon careful completion of all three sessions. </p>
 
             <p>You will not be paid for a session if one of the following applies: </p>
 
@@ -90,9 +91,9 @@
               <li> you do not complete the session within 24 hours of first opening the session link.</li>
            </ol>
 
-            <p>In the experiment, you will be asked to evaluate situations, in which different payments appear with different probabilities. When you make these choices, please imagine that the payments involve real money (even though you will not actually gain or lose money from the depicted situations).</p>
+            <p>In the study, you will be asked to evaluate situations, in which different payments appear with different probabilities. When you make these choices, please imagine that the payments involve real money (even though you will not actually gain or lose money from the depicted situations).</p>
 
-            <p>Please click the ‘Start’ button to participate in this experiment.</p>
+            <p>Please click the ‘Start’ button to participate in this study.</p>
 </p>
             <p style="text-align:right;">
               <button class="otree-btn-next btn btn-primary">Start &raquo;</button>
@@ -104,11 +105,18 @@
           <div class="col-md-6">
             <!-- This div will be filled with the background image via CSS -->
             <div class="content-image"> 
-              <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzZcL2Fzc2V0c1wvMWFcLzEyNjYzXC9iZmUyZDJhZmZjNWE3NmFmNTU2N2UxM2JiMzc4ZmRiMC0xNjU1ODk5NjA1LnRpZiJ9:unisg:WKEVB3Kabw70PIT5qJe7svkCSkRpdqmD6pGJFM_Ex4k?width=2400" alt="Experiment Image" class="img-fluid">
+              <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzZcL2Fzc2V0c1wvMWFcLzEyNjYzXC9iZmUyZDJhZmZjNWE3NmFmNTU2N2UxM2JiMzc4ZmRiMC0xNjU1ODk5NjA1LnRpZiJ9:unisg:WKEVB3Kabw70PIT5qJe7svkCSkRpdqmD6pGJFM_Ex4k?width=2400" alt="study Image" class="img-fluid">
             </div>
           </div>
           <p><strong>Important: Please note that you will have 24 hours to complete this session after you click the Start button. We cannot accept a submission after this time.</strong></p>
         </div>
+                            <div
+              class="cf-turnstile"
+              data-sitekey="0x4AAAAAACXKtkgV9SHRtBxi"
+              data-response-field="false"
+              data-callback="onTurnstileSuccess"
+              data-expired-callback="onTurnstileExpired"
+            ></div>    
       </div>
     </div>
 
@@ -119,7 +127,7 @@
       <div class="row">
         <div class="col-12 text-center">
 
-          <p class="mt-3 text-muted">&copy; 2025 University of St. Gallen. All rights reserved.</p>
+          
         </div>
       </div>
     </div>
@@ -135,6 +143,35 @@
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
   <script src="../../assets/js/vendor/popper.min.js"></script>
   <script src="../../dist/js/bootstrap.min.js"></script>
+    <script>
+    function setStartEnabled(enabled) {
+      var btn = document.getElementById('startButton');
+      if (!btn) return;
+      btn.disabled = !enabled;
+      btn.style.display = enabled ? 'inline-block' : 'none';
+    }
+
+    function onTurnstileSuccess(token) {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      if (input) input.value = token;
+      setStartEnabled(true);
+    }
+    function onTurnstileExpired() {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      if (input) input.value = '';
+      setStartEnabled(false);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      setStartEnabled(Boolean(input && input.value));
+    });
+  </script>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
 </body>
 </html>
 {{ endblock }}

@@ -1,11 +1,12 @@
 import copy
 import json
+import os
 import random
 import re
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-
+import requests
 import numpy as np
 
 PAYMENT_STORE_KEY = 'session1_payment'  # Key for participant.vars to store payment-related data
@@ -14,6 +15,8 @@ AMOUNT_PATTERN = re.compile(r'[-+]?\d+(?:\.\d+)?')  # Regex to extract numeric a
 rng = random.SystemRandom()  # independent RNG to avoid external seeding effects
 
 LOTTERIES_PATH = Path(__file__).with_name('lotteries.json')
+PRACTICE_LOTTERY_PATH = Path(__file__).with_name('practice_lottery.json')
+TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
 
 def _constants():
@@ -21,6 +24,48 @@ def _constants():
 
     return Constants
 
+
+
+
+def validate_turnstile(token, secret, remoteip=None):
+    data = {
+        'secret': secret,
+        'response': token
+    }
+
+    if remoteip:
+        data['remoteip'] = remoteip
+
+    try:
+        response = requests.post(TURNSTILE_VERIFY_URL, data=data, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Turnstile validation error: {e}")
+        return {'success': False, 'error-codes': ['internal-error']}
+
+
+def verify_turnstile_token(token, remoteip=None, secret=None):
+    if not token:
+        return False, {'success': False, 'error-codes': ['missing-input-response']}
+    if secret is None:
+        secret = os.getenv('TURNSTILE_SECRET') or ''
+    if not secret:
+        return False, {'success': False, 'error-codes': ['missing-input-secret']}
+    payload = {
+        'secret': secret,
+        'response': token,
+    }
+    if remoteip:
+        payload['remoteip'] = remoteip
+    try:
+        response = requests.post(TURNSTILE_VERIFY_URL, data=payload, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+    except requests.RequestException as exc:
+        print(f"Turnstile validation error: {exc}")
+        return False, {'success': False, 'error-codes': ['internal-error']}
+    return bool(data.get('success')), data
 
 def _assign_lottery_node_ids(lottery_id, lottery):
     """Attach stable node ids for rendering, without changing labels."""
@@ -55,6 +100,28 @@ def load_lotteries():
         lottery['periods'] = converted
         _assign_lottery_node_ids(lottery_id, lottery)
     return data
+
+
+
+def load_test_lotteries():
+    with PRACTICE_LOTTERY_PATH.open(encoding='utf-8') as handle:
+        data = json.load(handle)
+    for lottery_id, lottery in data.items():
+        periods = lottery.get('periods')
+        if not isinstance(periods, dict):
+            continue
+        converted = {}
+        for key, value in periods.items():
+            try:
+                key = int(key)
+            except (TypeError, ValueError):
+                pass
+            converted[key] = value
+        lottery['periods'] = converted
+        _assign_lottery_node_ids(lottery_id, lottery)
+    return data
+
+
 
 
 def _lottery_outcome_count(lottery):
@@ -659,7 +726,7 @@ def build_wheel_context(
     predetermined = realized_nodes.get(period) or {}
     missing_outcome = not predetermined or not segments
     if missing_outcome:
-        status_text = 'Outcome data missing. Please inform the experimenter.'
+        status_text = 'Outcome data missing. Please inform the admin.'
     accumulated_value = 0
     has_accumulated = False
     for node in realized_nodes.values():

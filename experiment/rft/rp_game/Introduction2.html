@@ -371,6 +371,19 @@
       margin-top: 0.5rem;
       font-size: 0.95rem;
     }
+    .quick-check-gate {
+      margin: 1rem 0 0;
+      color: #c0392b;
+      font-size: 0.95rem;
+      display: none;
+    }
+    .quick-check-gate.is-visible {
+      display: block;
+    }
+    .btn-primary[disabled] {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
 
     .image-modal {
       position: fixed;
@@ -464,7 +477,7 @@
     <div class="main-container">
       <div class="content-wrapper">
         <p>Please read this carefully. Afterwards, there will be further comprehension test questions. </p>
-        <p>In this experiment, you will see several random payoff trees. Please find an example below. A random payoff tree contains four time periods. The first period is now. The second period is in three days (which is the time of Session 2 of this experiment). The third period is in six days (the time of Session 3 of this experiment). The fourth period is in nine days (three days after the Session 3 of this experiment).</p>
+        <p>In this study, you will see several random payoff trees. Please find an example below. A random payoff tree contains four time periods. The first period is now. The second period is in three days (which is the time of Session 2 of this study). The third period is in six days (the time of Session 3 of this study). The fourth period is in nine days (three days after the Session 3 of this study).</p>
 
         <div class="example-stack">
           <div class="example-figure">
@@ -502,8 +515,8 @@
         </div>
         <div class="feedback" aria-live="polite"></div>
       </div>
-      <div class="question" data-answer="c" data-correct="Correct - £2 and £5 are two possible future outcomes." data-incorrect="Not quite - £2 and £5 are two possible future outcomes.">
-        <p><strong>2)</strong>In the example, assume that you are at the node '-£12'. Which two options are correct?</p>
+      <div class="question" data-answer="a,c" data-correct="Correct - you lost £10 and then £12, and the possible future outcomes are £2 or £5." data-incorrect="Not quite - two options are correct: the earlier losses and the possible future outcomes £2 or £5.">
+        <p><strong>2)</strong> In the example, assume that you are at the node '-£12'. Which two options are correct?</p>
         <div class="answers">
           <button type="button" data-choice="a">You lost £10 before and then an additional £12.</button>
           <button type="button" data-choice="b">You lost £10 before and then an additional £2.</button>
@@ -515,7 +528,7 @@
     </div>
 
     <h3 id="section-evaluate" tabindex="-1" style="margin-top: 2rem;">How to evaluate a random payoff tree</h3>
-    <p> <strong style="color:#2c8a2c">Your main task in this experiment is to evaluate such random payoff trees. We want to know how much money such a random payoff tree would be worth to you.</strong> Therefore, we will present you with a series of alternative options. For each option, please indicate whether you would prefer to receive or pay the shown amount or receive the outcomes determined by the random payoff tree. The shown monetary amounts and outcomes are hypothetical and do not affect your payment. Imagine the monetary amounts to be received or paid immediately (which is different from the outcomes of the random payoff tree, which do not only depend on luck but also arrive with time delays). When you click on ‘Start evaluation’, you will see a pop-out sidebar as follows:</p>
+    <p> <strong style="color:#2c8a2c">Your main task in this study is to evaluate such random payoff trees. We want to know how much money such a random payoff tree would be worth to you.</strong> Therefore, we will present you with a series of alternative options. For each option, please indicate whether you would prefer to receive or pay the shown amount or receive the outcomes determined by the random payoff tree. The shown monetary amounts and outcomes are hypothetical and do not affect your payment. Imagine the monetary amounts to be received or paid immediately (which is different from the outcomes of the random payoff tree, which do not only depend on luck but also arrive with time delays). When you click on ‘Start evaluation’, you will see a pop-out sidebar as follows:</p>
     <br> </br>
 <img src= "{{ static 'global/mcl.png' }}"  alt="Pop-out sidebar" width="100%" class="center zoomable">
     <br> </br>
@@ -544,9 +557,12 @@
 
 
 
+                <p class="quick-check-gate" id="quickCheckGate" role="status" aria-live="polite">
+                  Please answer all recall questions above to continue.
+                </p>
                 <p style="text-align:right; margin-top: 1.5rem;">
               
-              <button class="otree-btn-next btn btn-primary">Next &raquo;</button>
+              <button class="otree-btn-next btn btn-primary" disabled aria-disabled="true">Next &raquo;</button>
             </p>
       </div>
     </div>
@@ -556,8 +572,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12 text-center">
-          <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzEzXC9hc3NldHNcLzU0XC82MjA5XC9mZWU3ZTY4NmY5NmU4OTc1OGI2ZjEyZDY1MDRlMjk4Mi0xNjI1MDc4NzQ2LnBuZyJ9:unisg:fHwFjCnusCPTOHN3vBp9s0I-varvLhe40RmgsvP0Fms?width=2400" alt="University of St. Gallen Logo" style="height: 50px;">
-          <p class="mt-3 text-muted">&copy; 2025 University of St. Gallen. All rights reserved.</p>
+          
         </div>
       </div>
     </div>
@@ -654,28 +669,114 @@
       }
 
       var questions = document.querySelectorAll('.quick-check .question');
+      var nextButton = document.querySelector('.otree-btn-next');
+      var gateMessage = document.getElementById('quickCheckGate');
+
+      function requiredSelectionCount(question) {
+        var answerAttr = question.getAttribute('data-answer') || '';
+        var choiceCount = answerAttr.split(',').map(function (item) {
+          return item.trim();
+        }).filter(Boolean).length;
+        return choiceCount > 1 ? choiceCount : 1;
+      }
+
+      function isQuestionAnswered(question) {
+        var selectedCount = question.querySelectorAll('button.is-selected').length;
+        return selectedCount === requiredSelectionCount(question);
+      }
+
+      function updateNextState() {
+        if (!nextButton) return;
+        if (!questions.length) {
+          nextButton.disabled = false;
+          nextButton.removeAttribute('aria-disabled');
+          if (gateMessage) gateMessage.classList.remove('is-visible');
+          return;
+        }
+        var allAnswered = true;
+        questions.forEach(function (question) {
+          if (!isQuestionAnswered(question)) {
+            allAnswered = false;
+          }
+        });
+        nextButton.disabled = !allAnswered;
+        if (allAnswered) {
+          nextButton.removeAttribute('aria-disabled');
+        } else {
+          nextButton.setAttribute('aria-disabled', 'true');
+        }
+        if (gateMessage) {
+          gateMessage.classList.toggle('is-visible', !allAnswered);
+        }
+      }
       questions.forEach(function (question) {
-        var answer = question.getAttribute('data-answer');
+        var answerAttr = question.getAttribute('data-answer') || '';
+        var correctChoices = answerAttr.split(',').map(function (item) {
+          return item.trim();
+        }).filter(Boolean);
+        var isMulti = correctChoices.length > 1;
         var correctText = question.getAttribute('data-correct') || 'Correct.';
         var incorrectText = question.getAttribute('data-incorrect') || 'Not quite.';
         var feedback = question.querySelector('.feedback');
         var optionButtons = question.querySelectorAll('button[data-choice]');
+
+        function updateFeedback(selectedChoices) {
+          var hasAllCorrect = selectedChoices.length === correctChoices.length &&
+            selectedChoices.every(function (choice) { return correctChoices.indexOf(choice) !== -1; });
+          if (selectedChoices.length === 0) {
+            if (feedback) feedback.textContent = '';
+          } else if (hasAllCorrect) {
+            if (feedback) feedback.textContent = correctText;
+          } else {
+            if (feedback) feedback.textContent = incorrectText;
+          }
+        }
+
         optionButtons.forEach(function (btn) {
           btn.addEventListener('click', function () {
-            optionButtons.forEach(function (b) {
-              b.classList.remove('is-selected', 'is-correct', 'is-incorrect');
-            });
-            btn.classList.add('is-selected');
-            if (btn.getAttribute('data-choice') === answer) {
-              btn.classList.add('is-correct');
-              if (feedback) feedback.textContent = correctText;
+            if (!isMulti) {
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-selected', 'is-correct', 'is-incorrect');
+              });
+              btn.classList.add('is-selected');
             } else {
-              btn.classList.add('is-incorrect');
-              if (feedback) feedback.textContent = incorrectText;
+              btn.classList.toggle('is-selected');
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-correct', 'is-incorrect');
+              });
             }
+
+            var selectedButtons = Array.prototype.slice.call(optionButtons).filter(function (b) {
+              return b.classList.contains('is-selected');
+            });
+            var selectedChoices = selectedButtons.map(function (b) {
+              return b.getAttribute('data-choice');
+            });
+
+            if (!isMulti) {
+              if (selectedChoices[0] === correctChoices[0]) {
+                btn.classList.add('is-correct');
+              } else {
+                btn.classList.add('is-incorrect');
+              }
+              updateFeedback(selectedChoices);
+              updateNextState();
+              return;
+            }
+
+            selectedButtons.forEach(function (selectedBtn) {
+              if (correctChoices.indexOf(selectedBtn.getAttribute('data-choice')) !== -1) {
+                selectedBtn.classList.add('is-correct');
+              } else {
+                selectedBtn.classList.add('is-incorrect');
+              }
+            });
+            updateFeedback(selectedChoices);
+            updateNextState();
           });
         });
       });
+      updateNextState();
 
       var modal = document.getElementById('imageModal');
       var modalImg = document.getElementById('imageModalImg');

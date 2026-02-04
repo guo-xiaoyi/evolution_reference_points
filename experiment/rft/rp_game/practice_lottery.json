@@ -1,0 +1,78 @@
+{
+  "lottery_999": {
+    "name": "Mango",
+    "outcome_number": 4,
+    "stake": "lo",
+    "max_payoff": 44,
+    "min_payoff": -46,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "-£4",
+          "probability": 0.7,
+          "from": "Start",
+          "abs_prob": 0.7
+        },
+        {
+          "label": "-£2",
+          "probability": 0.3,
+          "from": "Start",
+          "abs_prob": 0.3
+        }
+      ],
+      "2": [
+        {
+          "label": "+£8",
+          "probability": 1,
+          "from": "-£4",
+          "abs_prob": 0.7
+        },
+        {
+          "label": "£2",
+          "probability": 1,
+          "from": "-£2",
+          "abs_prob": 0.3
+        }
+      ],
+      "3": [
+        {
+          "label": "-£28",
+          "probability": 0.3,
+          "from": "+£8",
+          "parent": "-£4",
+          "abs_prob": 0.21
+        },
+        {
+          "label": "£6",
+          "probability": 0.7,
+          "from": "+£8",
+          "parent": "-£4",
+          "abs_prob": 0.49
+        },
+        {
+          "label": "+£13",
+          "probability": 0.7,
+          "from": "£2",
+          "parent": "-£2",
+          "abs_prob": 0.21
+        },
+        {
+          "label": "-£32",
+          "probability": 0.3,
+          "from": "£2",
+          "parent": "-£2",
+          "abs_prob": 0.09
+        }
+      ]
+    }
+  }
+}

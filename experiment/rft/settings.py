@@ -38,6 +38,8 @@ DEMO_PAGE_INTRO_HTML = """ """
 OTREE_AUTH_LEVEL = 'STUDY'  # for adding participants from the admin interface
 
 SECRET_KEY = '6053408606911'
+OTREE_ADMIN_NAME = 'xyguo'
+OTREE_ADMIN_PASSWORD = 'unisg26'
 
 
 ROOMS = [
