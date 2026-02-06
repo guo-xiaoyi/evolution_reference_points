@@ -1,0 +1,231 @@
+{
+  "lottery_1": {
+    "name": "Apple",
+    "outcome_number": 4,
+    "stake": "lo",
+    "max_payoff": 44,
+    "min_payoff": -46,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£2",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "+£26",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        }
+      ],
+      "2": [
+        {
+          "label": "+£6",
+          "probability": 1,
+          "from": "+£2",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "-£29",
+          "probability": 1,
+          "from": "+£26",
+          "abs_prob": 0.5
+        }
+      ],
+      "3": [
+        {
+          "label": "+£36",
+          "probability": 0.4,
+          "from": "+£6",
+          "parent": "+£2",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "-£30",
+          "probability": 0.6,
+          "from": "+£6",
+          "parent": "+£2",
+          "abs_prob": 0.3
+        },
+        {
+          "label": "+£39",
+          "probability": 0.5,
+          "from": "-£29",
+          "parent": "£26",
+          "abs_prob": 0.25
+        },
+        {
+          "label": "-£43",
+          "probability": 0.5,
+          "from": "-£29",
+          "parent": "£26",
+          "abs_prob": 0.25
+        }
+      ]
+    }
+  },
+  "lottery_2": {
+  "name": "Banana",
+  "outcome_number": 4,
+  "stake": "lo",
+  "max_payoff": 61,
+  "min_payoff": -45,
+  "description": "n/a",
+  "periods": {
+    "0": [
+      {
+        "label": "Start",
+        "probability": 1,
+        "from": null,
+        "abs_prob": 1
+      }
+    ],
+    "1": [
+      {
+        "label": "+£41",
+        "probability": 0.6,
+        "from": "Start",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "+£22",
+        "probability": 0.4,
+        "from": "Start",
+        "abs_prob": 0.4
+      }
+    ],
+    "2": [
+      {
+        "label": "-£19",
+        "probability": 1,
+        "from": "+£41",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "-£34",
+        "probability": 1,
+        "from": "+£22",
+        "abs_prob": 0.4
+      }
+    ],
+    "3": [
+      {
+        "label": "-£47",
+        "probability": 0.7,
+        "from": "-£19",
+        "parent": "+£41",
+        "abs_prob": 0.42
+      },
+      {
+        "label": "+£39",
+        "probability": 0.3,
+        "from": "-£19",
+        "parent": "+£41",
+        "abs_prob": 0.18
+      },
+      {
+        "label": "-£33",
+        "probability": 0.4,
+        "from": "-£34",
+        "parent": "+£22",
+        "abs_prob": 0.16
+      },
+      {
+        "label": "+£36",
+        "probability": 0.6,
+        "from": "-£34",
+        "parent": "+£22",
+        "abs_prob": 0.24
+      }
+    ]
+  }
+},
+  "lottery_3": {
+  "name": "Banana",
+  "outcome_number": 4,
+  "stake": "lo",
+  "max_payoff": 61,
+  "min_payoff": -45,
+  "description": "n/a",
+  "periods": {
+    "0": [
+      {
+        "label": "Start",
+        "probability": 1,
+        "from": null,
+        "abs_prob": 1
+      }
+    ],
+    "1": [
+      {
+        "label": "+£82",
+        "probability": 0.6,
+        "from": "Start",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "+£61",
+        "probability": 0.4,
+        "from": "Start",
+        "abs_prob": 0.4
+      }
+    ],
+    "2": [
+      {
+        "label": "-£156",
+        "probability": 1,
+        "from": "+£82",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "-£17",
+        "probability": 1,
+        "from": "+£61",
+        "abs_prob": 0.4
+      }
+    ],
+    "3": [
+      {
+        "label": "-£19",
+        "probability": 0.7,
+        "from": "-£156",
+        "parent": "+£82",
+        "abs_prob": 0.42
+      },
+      {
+        "label": "+£3",
+        "probability": 0.3,
+        "from": "-£156",
+        "parent": "+£82",
+        "abs_prob": 0.18
+      },
+      {
+        "label": "-£17",
+        "probability": 0.4,
+        "from": "-£17",
+        "parent": "+£61",
+        "abs_prob": 0.16
+      },
+      {
+        "label": "+£6",
+        "probability": 0.6,
+        "from": "-£17",
+        "parent": "+£61",
+        "abs_prob": 0.24
+      }
+    ]
+  }
+}
+
+}

@@ -10,7 +10,7 @@ import pandas as pd
 
 # Parameters
 r = 0.97
-Z = np.array([-30,-15,15,30])
+Z = np.array([-25,15,15,30])
 p = np.array([0.25,0.25,0.25,0.25])
 alpha = 0.88
 lambda_ = 2.25
