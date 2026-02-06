@@ -879,7 +879,7 @@
       <div id="fine-choice-panel" class="fine-panel hidden">
         <h5>We would like to ask for more detail about your choice.</h5>
         <p id="fine-range-message">
-          Please inidcate your valuation of the same random payoff tree below.
+          Please indicate your valuation of the same random payoff tree below.
         </p>
         <div id="fine-choice-warning" class="text-danger" style="display:none;">
           Please select an option in the refinement list.
@@ -1817,7 +1817,7 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       selector: '.university-title',
       title: 'Welcome to the practice task',
-      text: 'This is a practice round. Your answers here are not recorded. Take your time to understand the instructions. You will experience a guided tour of the decision task to help you navigate the interface. You can exit the tour at any time by clicking outside the tour box. When you are ready, click \'Next\' to start the tour. You can move the tour box by dragging it.',
+      text: 'Your answers in this practice task are not recorded. You will now experience a guided tour of the decision task to help you navigate the interface. You can exit the tour at any time by clicking outside the tour box. You can move the tour box by dragging it.',
       position: 'bottom'
     },
     {
@@ -1828,8 +1828,8 @@ document.addEventListener('DOMContentLoaded', function () {
     },    
     {
       selector: '#lottery-visualization',
-      title: 'Three periods',
-      text: 'The four columns here represent the three periods of the game and the final outcome.',
+      title: 'Time periods',
+      text: 'The four columns represent three time periods corresponding to the three sessions of the study plus one time period thereafter.',
       position: 'undertop'
     },
         {
@@ -1840,13 +1840,13 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       selector: '#open-sidebar-btn',
-      title: 'Open the decision table',
-      text: 'Use this button to open the sidebar with the choice table.',
+      title: 'Opening the evaluation table',
+      text:  'Click this button to open the sidebar with the evaluation table.',
       position: 'top'
     },
     {
       selector: '#choice-table',
-      title: 'Choice table',
+      title: 'Evaluation table',
       text: 'Each row compares a fixed amount (left) to the random payoff tree outcomes (right).',
       position: 'right',
       openSidebar: true
@@ -1861,16 +1861,16 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       range: { selector: '#choice-table tbody tr', start: 0, end: 5 },
       focusIndex: 5,
-      title: 'You prefer to obtain the outcomes of the random payoff tree in this range.',
-      text: 'In this range, you prefer to obtain the outcomes of the random payoff tree rather than accepting the fixed amount (on the left-hand side).',
+      title: 'What this choice means I',
+      text: 'In this range, you prefer obtaining the outcomes of the random payoff tree over paying the fixed amounts (on the left).',
       position: 'right',
       openSidebar: true
     },
     {
       range: { selector: '#choice-table tbody tr', start: 6, end: 19 },
       focusIndex: 6,
-      title: 'You prefer the fixed amount of money.',
-      text: 'In this range, you prefer to accept the fixed amount (on the left-hand side) rather than obtaining the outcomes of the random payoff tree.',
+      title: 'What this choice means II',
+      text: 'In this range, you prefer paying or receiving the fixed amounts (on the left) over obtaining the out-comes of the random payoff tree.',
       position: 'right',
       openSidebar: true
     },
@@ -1884,23 +1884,23 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       selector: '#lottery-visualization',
-      title: 'Think one more time',
-      text: 'You can always close the sidebar to review the random payoff tree before submitting your choice. The question is: Suppose you are facing a choice between the fixed payment  and the random outcomes of the random payoff tree, which one would you choose?',
+      title: 'Close and open sidebar',
+      text: 'You can always close the sidebar to review the random payoff tree before submitting your choice.',
       position: 'left',
       openSidebar: false
     },
 
   {
       selector: '#choice-table',
-      title: 'Change your choice if needed',
-      text: 'What is your choice? You can change the selected row in the choice table if you want to.',
+      title: 'Making changes',
+      text: 'You can change the selected row in the evaluation table if you want to.',
       position: 'top',
       openSidebar: true
     },
     {
       selector: '.otree-btn-next',
       title: 'Submit',
-      text: 'When you are ready, submit to finish the practice round. If you still want to experience the tour, click anywhere outside this box to exit the tour and continue exploring.',
+      text: 'Once you click the ‘Submit’ button during the study, you can no longer go back to change your eval-uation of the given random payoff tree. Clicking ‘Submit’ now finishes the practice task. If you click anywhere outside this box, you can continue exploring the practice task and restart the tour if you want',
       position: 'top',
       openSidebar: true
     }
