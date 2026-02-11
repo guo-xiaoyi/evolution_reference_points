@@ -862,6 +862,13 @@ def store_cutoff_choice(player, lottery, base_offset=0):
         clear_fine_cutoff(player)
 
 
+def format_session_date(dt):
+    """Return a locale-aware readable date without platform-specific strftime flags."""
+    if not isinstance(dt, datetime):
+        return None
+    return f"{dt.strftime('%A')}, {dt.day} {dt.strftime('%B')}"
+
+
 def schedule_session_start(player, prefix, wait_seconds, future_round):
     """Store the scheduled start time for the next session and propagate it."""
     Constants = _constants()
@@ -871,7 +878,7 @@ def schedule_session_start(player, prefix, wait_seconds, future_round):
     if existing_ts is not None:
         if existing_readable is None:
             try:
-                existing_readable = datetime.fromtimestamp(existing_ts).strftime('%A, %B %d')
+                existing_readable = format_session_date(datetime.fromtimestamp(existing_ts))
             except (TypeError, OSError, ValueError):
                 existing_readable = None
         setattr(player, f'{prefix}_start', existing_ts)
@@ -887,7 +894,7 @@ def schedule_session_start(player, prefix, wait_seconds, future_round):
 
     t = datetime.now() + timedelta(seconds=wait_seconds)
     start_ts = t.timestamp()
-    readable = t.strftime('%A, %B %d')
+    readable = format_session_date(t)
     setattr(player, f'{prefix}_start', start_ts)
     setattr(player, f'{prefix}_start_readable', readable)
     participant.vars[f'{prefix}_start'] = start_ts

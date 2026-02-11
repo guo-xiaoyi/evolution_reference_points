@@ -180,14 +180,19 @@
       margin-bottom: 0.75rem;
     }
     #lottery-visualization {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 auto;
       margin-top: 1.25rem;
-      overflow-x: auto;
       padding-bottom: 0.5rem;
     }
     #lottery-visualization svg {
+      display: block;
+      margin: 0;
       width: 100%;
       height: auto;
-      min-width: 540px;
     }
 
     .col { fill: #f5f5f7; stroke: #d5d5d5; }
@@ -241,7 +246,7 @@
         padding: 1.3rem;
       }
       #lottery-visualization svg {
-        min-width: 750px;
+        width: 100%;
       }
     }
   </style>
@@ -546,14 +551,14 @@
           }
           realizedSetByPeriod.set(0, startSet);
         }
-        var H = 640;
-        var colW = 260;
-        var colGap = 10;
-        var leftPad = 20;
-        var topPad = 24;
-        var wheelR = 36;
+        var H = 750;
+        var colW = 300;
+        var colGap = 22;
+        var leftPad = 16;
+        var topPad = 16;
+        var wheelR = 35;
         var wheelCxOffset = colW / 2;
-        var W = periods.length * colW + Math.max(0, periods.length - 1) * colGap + leftPad * 2;
+        var W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
         var svgNS = 'http://www.w3.org/2000/svg';
         var mk = function (tag, attrs, text) {
           var el = document.createElementNS(svgNS, tag);
@@ -617,6 +622,11 @@
           return positive[0] / total >= 0.999999;
         };
         var svg = mk('svg', { width: W, height: H, class: 'lotto' });
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+        svg.style.width = '100%';
+        svg.style.height = 'auto';
+        svg.style.maxWidth = W + 'px';
         var defs = mk('defs');
         var marker = mk('marker', { id: 'ah', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: 'auto' });
         marker.appendChild(mk('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#888' }));

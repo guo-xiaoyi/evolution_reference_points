@@ -170,7 +170,7 @@ def plot_ce_comparison(
     param_values = np.linspace(param_start, param_end, num_points)
 
     # Create figure
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
 
     for val in param_values:
         # Dynamically assign parameter values
@@ -182,24 +182,26 @@ def plot_ce_comparison(
         R_range, CE_values, highlight_mask, y_values, ce_df = range_ce(alpha, lambda_, gamma, r, Z, p)
 
         # Plot CE curve and highlighted range
-        plt.plot(R_range, CE_values, color='gray', linewidth=1, alpha=0.7)
-        plt.plot(R_range[highlight_mask], CE_values[highlight_mask], color='red', linewidth=1.5)
+        ax.plot(R_range, CE_values, color='gray', linewidth=1, alpha=0.7)
+        ax.plot(R_range[highlight_mask], CE_values[highlight_mask], color='red', linewidth=1.5)
 
     # Plot the value function (same for all)
-    plt.plot(R_range, y_values, color='black', linewidth=1.5, label='Value Function')
+    ax.plot(R_range, y_values, color='black', linewidth=1.5, label='Value Function')
 
     # Mark the location where y ≈ 0
     closest_to_zero = ce_df.iloc[(ce_df['y'].abs()).argmin()]
-    plt.axvline(x=closest_to_zero['R'], color='black', linestyle='--', label='Kink of Value Function')
+    ax.axvline(x=closest_to_zero['R'], color='black', linestyle='--', label='Kink of Value Function')
 
     # Final plot formatting
-    plt.xlabel("Reference Point R")
-    plt.ylabel("Certainty Equivalent")
-    plt.title(f"CE Curves: Varying {param_name} from {param_start} to {param_end}")
-    plt.grid(True)
-    plt.ylim([-50, 50])
-    plt.tight_layout()
-    plt.legend()
+    ax.set_xlabel("Reference Point R")
+    ax.set_ylabel("Certainty Equivalent")
+    # plt.title(f"CE Curves: Varying {param_name} from {param_start} to {param_end}")
+    ax.grid(True)
+    ax.set_ylim([-50, 50])
+    fig.tight_layout()
+    ax.legend()
+    # Save before showing to avoid backends clearing the figure on show()
+    fig.savefig("range_simulation.pdf", format="pdf")
     plt.show()
 
 

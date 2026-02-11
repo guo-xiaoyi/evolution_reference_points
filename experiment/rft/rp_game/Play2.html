@@ -644,7 +644,7 @@
 
         <h1 class="university-title">Decision task</h1>
         <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
-        <p> Please now evaluate the remaining part of the random payoff tree (only the part shown in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p> Please now evaluate the remaining part of the random payoff tree (highlighted in red). Consider the following question: <strong>suppose you are facing a choice between the fixed payments shown on the left-hand side of the pop-out sidebar  and the random outcomes of the random payoff tree, which one would you choose?</strong> After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
         <p>If you want to re-read the instructions, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
 
 
@@ -742,7 +742,7 @@
       <div id="fine-choice-panel" class="fine-panel hidden">
         <h5>We would like to ask for more detail about your choice.</h5>
         <p id="fine-range-message">
-          Please inidcate your valuation of the same random payoff tree below.
+          Please indicate your valuation of the same random payoff tree below.
         </p>
         <div id="fine-choice-warning" class="text-danger" style="display:none;">
           Please select an option in the refinement list.
@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // period titles
 
-  const prettyTitle = i => (i === 0 ? '3 days ago' : i === 1 ? 'Current session (now)' : i === 2 ? 'In 3 days' : `In 6 days`);
+  const prettyTitle = i => (i === 0 ? '3 days ago [Session 1]' : i === 1 ? 'Today [Session 2]' : i === 2 ? 'In 3 days [Session 3]' : `In 6 days`);
 
   // ---- build normalized periods array (0..max sorted) ----
 
