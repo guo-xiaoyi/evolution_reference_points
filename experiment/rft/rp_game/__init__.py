@@ -25,6 +25,8 @@ from .helpers import (
     choice_field_names,
     choice_rows,
     clear_fine_cutoff,
+    continuation_time_left,
+    continuation_window_expired,
     compute_final_payoff,
     compute_realized_offset,
     compute_upcoming_payoff_range,
@@ -46,7 +48,6 @@ from .helpers import (
     parse_payoff_label,
     persist_payment_store,
     populate_fine_cutoff,
-    schedule_session_start,
     should_show_bridge,
     store_cutoff_choice,
     verify_turnstile_token,
@@ -166,6 +167,20 @@ class Player(BasePlayer):
     session2_start_readable = models.StringField(blank=True)
     session3_start = models.FloatField(blank=True)
     session3_start_readable = models.StringField(blank=True)
+
+
+CONTINUATION_MIN_SECONDS = 3
+
+
+def _continuation_time_left(player, prefix):
+    return continuation_time_left(player, prefix)
+
+
+def _continuation_has_time(player, prefix, min_seconds=CONTINUATION_MIN_SECONDS):
+    seconds_left = _continuation_time_left(player, prefix)
+    if seconds_left is None:
+        return True
+    return seconds_left > min_seconds
 
 
 # Dynamically add the multiple choice list fields (supports up to long list length)
@@ -338,12 +353,6 @@ class Play(Page):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
         store_cutoff_choice(player, choice_lottery)
         if player.round_number == Constants.initial_evaluation_rounds:
-            schedule_session_start(
-                player,
-                prefix='session2',
-                wait_seconds=259200, # 3 days
-                future_round=Constants.continuation_rounds[0],
-            )
             ensure_payment_lottery_selected(player)
 
 
@@ -417,6 +426,10 @@ class Failed(Page):
 
     @staticmethod
     def is_displayed(player: Player):
+        if player.round_number in Constants.continuation_rounds:
+            prefix = 'session2' if player.round_number == Constants.continuation_rounds[0] else 'session3'
+            if continuation_window_expired(player, prefix, min_seconds=CONTINUATION_MIN_SECONDS):
+                return True
         return player.failed_too_many_1 or player.failed_too_many_2 or player.failed_too_many_3
 
 class Draw(Page):
@@ -481,9 +494,15 @@ class RevisionBeforeDraw(Page):
         }
 
 class RevisionBeforeDraw1(RevisionBeforeDraw):
+    timer_text = 'Time left to complete this session:'
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return _continuation_time_left(player, 'session2')
+
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -496,9 +515,15 @@ class RevisionBeforeDraw1(RevisionBeforeDraw):
 
 
 class RevisionBeforeDraw2(RevisionBeforeDraw):
+    timer_text = 'Time left to complete this session:'
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return _continuation_time_left(player, 'session3')
+
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
     @staticmethod
     def vars_for_template(player):
@@ -509,7 +534,7 @@ class RevisionBeforeDraw2(RevisionBeforeDraw):
 class BridgeSession2(Page):
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, Constants.continuation_rounds[0], 'session2')
+        return should_show_bridge(player, Constants.initial_evaluation_rounds, 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -520,19 +545,35 @@ class BridgeSession3(Page):
 
     @staticmethod
     def is_displayed(player):
-        return should_show_bridge(player, Constants.continuation_rounds[1], 'session3')
+        return should_show_bridge(player, Constants.continuation_rounds[0], 'session3')
 
     @staticmethod
     def vars_for_template(player):
         return build_bridge_context(player, current_session=2, next_session=3, prefix='session3')
 
 
-class Play2(Page):
+class Session2TimedPage(Page):
+    timer_text = 'Time left to complete this session:'
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return _continuation_time_left(player, 'session2')
+
+
+class Session3TimedPage(Page):
+    timer_text = 'Time left to complete this session:'
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return _continuation_time_left(player, 'session3')
+
+
+class Play2(Session2TimedPage):
     form_model = 'player'
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
     @staticmethod
     def get_form_fields(player):
@@ -579,21 +620,14 @@ class Play2(Page):
         lottery = get_conditional_lottery(player, realized_up_to=1)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
-        if player.round_number == Constants.continuation_rounds[0]:
-            schedule_session_start(
-                player,
-                prefix='session3',
-                wait_seconds=259200,  # 3 days
-                future_round=Constants.continuation_rounds[1],
-            )
 
-class Play3(Page):
+class Play3(Session3TimedPage):
     form_model = 'player'
     template_name = 'rp_game/Play3.html'
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
     @staticmethod
     def get_form_fields(player):
@@ -655,12 +689,12 @@ class Play3(Page):
             player.participant.vars['session1_final_payoff'] = final_payoff
 
 
-class RevisionSession2(Page):
+class RevisionSession2(Session2TimedPage):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
     template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -685,12 +719,12 @@ class RevisionSession2(Page):
             'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
-class RevisionSession3(Page):
+class RevisionSession3(Session3TimedPage):
     # This page is only displayed in the continuation rounds to show the drawn lottery.
     template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
     @staticmethod
     def vars_for_template(player):
@@ -715,13 +749,13 @@ class RevisionSession3(Page):
             'evaluation_rounds': Constants.initial_evaluation_rounds,
         }
 
-class WheelSession2(Page):
+class WheelSession2(Session2TimedPage):
     """Fortune wheel to realize the first continuation outcome (for Session 2)."""
     template_name = 'rp_game/fortune_wheel.html'
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0] #Constants.initial_evaluation_rounds
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
     @staticmethod
     def vars_for_template(player):
@@ -737,13 +771,13 @@ class WheelSession2(Page):
         )
 
 
-class WheelSession3(Page):
+class WheelSession3(Session3TimedPage):
     """Fortune wheel to realize the second continuation outcome (for Session 3)."""
     template_name = 'rp_game/fortune_wheel.html'
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
     @staticmethod
     def vars_for_template(player):
@@ -760,25 +794,25 @@ class WheelSession3(Page):
 
 
 
-class Post(Page):
+class Post(Session3TimedPage):
     form_model = 'player'
     form_fields = ['quiz6', 'quiz7', 'quiz8']
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
-class Thankyou(Page):
+class Thankyou(Session3TimedPage):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
 
-class WelcomeSession2(Page):
+class WelcomeSession2(Session2TimedPage):
     form_model = 'player'
     form_fields = ['turnstile_token']
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
     @staticmethod
     def error_message(player, values):
@@ -787,12 +821,12 @@ class WelcomeSession2(Page):
         if not ok:
             return 'Please complete the verification to proceed.'
     
-class WelcomeSession3(Page):
+class WelcomeSession3(Session3TimedPage):
     form_model = 'player'
     form_fields = ['turnstile_token']
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
     @staticmethod
     def error_message(player, values):
         token = values.get('turnstile_token')
@@ -800,23 +834,23 @@ class WelcomeSession3(Page):
         if not ok:
             return 'Please complete the verification to proceed.'
 
-class Session2(Page):
+class Session2(Session2TimedPage):
     template_name = 'rp_game/session2.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
 
-class Session3(Page):
+class Session3(Session3TimedPage):
     template_name = 'rp_game/session2.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[1]
+        return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
-class RevisionSession1(Page):
+class RevisionSession1(Session2TimedPage):
     template_name = 'rp_game/Draw.html'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == Constants.continuation_rounds[0]
+        return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
     
     @staticmethod
     def vars_for_template(player):
@@ -856,14 +890,12 @@ page_sequence = [
     PracticePlay,
     Play,
     Draw,
-    BridgeSession2,
     WelcomeSession2,
     RevisionBeforeDraw1,
     WheelSession2,
     RevisionSession1,
     Session2,
     Play2,
-    BridgeSession3,
     WelcomeSession3,
     RevisionBeforeDraw2,
     WheelSession3,
@@ -872,6 +904,8 @@ page_sequence = [
     Play3,
     Post,
     Thankyou,
+    BridgeSession2,
+    BridgeSession3
 ]
 
 

@@ -16,6 +16,10 @@
   <link href="jumbotron.css" rel="stylesheet">
   
   <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
     .otree-body{
         
         max-width: 1280px;
@@ -133,9 +137,9 @@
             <h1 class="university-title">Time for a cup of coffee: This is the end of Session {{this_session}}.</h1>
             <p>Thank you very much for participating in this session.</p>
             {{ if next_session }}
-            <p>Please return for session {{ next_session }}{{ if wait_readable }} on {{ wait_readable }}{{ endif }} using the same link. We will send you reminders.</p>
+            <p>Session {{ next_session }} will begin {{ if wait_readable }} on {{ wait_readable }}{{ endif }} and will remain open for 24 hours. After this 24-hour period, it will no longer be possible to participate. Please write down the date and time of the next session!</p>
             {{ endif }}
-            <p>Please click the following button to finish your first session. You will be redirected to Prolific to record your participation. We cannot match you with your Prolific ID unless you click the button.</p>
+            <p>Please click the button below to finish your first session. You will be redirected to Prolific to record your participation. We cannot match you with your Prolific ID unless you click the button.</p>
             <a class="btn btn-primary btn-lg" href="https://app.prolific.com/submissions/complete?cc=CP80SZ7T" role="button">Finish Session {{this_session}}</a>
 
           </div>
@@ -150,7 +154,7 @@
     </div>
 
 
-
+    <!-- Bootstrap core CSS
   <div class="container">
     <br> <br> 
         <div class="row">
@@ -169,6 +173,7 @@
           </div>
         </div>
       </div>
+ -->
 
   </main>
 

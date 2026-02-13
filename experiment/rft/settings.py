@@ -45,7 +45,20 @@ OTREE_ADMIN_PASSWORD = 'unisg26'
 ROOMS = [
     dict(
         name='rp_game_room',
-        display_name='RP Game Room',
+        display_name='RP Game Room (for internal test)',
     ),
+    dict(
+        name='rpp01',
+        display_name='RP Game Room (for pilot session)',
+    ),
+    dict(
+        name='rpp02',
+        display_name='RP Game Room (for real experiment)',
+    ),
+    dict(
+        name='rpp03',
+        display_name='RP Game Room (for real experiment 2)',
+    ),
+
 ]
 

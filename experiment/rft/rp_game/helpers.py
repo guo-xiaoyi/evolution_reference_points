@@ -610,13 +610,21 @@ def should_show_bridge(player, expected_round, prefix):
         return False
     start_ts, _ = get_session_start_info(player, prefix)
     if start_ts is None:
-        return False
+        # First visit to the bridge page; allow it to render and schedule inside.
+        return True
     return time.time() < start_ts
 
 
-def build_bridge_context(player, current_session, next_session, prefix):
+def build_bridge_context(player, current_session, next_session, prefix, days_after=3, start_hour=6):
     """Prepare template data shared by both bridge pages."""
     start_ts, readable = get_session_start_info(player, prefix)
+    if start_ts is None:
+        target_dt = compute_bridge_start_datetime(days_after=days_after, hour=start_hour)
+        start_ts, readable = schedule_session_start(
+            player,
+            prefix=prefix,
+            start_dt=target_dt,
+        )
     return {
         'this_session': current_session,
         'next_session': next_session,
@@ -624,6 +632,22 @@ def build_bridge_context(player, current_session, next_session, prefix):
         'wait_readable': readable,
         'server_timestamp': time.time(),
     }
+
+
+def continuation_time_left(player, prefix, window_seconds=86400):
+    """Return seconds left in the continuation window (can be negative)."""
+    start_ts, _ = get_session_start_info(player, prefix)
+    if start_ts is None:
+        return None
+    return (start_ts + window_seconds) - time.time()
+
+
+def continuation_window_expired(player, prefix, window_seconds=86400, min_seconds=0):
+    """Return True if the continuation session window has expired."""
+    seconds_left = continuation_time_left(player, prefix, window_seconds=window_seconds)
+    if seconds_left is None:
+        return False
+    return seconds_left <= min_seconds
 
 
 def build_play_context(player, choice_lottery, display_lottery=None, base_offset=0):
@@ -778,6 +802,7 @@ def build_realized_display(store):
         summary.append(
             {
                 'period': period,
+                'session': period + 1,
                 'label': label,
                 'probability_text': probability_text,
             }
@@ -863,13 +888,13 @@ def store_cutoff_choice(player, lottery, base_offset=0):
 
 
 def format_session_date(dt):
-    """Return a locale-aware readable date without platform-specific strftime flags."""
+    """Return a locale-aware readable date/time without platform-specific strftime flags."""
     if not isinstance(dt, datetime):
         return None
-    return f"{dt.strftime('%A')}, {dt.day} {dt.strftime('%B')}"
+    return f"{dt.strftime('%A')}, {dt.day} {dt.strftime('%B')} at {dt.strftime('%H:%M')}"
 
 
-def schedule_session_start(player, prefix, wait_seconds, future_round):
+def schedule_session_start(player, prefix, wait_seconds=None, future_round=None, start_dt=None):
     """Store the scheduled start time for the next session and propagate it."""
     Constants = _constants()
     participant = player.participant
@@ -892,7 +917,12 @@ def schedule_session_start(player, prefix, wait_seconds, future_round):
                 setattr(future_player, f'{prefix}_start_readable', existing_readable)
         return existing_ts, existing_readable
 
-    t = datetime.now() + timedelta(seconds=wait_seconds)
+    if start_dt is None:
+        if wait_seconds is None:
+            raise ValueError('wait_seconds or start_dt is required to schedule a session start')
+        start_dt = datetime.now() + timedelta(seconds=wait_seconds)
+
+    t = start_dt
     start_ts = t.timestamp()
     readable = format_session_date(t)
     setattr(player, f'{prefix}_start', start_ts)
@@ -904,6 +934,13 @@ def schedule_session_start(player, prefix, wait_seconds, future_round):
         setattr(future_player, f'{prefix}_start', start_ts)
         setattr(future_player, f'{prefix}_start_readable', readable)
     return start_ts, readable
+
+
+def compute_bridge_start_datetime(days_after=3, hour=6, minute=0, base_dt=None):
+    """Return the scheduled bridge end datetime anchored to the provided base time."""
+    base_dt = base_dt or datetime.now()
+    target = base_dt + timedelta(days=days_after)
+    return target.replace(hour=hour, minute=minute, second=0, microsecond=0)
 
 
 def get_session_start_info(player, prefix):
