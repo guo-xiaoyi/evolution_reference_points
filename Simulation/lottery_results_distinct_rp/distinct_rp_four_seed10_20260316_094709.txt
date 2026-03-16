@@ -1,0 +1,182 @@
+================================================================================
+Discrete Lottery Optimizer (Distinct Reference Points) - Results Report
+================================================================================
+Generated on: 2026-03-16 09:47:09
+Mode: outcomes=4, stake=lo
+Constraint: EV≈0 + all sub-lottery reference points R must be pairwise distinct
+Distinct-RP threshold: 0.5
+Solutions found: 5
+Prospect theory parameters: alpha=0.88, lambda=2.25, gamma=0.61, r=0.98
+Search configuration:
+  - Lottery range: [-50, 50]
+  - Probability choices: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  - Violation threshold: 1.0
+  - Total evaluations: 26
+  - Numba acceleration: Enabled
+
+
+============================================================
+Solution 1
+============================================================
+Objective function value: 0.000142
+Timestamp: 2026-03-16 09:47:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-24, b12=-34
+  Stage 2: c21= 42, c22= 47
+  Stage 3: c31=  8, c32=-37, c33=-33, c34=-42
+  Probabilities: p1=0.500, p2=0.900, p3=0.900
+Final outcomes (nominal -> discounted):
+  z1_nom=   26 -> z1_disc=24.843 (prob=0.450)
+  z2_nom=  -19 -> z2_disc=-18.375 (prob=0.050)
+  z3_nom=  -20 -> z3_disc=-19.633 (prob=0.450)
+  z4_nom=  -29 -> z4_disc=-28.277 (prob=0.050)
+  Discounted expected value: 0.011920
+
+Reference point verification:
+  EV constraint: 0.011920 ≈ 0 ✓
+  R_full  = -9.9774
+  R_L1    = 9.5446
+  R_L2    = -22.6929
+  All reference points distinct (sep≥0.5): ✓
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 2
+============================================================
+Objective function value: 0.008847
+Timestamp: 2026-03-16 09:47:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=  4, b12=-48
+  Stage 2: c21= -4, c22= 49
+  Stage 3: c31= -3, c32= 20, c33= -8, c34=-33
+  Probabilities: p1=0.500, p2=0.100, p3=0.600
+Final outcomes (nominal -> discounted):
+  z1_nom=   -3 -> z1_disc=-2.801 (prob=0.050)
+  z2_nom=   20 -> z2_disc=19.288 (prob=0.450)
+  z3_nom=   -7 -> z3_disc=-7.663 (prob=0.300)
+  z4_nom=  -32 -> z4_disc=-31.673 (prob=0.200)
+  Discounted expected value: -0.094060
+
+Reference point verification:
+  EV constraint: -0.094060 ≈ 0 ✓
+  R_full  = -10.7093
+  R_L1    = 11.4687
+  R_L2    = -23.3863
+  All reference points distinct (sep≥0.5): ✓
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 3
+============================================================
+Objective function value: 0.052397
+Timestamp: 2026-03-16 09:47:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-15, b12= 45
+  Stage 2: c21= -9, c22= 37
+  Stage 3: c31= 41, c32=-26, c33=-32, c34= -6
+  Probabilities: p1=0.700, p2=0.400, p3=0.900
+Final outcomes (nominal -> discounted):
+  z1_nom=   17 -> z1_disc=15.556 (prob=0.280)
+  z2_nom=  -50 -> z2_disc=-48.790 (prob=0.420)
+  z3_nom=   50 -> z3_disc=50.527 (prob=0.270)
+  z4_nom=   76 -> z4_disc=75.498 (prob=0.030)
+  Discounted expected value: -0.228904
+
+Reference point verification:
+  EV constraint: -0.228904 ≈ 0 ✓
+  R_full  = -17.7716
+  R_L1    = -33.9251
+  R_L2    = 52.5207
+  All reference points distinct (sep≥0.5): ✓
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 4
+============================================================
+Objective function value: 0.089530
+Timestamp: 2026-03-16 09:47:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11=-32, b12=-19
+  Stage 2: c21= 29, c22= 19
+  Stage 3: c31= 26, c32=-45, c33=-41, c34= 12
+  Probabilities: p1=0.400, p2=0.900, p3=0.400
+Final outcomes (nominal -> discounted):
+  z1_nom=   23 -> z1_disc=21.390 (prob=0.360)
+  z2_nom=  -48 -> z2_disc=-46.798 (prob=0.040)
+  z3_nom=  -41 -> z3_disc=-39.756 (prob=0.240)
+  z4_nom=   12 -> z4_disc=11.145 (prob=0.360)
+  Discounted expected value: 0.299216
+
+Reference point verification:
+  EV constraint: 0.299216 ≈ 0 ✓
+  R_full  = -16.3664
+  R_L1    = -2.7473
+  R_L2    = -22.1881
+  All reference points distinct (sep≥0.5): ✓
+
+Alternate-parameter sanity checks:
+
+============================================================
+Solution 5
+============================================================
+Objective function value: 0.406952
+Timestamp: 2026-03-16 09:47:08
+
+Lottery structure (4 outcomes):
+  Stage 1: b11= 22, b12=-29
+  Stage 2: c21=-11, c22=  3
+  Stage 3: c31= 19, c32= 14, c33=-45, c34= 39
+  Probabilities: p1=0.600, p2=0.900, p3=0.700
+Final outcomes (nominal -> discounted):
+  z1_nom=   30 -> z1_disc=29.468 (prob=0.540)
+  z2_nom=   25 -> z2_disc=24.666 (prob=0.060)
+  z3_nom=  -71 -> z3_disc=-69.278 (prob=0.280)
+  z4_nom=   13 -> z4_disc=11.396 (prob=0.120)
+  Discounted expected value: -0.637928
+
+Reference point verification:
+  EV constraint: -0.637928 ≈ 0 ✓
+  R_full  = -27.6466
+  R_L1    = 27.7678
+  R_L2    = -54.6672
+  All reference points distinct (sep≥0.5): ✓
+
+Alternate-parameter sanity checks:
+
+================================================================================
+Solution Summary Table
+================================================================================
+ Sol  b11  b12  c21  c22  c31  c32  c33  c34    p1    p2    p3  z1  z2  z3  z4  z1_disc  z2_disc  z3_disc  z4_disc   E[Z]  Violation
+   1  -24  -34   42   47    8  -37  -33  -42 0.500 0.900 0.900  26 -19 -20 -29   24.843  -18.375  -19.633  -28.277  0.012      0.000
+   2    4  -48   -4   49   -3   20   -8  -33 0.500 0.100 0.600  -3  20  -7 -32   -2.801   19.288   -7.663  -31.673 -0.094      0.009
+   3  -15   45   -9   37   41  -26  -32   -6 0.700 0.400 0.900  17 -50  50  76   15.556  -48.790   50.527   75.498 -0.229      0.052
+   4  -32  -19   29   19   26  -45  -41   12 0.400 0.900 0.400  23 -48 -41  12   21.390  -46.798  -39.756   11.145  0.299      0.090
+   5   22  -29  -11    3   19   14  -45   39 0.600 0.900 0.700  30  25 -71  13   29.468   24.666  -69.278   11.396 -0.638      0.407
+
+================================================================================
+Solution Diversity Metrics
+================================================================================
+Total solutions: 5
+Unique lottery combinations: 5
+Unique probability combinations: 5
+Mean pairwise distance: 100.983
+Distance range: [67.899, 127.723]
+Distance standard deviation: 17.309
+
+================================================================================
+Performance Statistics
+================================================================================
+Total runtime: 16.45 seconds
+Total evaluations: 26
+Solutions found: 5
+Evaluation speed: 2 evals/s
+Best violation value: 0.000142
+Average violation value: 0.111574
+Worst violation value: 0.406952
