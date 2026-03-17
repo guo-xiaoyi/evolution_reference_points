@@ -187,6 +187,7 @@ class OptimizedConfig:
     lambda_: float = 2.25
     gamma: float = 0.61
     r: float = 0.98
+    delta: float = 0.7   # time-discount in PA/LE reference-point update (independent of r)
     seed: Optional[int] = None
 
     # Mode
@@ -208,7 +209,7 @@ class OptimizedConfig:
     progress_position: int = 0
 
     # Minimum separation required between any two reference points
-    distinct_threshold: float = 0.5
+    distinct_threshold: float = 10
 
     # Performance settings
     batch_size: int = 10000
@@ -225,7 +226,7 @@ class OptimizedConfig:
         if self.prob_choices is None:
             self.prob_choices = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         if self.num_cores is None:
-            self.num_cores = mp.cpu_count() or 1
+            self.num_cores = mp.cpu_count() - 5 or 1
         os.makedirs(self.output_dir, exist_ok=True)
         if self.alt_params is None and 'ALT_PARAMS' in globals():
             self.alt_params = ALT_PARAMS
@@ -294,6 +295,7 @@ class DistinctRPLotteryOptimizer:
         self.lambda_ = config.lambda_
         self.gamma = config.gamma
         self.r = config.r
+        self.delta = config.delta
         self.outcomes = config.outcomes
         self.stake = config.stake
         self.sign = config.sign
@@ -407,7 +409,7 @@ class DistinctRPLotteryOptimizer:
         self._worker_ps = live_workers
         mem_gb = total_rss / (1024 ** 3) if total_rss else 0.0
         cpu_pct = self._psutil_process.cpu_percent(None)
-        core_usage = (cpu_pct / 100.0) * (psutil.cpu_count() or 1)
+        core_usage = (cpu_pct / 100.0) * (psutil.cpu_count() - 5 or 1)
         status['CoreUse'] = f"{core_usage:.1f}"
         status['RAM'] = f"{mem_gb:.2f}GB"
         if self._worker_ps:
@@ -583,7 +585,75 @@ class DistinctRPLotteryOptimizer:
                     total += (threshold - sep)
         return total
 
-    # ---------- Sub-lottery R collection ----------
+    # ---------- Model reference points (SQA / PA / LE / FLE) ----------
+
+    def _compute_model_reference_points(self, Z, p, params) -> Dict[str, List[float]]:
+        """
+        For each sub-lottery node, compute the 4 model reference points:
+          R_SQA = 0                        (Status Quo Ante: anchored at Z_0=0)
+          R_PA  = cumulative payoff Z_t     (Partial Adaptation; alpha_1=1 at t=1,
+                                             alpha_2=1/(1+r) at t=2)
+          R_LE  = weighted avg of E[L_s]    (Lagged Expectations; beta_1=1 at t=1,
+                                             beta_2=1/(1+r) at t=2)
+          R_FLE = E[sub-lottery outcomes]   (Forward-Looking Expectations)
+
+        Returns dict mapping label -> [R_SQA, R_PA, R_LE, R_FLE].
+        """
+        E_Z = float(np.dot(Z, p))
+
+        if self.outcomes == 4:
+            b11, b12 = float(params[0]), float(params[1])
+            p2, p3 = float(params[9]), float(params[10])
+            z1, z2, z3, z4 = float(Z[0]), float(Z[1]), float(Z[2]), float(Z[3])
+
+            # t=1 sub-lotteries (alpha_1 = beta_1 = 1)
+            E_L1 = p2 * z1 + (1.0 - p2) * z2   # E[payoff | branch 1]
+            E_L2 = p3 * z3 + (1.0 - p3) * z4   # E[payoff | branch 2]
+
+            return {
+                'L1': [0.0, b11, E_Z, E_L1],
+                'L2': [0.0, b12, E_Z, E_L2],
+            }
+        else:  # 6-outcome
+            b11, b12 = float(params[0]), float(params[1])
+            c22, c23 = float(params[3]), float(params[4])
+            p2, p3, p4, p5 = (float(params[12]), float(params[13]),
+                               float(params[14]), float(params[15]))
+            z1, z2, z3, z4, z5, z6 = [float(Z[i]) for i in range(6)]
+
+            # t=1 sub-lotteries (alpha_1 = beta_1 = 1)
+            E_L1 = p2 * z1 + (1.0 - p2) * z2
+            E_L4 = (p3 * p4 * z3 + p3 * (1.0 - p4) * z4
+                    + (1.0 - p3) * p5 * z5 + (1.0 - p3) * (1.0 - p5) * z6)
+
+            # t=2 sub-lotteries within branch 2 (alpha_2 = beta_2 = 1/(1+delta))
+            a2 = 1.0 / (1.0 + self.delta)
+            R_LE_t2 = (1.0 - a2) * E_Z + a2 * E_L4   # same for L2 and L3
+
+            E_L2 = p4 * z3 + (1.0 - p4) * z4
+            E_L3 = p5 * z5 + (1.0 - p5) * z6
+
+            return {
+                'L1': [0.0, b11,              E_Z,     E_L1],
+                'L4': [0.0, b12,              E_Z,     E_L4],
+                'L2': [0.0, b12 + a2 * c22,  R_LE_t2, E_L2],
+                'L3': [0.0, b12 + a2 * c23,  R_LE_t2, E_L3],
+            }
+
+    def _model_rp_violation(self, model_rp: Dict[str, List[float]]) -> float:
+        """Penalise if the 4 model reference points within any sub-lottery are not pairwise distinct."""
+        threshold = self.config.distinct_threshold
+        total = 0.0
+        for rp_list in model_rp.values():
+            n = len(rp_list)
+            for i in range(n):
+                for j in range(i + 1, n):
+                    sep = abs(rp_list[i] - rp_list[j])
+                    if sep < threshold:
+                        total += (threshold - sep)
+        return total
+
+    # ---------- Sub-lottery R collection (kept for reporting) ----------
 
     def _collect_R_values(self, Z, p, params) -> List[Optional[float]]:
         R_full = self.find_R_where_Y_equals_zero(Z, p)
@@ -662,7 +732,7 @@ class DistinctRPLotteryOptimizer:
         """
         Full constraint check:
           1. Sign constraint (gain / loss / mixed)
-          2. All sub-lottery reference points pairwise distinct
+          2. Model reference points (SQA/PA/LE/FLE) pairwise distinct per sub-lottery
           3. Probability bounds soft penalty
         No EV = 0 constraint.
         """
@@ -688,11 +758,11 @@ class DistinctRPLotteryOptimizer:
             violations['sign'] = sign_viol
             total_violations += sign_viol
 
-            # 2. Distinct reference points
-            R_values = self._collect_R_values(Z, p, params)
-            distinct_viol = self._distinct_rp_violation(R_values)
-            violations['distinct_rp'] = distinct_viol
-            total_violations += distinct_viol
+            # 2. Model reference points pairwise distinct per sub-lottery
+            model_rp = self._compute_model_reference_points(Z, p, params)
+            model_rp_viol = self._model_rp_violation(model_rp)
+            violations['model_rp'] = model_rp_viol
+            total_violations += model_rp_viol
 
             # 3. Probability bounds soft penalty
             prob_viol = 0.0
@@ -723,8 +793,8 @@ class DistinctRPLotteryOptimizer:
                 Z, p, _ = self.create_lottery_structure(params, r_override)
 
             total_violations = self._sign_violation(Z)
-            R_values = self._collect_R_values_params(Z, p, params, alpha, lambda_, gamma)
-            total_violations += self._distinct_rp_violation(R_values)
+            model_rp = self._compute_model_reference_points(Z, p, params)
+            total_violations += self._model_rp_violation(model_rp)
 
             prob_viol = 0.0
             for prob in (params[8:] if self.outcomes == 4 else params[11:]):
@@ -1042,23 +1112,19 @@ class DistinctRPLotteryOptimizer:
                         f.write(f"  z{idx}: {int(z_nom):6d} -> {z_disc:8.3f}  (prob={prob:.3f})\n")
                     f.write(f"  E[Z] = {expected_value:.6f}\n")
 
-                    # Reference points
-                    f.write("\nReference points:\n")
-                    R_values = self._collect_R_values(Z, p, solution.params)
-                    labels = (["R_full", "R_L1", "R_L2"]
-                              if self.outcomes == 4
-                              else ["R_full", "R_L1", "R_L2", "R_L3", "R_L4"])
-                    for lbl, R in zip(labels, R_values):
-                        f.write(f"  {lbl:8s} = {R:.4f}\n" if R is not None
-                                else f"  {lbl:8s} = not found\n")
-                    valid_R = [v for v in R_values if v is not None]
-                    all_distinct = all(
-                        abs(valid_R[ii] - valid_R[jj]) >= self.config.distinct_threshold
-                        for ii in range(len(valid_R))
-                        for jj in range(ii + 1, len(valid_R))
-                    )
-                    f.write(f"  Pairwise distinct (≥{self.config.distinct_threshold}): "
-                            f"{'✓' if all_distinct else '✗'}\n")
+                    # Model reference points (SQA / PA / LE / FLE)
+                    f.write("\nModel reference points per sub-lottery "
+                            "[R_SQA, R_PA, R_LE, R_FLE]:\n")
+                    model_rp = self._compute_model_reference_points(Z, p, solution.params)
+                    thr = self.config.distinct_threshold
+                    for lbl, rp_list in model_rp.items():
+                        vals_str = ", ".join(f"{v:8.4f}" for v in rp_list)
+                        n = len(rp_list)
+                        ok = all(
+                            abs(rp_list[ii] - rp_list[jj]) >= thr
+                            for ii in range(n) for jj in range(ii + 1, n)
+                        )
+                        f.write(f"  {lbl:4s}: [{vals_str}]  {'✓' if ok else '✗'}\n")
 
                     # Sign check
                     sign_ok = self._sign_violation(Z) == 0.0
@@ -1318,6 +1384,8 @@ def main():
     parser.add_argument("--batch_size", type=int, default=None)
     parser.add_argument("--early", type=int, default=None,
                         help="Early termination: stop after this many solutions (default 5)")
+    parser.add_argument("--delta", type=float, default=None,
+                        help="Time-discount delta in PA/LE reference-point update (default 0.98)")
     parser.add_argument("--distinct_threshold", type=float, default=None,
                         help="Min separation between reference points (default 0.5)")
     parser.add_argument("--min", dest="lot_min", type=int, default=None)
@@ -1354,6 +1422,8 @@ def main():
         config.batch_size = args.batch_size
     if args.early is not None:
         config.early_termination_solutions = args.early
+    if args.delta is not None:
+        config.delta = args.delta
     if args.distinct_threshold is not None:
         config.distinct_threshold = args.distinct_threshold
     if args.lot_min is not None:
@@ -1376,10 +1446,10 @@ def main():
     seed_values = args.seed if args.seed else [None]
 
     if len(seed_values) > 1:
-        seed_workers = args.seed_workers or min(len(seed_values), mp.cpu_count() or len(seed_values))
+        seed_workers = args.seed_workers or min(len(seed_values), mp.cpu_count() - 5 or len(seed_values))
         base_state = asdict(config)
         if args.cores is None:
-            total_cpus = mp.cpu_count() or 1
+            total_cpus = mp.cpu_count() - 5 or 1
             base_state['num_cores'] = max(1, total_cpus // seed_workers)
         print(f"Running {len(seed_values)} seeds with {seed_workers} parallel processes "
               f"(cores per run: {base_state.get('num_cores')})")
@@ -1415,13 +1485,15 @@ def main():
         print(f"\nTop {top_k} solutions:")
         for i, sol in enumerate(solutions[:top_k]):
             Z, p, Z_base = optimizer.create_lottery_structure(sol.params)
-            R_vals = optimizer._collect_R_values(Z, p, sol.params)
+            model_rp = optimizer._compute_model_reference_points(Z, p, sol.params)
             print(f"  {i+1}. violation={sol.violation:.6f}")
             print(f"     nominal outcomes : {Z_base.astype(int).tolist()}")
             print(f"     discounted       : {[round(float(z), 3) for z in Z]}")
             print(f"     probs            : {[round(float(q), 3) for q in p]}")
             print(f"     E[Z]             : {float(np.sum(Z * p)):.4f}")
-            print(f"     reference points : {[round(r, 3) if r is not None else None for r in R_vals]}")
+            print(f"     model RPs [SQA, PA, LE, FLE] per sub-lottery:")
+            for lbl, rp_list in model_rp.items():
+                print(f"       {lbl}: {[round(v, 3) for v in rp_list]}")
     else:
         print("No solutions found. Try increasing --attempts or relaxing "
               "--violation_threshold / --distinct_threshold.")
