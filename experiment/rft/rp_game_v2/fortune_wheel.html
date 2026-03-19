@@ -1,0 +1,953 @@
+{{ block content }}
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Random payoff tree Valuation Tasks - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Uni St.Gallen - Fortune Wheel</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="jumbotron.css" rel="stylesheet">
+
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+    .otree-body {
+      
+      max-width: 1280px;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .main-container {
+      background-color: #ffffff;
+      padding: 2rem 0 3rem;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .wheel-section {
+      margin-top: 1.5rem;
+    }
+    .wheel-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+    }
+    .wheel-column {
+      flex: 1 1 360px;
+      max-width: 420px;
+    }
+    .wheel-context {
+      flex: 1 1 360px;
+      min-width: 320px;
+    }
+    .wheel-frame {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 28px solid #d1495b;
+      z-index: 3;
+    }
+    .wheel-pointer::after {
+      content: "";
+      position: absolute;
+      top: 26px;
+      left: -6px;
+      width: 12px;
+      height: 36px;
+      background: linear-gradient(180deg, #d1495b, #a13040);
+      border-radius: 6px;
+    }
+    .wheel-rotator {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+      background: #fff;
+      transform: rotate(0deg);
+      transition: transform 5.4s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .wheel-rotator svg {
+      width: 92%;
+      height: 92%;
+    }
+    .wheel-centre {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 38%;
+      height: 38%;
+      background: radial-gradient(circle at 30% 30%, #71bcd6, #205b6f);
+      border-radius: 50%;
+      box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+    .wheel-centre::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.38);
+    }
+    .wheel-actions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .wheel-actions button {
+      background-color: #e76e4f;
+      border: none;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.9rem 2.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+    .wheel-actions button:hover:not([disabled]) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 112, 149, 0.25);
+      background-color: #005a79;
+    }
+    .wheel-actions button[disabled] {
+      background-color: #9cbac5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+    .wheel-status {
+      margin-top: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #007095;
+    }
+    .wheel-summary,
+    .wheel-outcomes,
+    .spin-summary {
+      background: rgba(245, 248, 250, 0.9);
+      border: 1px solid #d6e0e7;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 12px 28px rgba(14, 30, 37, 0.06);
+    }
+    .wheel-summary h3,
+    .wheel-outcomes h3,
+    .spin-summary h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #0f3c56;
+    }
+    .wheel-summary dl {
+      margin: 0;
+    }
+    .wheel-summary dt {
+      font-weight: 600;
+      color: #0f3c56;
+    }
+    .wheel-summary dd {
+      margin: 0 0 0.75rem;
+      color: #37474f;
+    }
+    .wheel-realized-list {
+      margin: 0.2rem 0 0 1.1rem;
+      color: #37474f;
+    }
+    .wheel-realized-list li {
+      margin-bottom: 0.35rem;
+    }
+    .wheel-outcomes-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .wheel-outcomes-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #dbe5eb;
+      font-size: 0.98rem;
+      color: #37474f;
+    }
+    .wheel-outcomes-list li:last-child {
+      border-bottom: none;
+    }
+    .wheel-outcomes-list .outcome-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .wheel-outcomes-list .outcome-label {
+      flex: 1;
+      font-weight: 500;
+    }
+    .wheel-outcomes-list .outcome-prob {
+      font-variant-numeric: tabular-nums;
+      color: #0f3c56;
+      font-weight: 600;
+    }
+    .spin-summary {
+      display: none;
+    }
+    .spin-summary.visible {
+      display: block;
+    }
+    .spin-summary .result-line {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #0c5c3c;
+    }
+    .spin-summary .next-step {
+      margin-top: 0.5rem;
+      color: #37474f;
+    }
+    .segment-slice {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .segment-winning {
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 6px rgba(11, 132, 87, 0.65));
+    }
+    @media (max-width: 960px) {
+      .wheel-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .wheel-column,
+      .wheel-context {
+        width: 100%;
+        max-width: 540px;
+      }
+      .wheel-frame {
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 576px) {
+      .wheel-summary,
+      .wheel-outcomes,
+      .spin-summary {
+        padding: 1rem 1.2rem;
+      }
+      .wheel-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-7">
+            <h1 class="university-title">
+              {{ if wheel_title }}
+              {{ wheel_title }}
+              {{ else }}
+              Spin the wheel for this session
+              {{ endif }}
+            </h1>
+            <p>
+              {{ if wheel_description }}
+              {{ wheel_description }}
+              {{ else }}
+              We now realize the next stage of your Random payoff tree. The result of this wheel will determine the branch you face in the following task.
+              {{ endif }}
+            </p>
+          </div>
+          <div class="col-lg-5">
+            <div class="content-image">
+              <img src="https://unsplash.com/photos/hscnBlx_DRE/download?force=true" alt="Fortune wheel illustration" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="container wheel-section">
+        <div class="wheel-layout">
+          <div class="wheel-column">
+            <div class="wheel-frame" aria-live="polite">
+              <div class="wheel-pointer" id="wheel-pointer" aria-hidden="true"></div>
+              <div class="wheel-rotator" id="wheel-rotator">
+                <svg id="wheel-svg" viewBox="-250 -250 500 500" aria-hidden="true"></svg>
+              </div>
+              <div class="wheel-centre"></div>
+            </div>
+            <div class="wheel-actions">
+              <button type="button" id="spin-button" {{ if wheel_spin_disabled }}disabled{{ endif }}>
+                {{ if wheel_spin_button }}
+                {{ wheel_spin_button }}
+                {{ else }}
+                Spin the wheel
+                {{ endif }}
+              </button>
+              <p class="wheel-status" id="wheel-status">
+                {{ if wheel_status_text }}
+                {{ wheel_status_text }}
+                {{ else }}
+                Click the button to reveal the outcome for this session.
+                {{ endif }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wheel-context">
+            <div class="wheel-summary">
+              <h3>Session context</h3>
+              <dl>
+
+                {{ if wheel_stage_label }}
+                <dt>Current stage</dt>
+                <dd>{{ wheel_stage_label }}</dd>
+                {{ endif }}
+
+              </dl>
+
+              <div id="realized-summary" hidden>
+                <h4 style="font-size:1.05rem; font-weight:600; color:#0f3c56; margin-top:1rem;">Realized so far</h4>
+                <ul class="wheel-realized-list" id="realized-list"></ul>
+              </div>
+            </div>
+
+            <div class="wheel-outcomes">
+              <h3>Possible outcomes</h3>
+              <ul class="wheel-outcomes-list" id="wheel-outcomes-list">
+                <li>No Random payoff tree data provided.</li>
+              </ul>
+            </div>
+
+            <div class="spin-summary" id="spin-summary">
+              <h3>Result</h3>
+              <p class="result-line">
+                Outcome: <strong id="spin-result">Pending spin</strong>
+                {{next_button}}
+              </p>
+              {{ if wheel_next_step }}
+              <p class="next-step" id="next-step">{{ wheel_next_step }}</p>
+              {{ else }}
+              <p class="next-step" id="next-step" hidden></p>
+              {{ endif }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div style="display:none;">
+    {{ formfields }}
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src=\"../../assets/js/vendor/jquery-slim.min.js\"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+
+  <script>
+    (function () {
+      var svgNS = 'http://www.w3.org/2000/svg';
+      var segments = {{ if wheel_segments }}{{ wheel_segments|json }}{{ else }}[]{{ endif }};
+      var realizedPeriod1 = {{ if realized_period1 }}{{ realized_period1|json }}{{ else }}null{{ endif }};
+      var realizedPeriod2 = {{ if realized_period2 }}{{ realized_period2|json }}{{ else }}null{{ endif }};
+      var realizedPeriod3 = {{ if realized_period3 }}{{ realized_period3|json }}{{ else }}null{{ endif }};
+      var predeterminedLabel = {{ if wheel_result_label }}{{ wheel_result_label|json }}{{ else }}null{{ endif }};
+      var predeterminedId = {{ if wheel_result_id }}{{ wheel_result_id|json }}{{ else }}null{{ endif }};
+      var predeterminedValue = {{ if wheel_result_value }}{{ wheel_result_value|json }}{{ else }}null{{ endif }};
+      var autoSpin = {{ if auto_spin }}{{ auto_spin|json }}{{ else }}false{{ endif }};
+      var autoSubmit = {{ if auto_submit }}{{ auto_submit|json }}{{ else }}false{{ endif }};
+      var autoSubmitDelay = {{ if auto_submit_delay }}{{ auto_submit_delay }}{{ else }}0{{ endif }};
+      var resultFieldName = {{ if wheel_result_field }}{{ wheel_result_field|json }}{{ else }}null{{ endif }};
+      var resultJsonFieldName = {{ if wheel_result_json_field }}{{ wheel_result_json_field|json }}{{ else }}null{{ endif }};
+      var allowRespin = {{ if allow_respin }}{{ allow_respin|json }}{{ else }}false{{ endif }};
+      var wheelPeriod = {{ if wheel_period }}{{ wheel_period|json }}{{ else }}null{{ endif }};
+      var wheelRotator = document.getElementById('wheel-rotator');
+      var wheelSvg = document.getElementById('wheel-svg');
+      var spinButton = document.getElementById('spin-button');
+      var statusEl = document.getElementById('wheel-status');
+      var outcomesListEl = document.getElementById('wheel-outcomes-list');
+      var summaryPanel = document.getElementById('spin-summary');
+      var summaryResultEl = document.getElementById('spin-result');
+      var nextStepEl = document.getElementById('next-step');
+      var realizedSummaryBox = document.getElementById('realized-summary');
+      var realizedList = document.getElementById('realized-list');
+      var formEl = document.querySelector('form');
+      var hasSpun = false;
+      var latestOutcome = null;
+      var palette = ['#205b6f', '#71bcd6', '#2e829e', '#90cbdf', '#276f86', '#59b1cf', '#3596b6', '#81c4da', '#226277', '#69b9d3', '#3089a6', '#88c8dd'];
+      var colorParser = null;
+      var realizedEntries = [];
+      var realizedMap = new Map();
+      if (realizedPeriod1) realizedMap.set(1, realizedPeriod1);
+      if (realizedPeriod2) realizedMap.set(2, realizedPeriod2);
+      if (realizedPeriod3) realizedMap.set(3, realizedPeriod3);
+
+      function formatProb(value) {
+        var n = Number(value);
+        if (!Number.isFinite(n)) {
+          return '';
+        }
+        var pct = n * 100;
+        if (!Number.isFinite(pct)) {
+          return '';
+        }
+        var decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
+        return pct.toFixed(decimals) + '%';
+      }
+
+      function getColorParser() {
+        if (colorParser) {
+          return colorParser;
+        }
+        var canvas = document.createElement('canvas');
+        colorParser = canvas.getContext('2d');
+        return colorParser;
+      }
+
+      function hexToRgb(hex) {
+        if (!hex) {
+          return null;
+        }
+        var trimmed = hex.replace('#', '');
+        if (trimmed.length === 3) {
+          trimmed = trimmed.split('').map(function (ch) { return ch + ch; }).join('');
+        }
+        if (trimmed.length !== 6) {
+          return null;
+        }
+        var num = parseInt(trimmed, 16);
+        if (!Number.isFinite(num)) {
+          return null;
+        }
+        return {
+          r: (num >> 16) & 255,
+          g: (num >> 8) & 255,
+          b: num & 255
+        };
+      }
+
+      function rgbStringToRgb(value) {
+        if (!value) {
+          return null;
+        }
+        var matches = value.match(/rgba?\(([^)]+)\)/i);
+        if (!matches || !matches[1]) {
+          return null;
+        }
+        var parts = matches[1].split(',').map(function (item) { return item.trim(); });
+        if (parts.length < 3) {
+          return null;
+        }
+        var r = Number(parts[0]);
+        var g = Number(parts[1]);
+        var b = Number(parts[2]);
+        if (![r, g, b].every(function (n) { return Number.isFinite(n); })) {
+          return null;
+        }
+        return { r: r, g: g, b: b };
+      }
+
+      function colorToRgb(color) {
+        if (!color) {
+          return null;
+        }
+        var ctx = getColorParser();
+        if (!ctx) {
+          return null;
+        }
+        ctx.fillStyle = '#000';
+        ctx.fillStyle = color;
+        var computed = ctx.fillStyle;
+        if (computed.startsWith('#')) {
+          return hexToRgb(computed);
+        }
+        if (computed.startsWith('rgb')) {
+          return rgbStringToRgb(computed);
+        }
+        return null;
+      }
+
+      function relativeLuminance(rgb) {
+        if (!rgb) {
+          return 0;
+        }
+        function channel(value) {
+          var v = value / 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        }
+        return 0.2126 * channel(rgb.r) + 0.7152 * channel(rgb.g) + 0.0722 * channel(rgb.b);
+      }
+
+      function isColorTooLight(color) {
+        var rgb = colorToRgb(color);
+        if (!rgb) {
+          return false;
+        }
+        return relativeLuminance(rgb) > 0.82;
+      }
+
+      function pickTextColors(bgColor) {
+        var fallback = {
+          label: '#0f3c56',
+          prob: '#325b6b',
+          stroke: 'rgba(255,255,255,0.45)',
+          strokeWidth: 1.6,
+          probStrokeWidth: 1.2
+        };
+        var rgb = colorToRgb(bgColor);
+        if (!rgb) {
+          return fallback;
+        }
+        var lum = relativeLuminance(rgb);
+        var isDark = lum < 0.5;
+        return {
+          label: isDark ? '#f7fbff' : '#0f3c56',
+          prob: isDark ? 'rgba(247,251,255,0.88)' : '#325b6b',
+          stroke: isDark ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.55)',
+          strokeWidth: isDark ? 2.2 : 1.6,
+          probStrokeWidth: isDark ? 1.6 : 1.2
+        };
+      }
+
+      function ensureSegments(data) {
+        if (!Array.isArray(data)) {
+          return [];
+        }
+        var anyProb = data.some(function (seg) {
+          return Number.isFinite(Number(seg && seg.probability));
+        });
+        var totalProb = 0;
+        var sanitized = data.map(function (seg, idx) {
+          var probability = Number(seg && seg.probability);
+          if (!Number.isFinite(probability) || probability <= 0) {
+            probability = anyProb ? 0 : 1;
+          }
+          totalProb += probability;
+          return {
+            id: seg && seg.id != null ? seg.id : null,
+            label: seg && seg.label ? String(seg.label) : 'Outcome ' + (idx + 1),
+            probability: probability,
+            color: seg && seg.color ? String(seg.color) : palette[idx % palette.length],
+            value: seg && seg.value != null ? seg.value : (seg && seg.id != null ? seg.id : (seg && seg.label ? seg.label : idx)),
+            raw: seg || {}
+          };
+        });
+        if (totalProb <= 0) {
+          totalProb = sanitized.length;
+          sanitized.forEach(function (seg) {
+            seg.probability = 1;
+          });
+        }
+        sanitized.forEach(function (seg) {
+          seg.normalized = seg.probability / totalProb;
+        });
+        if (sanitized.length === 1) {
+          var solo = sanitized[0];
+          if (isColorTooLight(solo.color)) {
+            solo.color = '#2e829e';
+          }
+        }
+        return sanitized;
+      }
+
+      function buildRealizedEntries(includeCurrentPeriod) {
+        var showAll = wheelPeriod == null;
+        var entries = [];
+        realizedMap.forEach(function (node, period) {
+          if (!node) return;
+          if (!showAll) {
+            if (period > wheelPeriod) {
+              return;
+            }
+            if (period === wheelPeriod && !includeCurrentPeriod) {
+              return;
+            }
+          }
+          var label = node.label || ('Outcome ' + period);
+          var probText = '';
+          var prob = Number(node.probability);
+          if (Number.isFinite(prob)) {
+            var formatted = formatProb(prob);
+            if (formatted) {
+              probText = formatted;
+            }
+          }
+          entries.push({
+            period: period,
+            label: label,
+            probabilityText: probText
+          });
+        });
+        entries.sort(function (a, b) { return a.period - b.period; });
+        return entries;
+      }
+
+      function renderRealizedSummary(includeCurrentPeriod) {
+        if (!realizedSummaryBox || !realizedList) {
+          return;
+        }
+        var entries = buildRealizedEntries(includeCurrentPeriod);
+        realizedList.innerHTML = '';
+        if (!entries.length) {
+          realizedSummaryBox.hidden = true;
+          return;
+        }
+        entries.forEach(function (entry) {
+          var li = document.createElement('li');
+          var session_entry = entry.period + 1;
+          var text = 'Session ' + session_entry + ': ' + entry.label;
+          if (entry.probabilityText) {
+            text += ' (' + entry.probabilityText + ')';
+          }
+          li.textContent = text;
+          realizedList.appendChild(li);
+        });
+        realizedSummaryBox.hidden = false;
+      }
+
+      function describeSlice(radius, startDeg, endDeg) {
+        var start = (startDeg + 360) % 360;
+        var end = (endDeg + 360) % 360;
+        var sweep = endDeg - startDeg;
+        if (sweep <= 0) {
+          sweep += 360;
+        }
+        var largeArcFlag = sweep > 180 ? 1 : 0;
+        var startRad = startDeg * Math.PI / 180;
+        var endRad = (startDeg + sweep) * Math.PI / 180;
+        var x1 = radius * Math.cos(startRad);
+        var y1 = radius * Math.sin(startRad);
+        var x2 = radius * Math.cos(endRad);
+        var y2 = radius * Math.sin(endRad);
+        var path = [
+          'M 0 0',
+          'L ' + x1.toFixed(4) + ' ' + y1.toFixed(4),
+          'A ' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' 1 ' + x2.toFixed(4) + ' ' + y2.toFixed(4),
+          'Z'
+        ];
+        return path.join(' ');
+      }
+
+      function renderWheel(slices) {
+        if (!wheelSvg) return;
+        wheelSvg.innerHTML = '';
+        var radius = 240;
+        var labelRadius = radius * 0.62;
+        var probRadius = radius * 0.8;
+        slices.forEach(function (seg, idx) {
+          var sweep = seg.endDeg - seg.startDeg;
+          if (sweep < 0) {
+            sweep += 360;
+          }
+          var isFullCircle = sweep >= 359.5;
+          var sliceEl;
+          if (isFullCircle) {
+            sliceEl = document.createElementNS(svgNS, 'circle');
+            sliceEl.setAttribute('cx', '0');
+            sliceEl.setAttribute('cy', '0');
+            sliceEl.setAttribute('r', radius);
+          } else {
+            sliceEl = document.createElementNS(svgNS, 'path');
+            sliceEl.setAttribute('d', describeSlice(radius, seg.startDeg, seg.endDeg));
+          }
+          sliceEl.setAttribute('fill', seg.color);
+          sliceEl.setAttribute('class', 'segment-slice');
+          sliceEl.dataset.index = idx;
+          wheelSvg.appendChild(sliceEl);
+
+          var midRad = (seg.midDeg) * Math.PI / 180;
+          var labelX = (labelRadius * Math.cos(midRad)).toFixed(2);
+          var labelY = (labelRadius * Math.sin(midRad)).toFixed(2);
+          var probX = (probRadius * Math.cos(midRad)).toFixed(2);
+          var probY = (probRadius * Math.sin(midRad)).toFixed(2);
+          var textColors = pickTextColors(seg.color);
+          var text = document.createElementNS(svgNS, 'text');
+          text.setAttribute('x', labelX);
+          text.setAttribute('y', labelY);
+          text.setAttribute('fill', textColors.label);
+          text.setAttribute('font-size', '30');
+          text.setAttribute('font-weight', '600');
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('alignment-baseline', 'middle');
+          text.style.paintOrder = 'stroke';
+          text.style.stroke = textColors.stroke;
+          text.style.strokeWidth = textColors.strokeWidth + 'px';
+          text.style.strokeLinejoin = 'round';
+          text.textContent = seg.label;
+          wheelSvg.appendChild(text);
+
+          var probText = document.createElementNS(svgNS, 'text');
+          probText.setAttribute('x', probX);
+          probText.setAttribute('y', probY);
+          probText.setAttribute('fill', textColors.prob);
+          probText.setAttribute('font-size', '22');
+          probText.setAttribute('text-anchor', 'middle');
+          probText.setAttribute('alignment-baseline', 'middle');
+          probText.style.paintOrder = 'stroke';
+          probText.style.stroke = textColors.stroke;
+          probText.style.strokeWidth = textColors.probStrokeWidth + 'px';
+          probText.style.strokeLinejoin = 'round';
+          var probLabel = formatProb(seg.normalized);
+          probText.textContent = probLabel || '';
+          wheelSvg.appendChild(probText);
+
+          seg.pathEl = sliceEl;
+        });
+      }
+
+      function renderOutcomesList(slices) {
+        if (!outcomesListEl) return;
+        outcomesListEl.innerHTML = '';
+        if (!slices.length) {
+          var fallback = document.createElement('li');
+          fallback.textContent = 'No Random payoff tree data provided.';
+          outcomesListEl.appendChild(fallback);
+          return;
+        }
+        slices.forEach(function (seg) {
+          var li = document.createElement('li');
+          var color = document.createElement('span');
+          color.className = 'outcome-color';
+          color.style.backgroundColor = seg.color;
+          var label = document.createElement('span');
+          label.className = 'outcome-label';
+          label.textContent = seg.label;
+          var prob = document.createElement('span');
+          prob.className = 'outcome-prob';
+          prob.textContent = formatProb(seg.normalized);
+          li.appendChild(color);
+          li.appendChild(label);
+          li.appendChild(prob);
+          outcomesListEl.appendChild(li);
+        });
+      }
+
+      function prepareSlices(data) {
+        var sanitized = ensureSegments(data);
+        if (!sanitized.length) {
+          return [];
+        }
+        var startDeg = -90;
+        sanitized.forEach(function (seg) {
+          var sweep = seg.normalized * 360;
+          seg.startDeg = startDeg;
+          seg.endDeg = startDeg + sweep;
+          seg.midDeg = seg.startDeg + sweep / 2;
+          startDeg = seg.endDeg;
+        });
+        // ensure last segment ends exactly at 270 to avoid precision issues
+        sanitized[sanitized.length - 1].endDeg = sanitized[sanitized.length - 1].midDeg * 2 - sanitized[sanitized.length - 1].startDeg;
+        return sanitized;
+      }
+
+      function findSegmentForOutcome(slices) {
+        if (!slices.length) {
+          return null;
+        }
+        var match = null;
+        if (predeterminedId != null) {
+          match = slices.find(function (seg) {
+            return seg.id === predeterminedId;
+          });
+        }
+        if (!match && predeterminedLabel != null) {
+          match = slices.find(function (seg) {
+            return seg.label === predeterminedLabel;
+          });
+        }
+        return match || null;
+      }
+
+      function setStatus(message) {
+        if (statusEl) {
+          statusEl.textContent = message;
+        }
+      }
+
+      function highlightSegment(seg) {
+        if (!seg) return;
+        wheelSvg.querySelectorAll('.segment-slice').forEach(function (slice) {
+          slice.classList.remove('segment-winning');
+        });
+        if (seg.pathEl) {
+          seg.pathEl.classList.add('segment-winning');
+        }
+      }
+
+      function updateHiddenFields(outcome) {
+        if (!outcome) return;
+        var value = predeterminedValue != null ? predeterminedValue : (outcome.value != null ? outcome.value : outcome.label);
+        if (resultFieldName) {
+          var field = document.querySelector('[name=\"' + resultFieldName + '\"]');
+          if (field) {
+            field.value = value;
+          }
+        }
+        if (resultJsonFieldName) {
+          var jsonField = document.querySelector('[name=\"' + resultJsonFieldName + '\"]');
+          if (jsonField) {
+            jsonField.value = JSON.stringify({
+              id: outcome.id,
+              label: outcome.label,
+              value: value,
+              probability: outcome.normalized
+            });
+          }
+        }
+        var dataField = document.querySelector('[data-wheel-result]');
+        if (dataField) {
+          dataField.value = value;
+        }
+      }
+
+      function completeSpin(outcome, finalRotation) {
+        latestOutcome = outcome;
+        highlightSegment(outcome);
+        var displayLabel = outcome ? outcome.label : 'Outcome';
+        if (summaryResultEl) {
+          summaryResultEl.textContent = displayLabel;
+        }
+        if (summaryPanel) {
+          summaryPanel.classList.add('visible');
+        }
+        setStatus('Outcome locked in. You may continue.');
+        updateHiddenFields(outcome);
+        renderRealizedSummary(true);
+        if (!allowRespin && spinButton) {
+          spinButton.disabled = true;
+        }
+        if (autoSubmit && formEl) {
+          var delay = Number(autoSubmitDelay);
+          if (!Number.isFinite(delay) || delay < 0) {
+            delay = 800;
+          }
+          window.setTimeout(function () {
+            if (formEl && typeof formEl.submit === 'function') {
+              formEl.submit();
+            }
+          }, delay);
+        }
+      }
+
+      function spinWheel() {
+        if (hasSpun && !allowRespin) {
+          return;
+        }
+        if (!segmentsPrepared.length) {
+          setStatus('No Random payoff tree data available for spinning.');
+          return;
+        }
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+        hasSpun = true;
+        wheelRotator.style.transition = 'none';
+        wheelRotator.style.transform = 'rotate(0deg)';
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            var outcome = findSegmentForOutcome(segmentsPrepared);
+            if (!outcome) {
+              setStatus('Outcome data missing. Please contact the admin.');
+              if (spinButton) {
+                spinButton.disabled = true;
+              }
+              return;
+            }
+            var turns = 4 + Math.floor(Math.random() * 2); // 4 or 5 full spins
+            var finalRotation = (turns * 360) + (-90 - outcome.midDeg);
+            wheelRotator.style.transition = 'transform 5.4s cubic-bezier(0.22, 1, 0.36, 1)';
+            wheelRotator.style.transform = 'rotate(' + finalRotation + 'deg)';
+            setStatus('Spinning...');
+            var onEnd = function () {
+              wheelRotator.removeEventListener('transitionend', onEnd);
+              completeSpin(outcome, finalRotation);
+            };
+            wheelRotator.addEventListener('transitionend', onEnd);
+          });
+        });
+      }
+
+      renderRealizedSummary(wheelPeriod == null ? true : false);
+
+      var segmentsPrepared = prepareSlices(segments);
+      renderWheel(segmentsPrepared);
+      if (predeterminedId == null && predeterminedLabel == null) {
+        setStatus('Outcome data missing. Please contact the admin.');
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+      }
+      renderOutcomesList(segmentsPrepared);
+
+      if (!segmentsPrepared.length) {
+        setStatus('Random payoff tree data missing. Please inform the admin.');
+        if (spinButton) {
+          spinButton.disabled = true;
+        }
+        return;
+      }
+
+      if (spinButton) {
+        spinButton.addEventListener('click', spinWheel);
+      }
+
+      if (autoSpin) {
+        window.setTimeout(spinWheel, 600);
+      }
+    })();
+  </script>
+</body>
+</html>
+{{ endblock }}

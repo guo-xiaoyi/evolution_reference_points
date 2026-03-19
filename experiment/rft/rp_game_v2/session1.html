@@ -1,0 +1,413 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Instruction - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>University of St.Gallen (HSG)</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+  <style>
+
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+        .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #efefef;
+      z-index: 1000;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #007095;
+      transition: width 0.2s ease;
+    }
+      .otree-body{
+        
+        max-width: 1280px;
+    }
+    /* CSS for the framework */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+      margin-top: 2rem;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+    <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress-bar" id="readingProgress"></div>
+  </div>
+  <main role="main">
+    <!-- Main jumbotron for primary marketing message -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h1 class="university-title">Sessions</h1>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="content-wrapper">
+        <p>There are three sessions for the study. Each time, you will return via Prolific and open the study link to make decisions. You are currently in Session 1. The first session is long (about 30-45 min), the other two sessions are much shorter (about 7-15 min each). Please make sure that you attend all three sessions (only in that case will you receive the full compensation for the three sessions and the extra payment of £5).</p>
+        <div class="feature-box text-center mb-4"></div>
+          <h2>Session Progress</h2>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+            <div>
+              <span style="font-size: 2.5rem; color: #007095; font-weight: bold;">1</span>
+                <div><strong>Current Session</strong></div>
+              <div>about 30-45 minutes</div>
+            </div>
+            <div>
+              <span style="font-size: 2.5rem; color: #ccc; font-weight: bold;">2</span>
+              <div><strong>In 3 Days</strong></div>
+              <div>about 7-15 minutes</div>
+            </div>
+            <div>
+              <span style="font-size: 2.5rem; color: #ccc; font-weight: bold;">3</span>
+              <div><strong>In 6 Days</strong></div>
+              <div>about 7-15 minutes</div>
+            </div>
+          </div>
+          <p class="mt-3">You are currently in <strong>Session 1</strong> of 3.</p>
+
+
+        <h2>AI policy and authenticity check</h2>
+        <p>The goal of this study is to understand your preferences regarding the shown payoff scenarios. Therefore, it is important for us that you do not use AI tools to assist you in the decision making. We are interested in your preferences, thus <strong>there are no right or wrong answers</strong>. We may use automated checks for non-genuine responses (including AI assistance). If these checks indicate non-genuine responses, payment may be withheld. </p>
+        <h2>Privacy and scientific ethics</h2>
+        <p> During this study, we will obtain information from Prolific (your email address and demographic information).</p>
+        <p>If the study is interrupted (e.g., due to your device running out of battery), you will be able to resume the study by logging back into the same Prolific account and use the same study link. If you encounter any technical difficulties, please contact us immediately via the Prolific internal messaging system. </p>
+        <p>We care about your privacy. Any personal information collected for administrative purposes (e.g., payments, scheduling) will be stored separately from your study responses. Your answers in the study will be anonymised: direct identifiers are removed and replaced with participant codes so that responses cannot be traced back to you. Data will be stored in accordance with the data protection regulations of the University of St. Gallen and Prolific. The research team will only store the anonymised data after the data collection period has ended. </p>
+        <p>Participation in the study is voluntary, and you may withdraw at any time (implications for payments will be described in information below before starting the decision tasks). By completing this survey, you confirm your willingness and consent to participate in this study.
+        <p><strong>Please click ‘Next’ to proceed to a few comprehension questions.</strong></p>
+        <div style="text-align:right;">
+          <button class="otree-btn-next btn btn-primary">Next &raquo;</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzEzXC9hc3NldHNcLzU0XC82MjA5XC9mZWU3ZTY4NmY5NmU4OTc1OGI2ZjEyZDY1MDRlMjk4Mi0xNjI1MDc4NzQ2LnBuZyJ9:unisg:fHwFjCnusCPTOHN3vBp9s0I-varvLhe40RmgsvP0Fms?width=2400" alt="University of St. Gallen Logo" style="height: 50px;">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Hidden form fields for oTree -->
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+    <script>
+    (function () {
+      var progressBar = document.getElementById('readingProgress');
+      function updateProgress() {
+        if (!progressBar) return;
+        var doc = document.documentElement;
+        var scrollTop = doc.scrollTop || document.body.scrollTop;
+        var height = doc.scrollHeight - doc.clientHeight;
+        var percent = height > 0 ? (scrollTop / height) * 100 : 0;
+        progressBar.style.width = Math.min(100, percent) + '%';
+      }
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+
+      var steps = Array.prototype.slice.call(document.querySelectorAll('#focusSteps li'));
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('.focus-step'));
+      var status = document.getElementById('focusStatus');
+      var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function updateStatus() {
+        if (!status) return;
+        var doneCount = 0;
+        for (var i = 0; i < steps.length; i += 1) {
+          if (steps[i].classList.contains('is-done')) doneCount += 1;
+        }
+        status.textContent = doneCount + '/' + steps.length + ' completed';
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var targetId = button.getAttribute('data-target');
+          var target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      function stepForTarget(targetId) {
+        for (var i = 0; i < steps.length; i += 1) {
+          var stepButton = steps[i].querySelector('.focus-step');
+          if (stepButton && stepButton.getAttribute('data-target') === targetId) {
+            return steps[i];
+          }
+        }
+        return null;
+      }
+
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var targetId = entry.target.getAttribute('id');
+            var step = stepForTarget(targetId);
+            if (!step) return;
+            if (entry.isIntersecting) {
+              steps.forEach(function (item) { item.classList.remove('is-active'); });
+              step.classList.add('is-active');
+              step.classList.add('is-done');
+              updateStatus();
+            }
+          });
+        }, { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 });
+
+        ['section-example', 'section-timeline', 'section-evaluate'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
+      } else {
+        updateStatus();
+      }
+
+      var questions = document.querySelectorAll('.quick-check .question');
+      questions.forEach(function (question) {
+        var answer = question.getAttribute('data-answer');
+        var correctText = question.getAttribute('data-correct') || 'Correct.';
+        var incorrectText = question.getAttribute('data-incorrect') || 'Not quite.';
+        var feedback = question.querySelector('.feedback');
+        var optionButtons = question.querySelectorAll('button[data-choice]');
+        optionButtons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            optionButtons.forEach(function (b) {
+              b.classList.remove('is-selected', 'is-correct', 'is-incorrect');
+            });
+            btn.classList.add('is-selected');
+            if (btn.getAttribute('data-choice') === answer) {
+              btn.classList.add('is-correct');
+              if (feedback) feedback.textContent = correctText;
+            } else {
+              btn.classList.add('is-incorrect');
+              if (feedback) feedback.textContent = incorrectText;
+            }
+          });
+        });
+      });
+
+      var modal = document.getElementById('imageModal');
+      var modalImg = document.getElementById('imageModalImg');
+      var modalCaption = document.getElementById('imageModalCaption');
+      var closeBtn = document.querySelector('.image-close');
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        if (modalImg) modalImg.src = '';
+        if (modalCaption) modalCaption.textContent = '';
+      }
+
+      document.querySelectorAll('img.zoomable').forEach(function (img) {
+        img.addEventListener('click', function () {
+          if (!modal || !modalImg) return;
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          if (modalCaption) modalCaption.textContent = img.alt || '';
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+        });
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+      if (modal) {
+        modal.addEventListener('click', function (event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+      }
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+{{ endblock }}

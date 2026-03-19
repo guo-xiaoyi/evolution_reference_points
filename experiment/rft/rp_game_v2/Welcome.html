@@ -1,0 +1,170 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="random payoff tree Valuation Tasks - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Uni St.Gallen - Intergrated Page</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <link rel="preconnect" href="https://challenges.cloudflare.com">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+    .otree-body{
+        
+        max-width: 1280px;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <!-- Main jumbotron for primary marketing message -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="university-title">Welcome!</h1>
+            <p> Welcome! This study is conducted by researchers from the University of St. Gallen. It studies human behaviour in abstract settings with risk and time. </p>
+            <p>The study consists of <strong>three sessions</strong>. <strong>Today's session will take about 30-45 minutes.</strong> The second session will take place in three days and take about 7-15 minutes. The third session will take place in six days and also take about 7-15 minutes. You will have a 16-hour window (06:00 to 22:00) to complete Session 2 and another 16-hour window (06:00 to 22:00) to complete Session 3. <strong>Please only start the study if you are certain that you can participate in all three sessions!</strong></p> <p> If you complete all three sessions, you will receive an extra payment of £5 in addition to the regular payments of £10 for the first session, £5 for the second session, and £5 for the third session. <strong>In addition, you will be eligible to win a prize of £300 upon careful completion of all three sessions.</strong> Note that response quality will be monitored using standard technological checks. Participants whose responses indicate insufficient engagement or lack of serious effort may forfeit eligibility for any payment.</p>
+            <p>Please click 'Start' button to participate in this study.</p>
+            <p style="text-align:right;">
+              <button class="otree-btn-next btn btn-primary" id="startButton" disabled>Start &raquo;</button>
+            </p>
+
+
+          </div>
+
+          <div class="col-md-6">
+            <!-- This div will be filled with the background image via CSS -->
+            <div class="content-image"> 
+              <img src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoidW5pc2dcL2FjY291bnRzXC9kNFwvNDAwMDQwOFwvcHJvamVjdHNcLzZcL2Fzc2V0c1wvMWFcLzEyNjYzXC9iZmUyZDJhZmZjNWE3NmFmNTU2N2UxM2JiMzc4ZmRiMC0xNjU1ODk5NjA1LnRpZiJ9:unisg:WKEVB3Kabw70PIT5qJe7svkCSkRpdqmD6pGJFM_Ex4k?width=2400" alt="study Image" class="img-fluid">
+            </div>
+
+
+                    <div
+              class="cf-turnstile"
+              data-sitekey="0x4AAAAAACXKtkgV9SHRtBxi"
+              data-response-field="false"
+              data-callback="onTurnstileSuccess"
+              data-expired-callback="onTurnstileExpired"
+            ></div>    
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Hidden form fields for oTree -->
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script>
+    function setStartEnabled(enabled) {
+      var btn = document.getElementById('startButton');
+      if (!btn) return;
+      btn.disabled = !enabled;
+      btn.style.display = enabled ? 'inline-block' : 'none';
+    }
+
+    function onTurnstileSuccess(token) {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      if (input) input.value = token;
+      setStartEnabled(true);
+    }
+    function onTurnstileExpired() {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      if (input) input.value = '';
+      setStartEnabled(false);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var input = document.querySelector('input[name="turnstile_token"]');
+      setStartEnabled(Boolean(input && input.value));
+    });
+  </script>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
+</body>
+</html>
+{{ endblock }}

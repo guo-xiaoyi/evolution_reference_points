@@ -1,0 +1,295 @@
+{
+  "cali_gain": {
+    "name": "Apple",
+    "outcome_number": 2,
+    "stake": "lo",
+    "max_payoff": 40,
+    "min_payoff": 12,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£40",
+          "probability": 0.9,
+          "from": "Start",
+          "abs_prob": 0.9
+        },
+        {
+          "label": "+£12",
+          "probability": 0.1,
+          "from": "Start",
+          "abs_prob": 0.1
+        }
+      ]
+    }
+  },
+  "cali_gain_st": {
+    "name": "Apple",
+    "outcome_number": 2,
+    "stake": "lo",
+    "max_payoff": 40,
+    "min_payoff": 12,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£40",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "+£12",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        }
+      ]
+    }
+  },
+
+"cali_gain_de": {
+  "name": "Orange",
+  "outcome_number": 4,
+  "stake": "lo",
+  "max_payoff": 40,
+  "min_payoff": 10,
+  "description": "n/a",
+  "periods": {
+    "0": [
+      {
+        "label": "Start",
+        "probability": 1,
+        "from": null,
+        "abs_prob": 1
+      }
+    ],
+    "1": [
+      {
+        "label": "+£10",
+        "probability": 0.9,
+        "from": "Start",
+        "abs_prob": 0.9
+      },
+      {
+        "label": "+£3",
+        "probability": 0.1,
+        "from": "Start",
+        "abs_prob": 0.1
+      }
+    ],
+    "2": [
+      {
+        "label": "+£30",
+        "probability": 1,
+        "from": "+£10",
+        "abs_prob": 0.9
+      },
+      {
+        "label": "+£9",
+        "probability": 1,
+        "from": "+£3",
+        "abs_prob": 1
+      }
+    ]
+  }
+},
+
+  "cali_loss": {
+    "name": "Apple",
+    "outcome_number": 2,
+    "stake": "lo",
+    "max_payoff": -8,
+    "min_payoff": -60,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "-£8",
+          "probability": 0.6,
+          "from": "Start",
+          "abs_prob": 0.6
+        },
+        {
+          "label": "-£60",
+          "probability": 0.4,
+          "from": "Start",
+          "abs_prob": 0.4
+        }
+      ]
+    }
+  },
+  "cali_loss_st": {
+    "name": "Apple",
+    "outcome_number": 2,
+    "stake": "lo",
+    "max_payoff": -8,
+    "min_payoff": -60,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "-£8",
+          "probability": 0.8,
+          "from": "Start",
+          "abs_prob": 0.8
+        },
+        {
+          "label": "-£60",
+          "probability": 0.2,
+          "from": "Start",
+          "abs_prob": 0.2
+        }
+      ]
+    }
+  },
+
+"cali_loss_de": {
+  "name": "Orange",
+  "outcome_number": 4,
+  "stake": "lo",
+  "max_payoff": -8,
+  "min_payoff": -60,
+  "description": "n/a",
+  "periods": {
+    "0": [
+      {
+        "label": "Start",
+        "probability": 1,
+        "from": null,
+        "abs_prob": 1
+      }
+    ],
+    "1": [
+      {
+        "label": "-£2",
+        "probability": 0.6,
+        "from": "Start",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "-£15",
+        "probability": 0.4,
+        "from": "Start",
+        "abs_prob": 0.4
+      }
+    ],
+    "2": [
+      {
+        "label": "-£6",
+        "probability": 1,
+        "from": "-£2",
+        "abs_prob": 0.6
+      },
+      {
+        "label": "-£45",
+        "probability": 1,
+        "from": "-£15",
+        "abs_prob": 0.4
+      }
+    ]
+  }
+},
+  "cali_mix": {
+    "name": "Apple",
+    "outcome_number": 2,
+    "stake": "lo",
+    "max_payoff": 700,
+    "min_payoff": -100,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£700",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        },
+        {
+          "label": "-£100",
+          "probability": 0.5,
+          "from": "Start",
+          "abs_prob": 0.5
+        }
+      ]
+    }
+  },
+  "cali_mix_pres": {
+    "name": "Apple",
+    "outcome_number": 3,
+    "stake": "lo",
+    "max_payoff": 700,
+    "min_payoff": -100,
+    "description": "n/a",
+    "periods": {
+      "0": [
+        {
+          "label": "Start",
+          "probability": 1,
+          "from": null,
+          "abs_prob": 1
+        }
+      ],
+      "1": [
+        {
+          "label": "+£700",
+          "probability": 0.4,
+          "from": "Start",
+          "abs_prob": 0.4
+        },
+        {
+          "label": "+£300",
+          "probability": 0.2,
+          "from": "Start",
+          "abs_prob": 0.2
+        },
+        {
+          "label": "-£100",
+          "probability": 0.4,
+          "from": "Start",
+          "abs_prob": 0.4
+        }
+      ]
+    }
+  }
+}

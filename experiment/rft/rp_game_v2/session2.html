@@ -1,0 +1,246 @@
+{{ block content }}
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Instruction - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>University of St.Gallen (HSG)</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+      .otree-body{
+        
+        max-width: 1280px;
+    }
+    /* CSS for the framework */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+      margin-top: 2rem;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <!-- Main jumbotron for primary marketing message -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h1 class="university-title">Reminder of the rules</h1>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="content-wrapper">
+        <p><strong> You have read the full instructions at the beginning of Session 1.</strong> Now, we will provide a summary of the instructions. You can read the full instructions <a href="https://guo-xiaoyi.github.io/full_instruction"  target="_blank">here</a>. </p>
+<h2 id="ai-authenticity-privacy-and-scientific-ethics">AI, authenticity, privacy, and scientific ethics</h2>
+<p>Please do not use AI for assistance in this study. There are no right or wrong answers. Note that we use automated checks for non-genuine responses (including AI assistance).</p>
+<p>For more details about privacy and scientific ethics, please refer to the <a href="https://guo-xiaoyi.github.io/full_instruction"  target="_blank">full instructions</a>.</p>
+<h2 id="decision-task">Decision task</h2>
+<p>In today’s session, you will only evaluate one random payoff tree.</p>
+<p>The figure shows four columns, each representing a time period. The nodes and connecting lines show your random payoff tree, with a fortune wheel in the centre.</p>
+<p>When a node has two outgoing lines, this means that one of two possible paths will be chosen by the fortune wheel. Once a path is chosen, the other path no longer matters.</p>
+<p>The payoffs shown at the nodes add up over time. For example, if you reach the nodes labelled “-10” and “-12” and “+5”, your total loss over the entire time span will be £17.</p>
+<h2 id="how-to-evaluate-a-random-payoff-tree">How to evaluate a random payoff tree</h2>
+<p>Your main task in this study is to evaluate such random payoff trees (14 in Session 1, one in Session 2, one in Session 3). We want to know how much money a given random payoff tree would be worth to you. When you click on 'Start evaluation', you will see a pop-out sidebar as the following:</p>
+    <div> <img src= "{{ static 'global/mcl.png' }}" alt="random payoff tree" width="80%"></div>
+<p>You make a choice by selecting one row, and the rest will be filled automatically. For example: if you click on “I would prefer to receive £8”, then automatically all options where you receive more than £8 will also be selected (for comparisons where you would receive less than £8, the option “I would prefer to obtain the outcomes of the random payoff tree.” will then automatically be selected). If you click on another field, your choice will be updated. Once the indicated choices correspond to your preferences, click on “Submit”. </p>
+    <div> <img src= "{{ static 'global/mcl_chosen.png' }}" alt="random payoff tree" width="80%"></div>
+<p>We will sometimes ask further about your choice. In this case, you can follow the same procedure, indicating your valuation in the table.</p>
+
+    <div> <img src= "{{ static 'global/mcl_refinement.png' }}" alt="random payoff tree" width="80%"></div>
+<p>When you have submitted a selection, your answer is recorded and you cannot go back and change it. You will only evaluate one random payoff tree in this session!</p>
+<p>The decisions that you make here do not determine your payment. You are only providing us with insights on how you are valuing the random payoff trees; you will neither participate in a random selected payoff tree nor receive or pay any amounts displayed in the tables where you indicate your choices. </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+                <p style="text-align:right; margin-top: 1.5rem;">
+              <button class="otree-btn-next btn btn-primary">Start &raquo;</button>
+            </p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Hidden form fields for oTree -->
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+{{ endblock }}

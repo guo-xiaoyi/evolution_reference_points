@@ -1,0 +1,1787 @@
+{{ block content }}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <meta name="description" content="random payoff tree Valuation Tasks - University of St. Gallen">
+
+  <meta name="author" content="University of St. Gallen">
+
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Valuation Task</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+
+  <!-- Bootstrap core CSS -->
+
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+
+  <link href="jumbotron.css" rel="stylesheet">
+
+  
+
+<style>
+
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+.otree-body{
+        
+
+        max-width: 1480px;
+
+    }
+
+      /* container */
+
+    .two-columns-grid {
+
+        display: grid;
+
+        grid-template-columns: 2fr 1fr;
+
+    }
+
+    /* columns */
+
+    .two-columns-grid > * {
+
+        padding:1rem;
+
+    }
+
+    #lottery-visualization { display: flex; justify-content: center; }
+
+    #lottery-visualization svg { display: block; margin: 0 auto; }
+
+    .lottery-container {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        margin: 30px 0;
+
+        width: 100%;
+
+        position: relative;
+
+        min-height: 510px; /* Increased minimum height */
+
+    }
+
+    
+
+    .period-column {
+
+        display: flex;
+
+        flex-direction: column;
+
+        width: 22%;
+
+        position: relative;
+
+        z-index: 1;
+
+    }
+
+    
+
+    .period-header {
+
+        text-align: center;
+
+        font-weight: bold;
+
+        margin-bottom: 10px;
+
+        padding: 5px;
+
+        background-color: #f0f0f0;
+
+        border-radius: 4px;
+
+    }
+
+    
+
+    .grid-container {
+
+        display: grid;
+
+        gap: 8px;
+
+        height: 100%;
+
+    }
+
+    
+
+    .outcome {
+
+        border: 1px solid #333;
+
+        border-radius: 6px;
+
+        text-align: center;
+
+        padding: 8px 5px;
+
+        position: relative;
+
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        font-size: 14px;
+
+        min-height: 35px; /* Ensure minimum height */
+
+    }
+
+    
+
+    /* Hide probability labels */
+
+    .probability-label {
+
+        display: none;
+
+    }
+
+    
+
+    .arrow {
+
+        position: absolute;
+
+        height: 4px;
+
+        background-color: #666;
+
+        z-index: 0;
+
+    }
+
+    
+
+    .arrow:after {
+
+        content: '';
+
+        position: absolute;
+
+        right: 0;
+
+        top: -4px;
+
+        width: 0;
+
+        height: 0;
+
+        border-top: 5px solid transparent;
+
+        border-bottom: 5px solid transparent;
+
+        border-left: 8px solid #666;
+
+    }
+
+    
+
+    .arrow-label {
+
+        position: absolute;
+
+        background-color: white;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        padding: 0 4px;
+
+        font-size: 12px;
+
+        white-space: nowrap;
+
+        z-index: 2;
+
+    }
+
+    /* CSS for the framework */
+
+    body {
+      font-family: 'Arial', sans-serif;
+
+
+
+      background-color: #f5f5f5;
+
+    }
+
+    .jumbotron {
+
+      background-color: #e8e3d9;
+
+      color: #333;
+
+      padding: 2rem;
+
+      margin-bottom: 0;
+
+      border-radius: 0;
+
+    }
+
+    .display-3 {
+
+      font-weight: 500;
+
+      margin-bottom: 1.5rem;
+
+    }
+
+    .main-container {
+
+      background-color: white;
+
+      padding: 2rem 0;
+
+    }
+
+    .content-wrapper {
+
+      max-width: 900px;
+
+      margin: 0 auto;
+
+      padding: 0 40px;
+
+    }
+
+    .btn-primary {
+
+      background-color: #007095;
+
+      border-color: #007095;
+
+    }
+
+    .btn-primary:hover {
+
+      background-color: #005a79;
+
+      border-color: #005a79;
+
+    }
+
+    .university-title {
+
+      font-size: 3rem;
+
+      font-weight: 300;
+
+      margin-bottom: 0.5rem;
+
+    }
+
+    .footer {
+
+      padding: 2rem 0;
+
+      background-color: #f5f5f5;
+
+      border-top: 1px solid #e7e7e7;
+
+      margin-top: 2rem;
+
+    }
+
+    h2 {
+
+      font-weight: 500;
+
+      color: #333;
+
+      margin-top: 2rem;
+
+    }
+
+    .content-image {
+
+      width: 100%;
+
+      height: auto;
+
+      margin-top: 1rem;
+
+    }
+
+    .feature-box {
+
+      margin-bottom: 2rem;
+
+    }
+
+    p {
+
+      font-size: 17px;
+
+      line-height: 1.6;
+
+      margin-bottom: 1.5rem;
+
+    }
+
+    
+
+    p {
+
+        margin-bottom: 1em;
+
+    }
+
+    
+
+    /* Definition term styling */
+
+    .definition-term {
+
+        position: relative;
+
+        display: inline-block;
+
+        background-color: #e8e3d9; /* Light yellow background */
+
+        padding: 0 4px;
+
+        border-bottom: 1px dotted #ffc107;
+
+        cursor: help;
+
+    }
+
+    
+
+    /* Question mark indicator */
+
+    .definition-term::after {
+
+        content: "?";
+
+        display: inline-block;
+
+        font-size: 0.7em;
+
+        width: 12px;
+
+        height: 12px;
+
+        line-height: 10px;
+
+        text-align: center;
+
+        border-radius: 50%;
+
+        background-color: #ffc107;
+
+        color: white;
+
+        margin-left: 0px;
+
+        position: relative;
+
+        top: -1px;
+
+    }
+
+    
+
+    /* Tooltip styling */
+
+    .tooltip {
+
+        position: absolute;
+
+        visibility: hidden;
+
+        width: 250px;
+
+        background-color: #fff;
+
+        color: #333;
+
+        text-align: left;
+
+        padding: 10px;
+
+        border-radius: 6px;
+
+        border: 1px solid #ddd;
+
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+        font-size: 0.9em;
+
+        z-index: 1;
+
+        bottom: 125%;
+
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        opacity: 0;
+
+        transition: opacity 0.3s;
+
+    }
+
+    
+
+    /* Arrow for tooltip */
+
+    .tooltip::after {
+
+        content: "";
+
+        position: absolute;
+
+        top: 100%;
+
+        left: 50%;
+
+        margin-left: -8px;
+
+        border-width: 8px;
+
+        border-style: solid;
+
+        border-color: #fff transparent transparent transparent;
+
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+
+    }
+
+    
+
+    /* Show tooltip on hover and click */
+
+    .definition-term:hover .tooltip {
+
+        visibility: visible;
+
+        opacity: 1;
+
+    }
+
+    
+
+    .tooltip-active {
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+    }
+
+    .lotto { font-family: 'Arial', sans-serif; }
+
+    .col { fill:#f5f5f7; stroke:#ddd; }
+    .col.highlight-col { fill:#fff1b8; stroke:#f0b429; stroke-width:2; }
+    .col.relevant-col { fill:#fff5c7; stroke:#f0d27c; }
+    .col.dim-col { fill:#f5f5f7; stroke:#ddd; opacity:0.25; }
+    .payout.highlight-node { fill:#b56600; font-weight:600; }
+    .prob.highlight-node { fill:#b56600; font-weight:600; }
+    .payout.experienced-node { fill:#0f5f5b; font-weight:600; }
+    .prob.experienced-node { fill:#0f5f5b; font-weight:600; }
+    .payout.relevant-node { fill:#a06600; }
+    .prob.relevant-node { fill:#c27f00; }
+    .payout.dim-node { fill:#777; }
+    .prob.dim-node { fill:#999; }
+
+    .title {font-weight:800px; font-size:16px; }
+
+    .payout { font-size:16px; }
+
+    .prob { font-size:16px; fill:#2a8f2a; }
+
+    .link { stroke:#888; stroke-width:2;}
+    .link-highlight { stroke:#f0b429; stroke-width:3; }
+    .link-experienced { stroke:#1c7f7a; stroke-width:3; }
+    .link-relevant { stroke:#ee5b18; stroke-width:3; }
+    .link-dim { stroke:#c8c8c8; stroke-width:1.6; opacity:0.35; }
+
+    .ring { fill:none; stroke:#f0a500; stroke-width:8; }
+
+    /* Selection table styles */
+     .cut-table { table-layout: fixed; width: 100%; }
+    .cut-table col { width: 50%; }
+    .cut-table th, .cut-table td { text-align: center; vertical-align: middle; }
+    .cut-left.shaded { background-color: #e7f7ec; }
+    .cut-right.shaded { background-color: #e7f7ec; }
+    .cut-table tbody tr { cursor: pointer; }
+    .cut-table tbody tr:hover td:not(.shaded) { background-color: #c9c9c9; }
+    .cut-table .cutoff-input,
+    .cut-table .fine-cutoff-input {
+        display: none;
+    }
+    .fine-panel {
+        margin-top: 1.5rem;
+        background-color: #f5f1eb;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+    }
+    .fine-panel.hidden {
+        display: none;
+    }
+    .fine-panel table {
+        margin-top: 1rem;
+    }
+
+    :root {
+      --sidebar-width: 650px; /* increase this value to make the sidebar wider */
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
+
+    /* When the sidebar has the "open" class it will use the wider width */
+    .sidebar.open {
+      width: var(--sidebar-width);
+    }
+
+    /* Shift main when sidebar is open (works if #main follows .sidebar in DOM) */
+    .sidebar.open + #main,
+    #main.shifted {
+      margin-left: var(--sidebar-width);
+      transition: margin-left .5s;
+    }
+
+    .sidebar a {
+      padding: 8px 8px 8px 50px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #f1f1f1;
+    }
+
+    .sidebar .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+
+    .openbtn {
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #111;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+    }
+
+    .openbtn:hover {
+      background-color: #444;
+    }
+
+    #main {
+      transition: margin-left .5s;
+      padding: 50px;
+    }
+
+    .content-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    .lottery-holder {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+</style>
+
+ <!-- Main jumbotron for primary marketing message -->
+
+ <div class="jumbotron">
+
+  <div class="container">
+
+    <div class="row">
+
+
+        <h1 class="university-title">Decision task</h1>
+        <h3> Please provide your evaluation to the random payoff tree shown in red. The highlighted blue node represents your current gain/loss. You currently have {{ realized_period1.label }}.</h3>
+        <p> Please now evaluate the remaining part of the random payoff tree (highlighted in red). Consider the following question: suppose you are facing a choice between the fixed payments shown on the left-hand side of the pop-out sidebar  and the random outcomes of the random payoff tree, which one would you choose? After you click on 'Start evaluation' a sidebar with an evaluation table will open. You can open and close the sidebar as often as you like.</p>
+        <p>If you want to re-read the instructions, please <a href="https://guo-xiaoyi.github.io/full_instruction" target="_blank">use this link</a> for a full explanation.</p>
+
+
+              <p style="text-align:right;">
+
+        <button type="button" id="open-sidebar-btn" class="btn btn-primary">Start evaluation &raquo;</button>
+
+      </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="main-container">
+
+  <div class="card mb-4">
+
+    <div class="content-wrapper">
+
+      <br>
+
+
+    </div>
+
+    <div class="card-body">
+
+
+      <div class="lottery-holder" style="display: flex; flex-direction: row; align-items: center; gap: 15px;">
+
+        <div id="lottery-visualization"></div>
+
+      </div>
+
+    </div>
+
+
+
+
+  <div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+ 
+
+
+    <h2><span style=" color:white; margin-left: 1em; margin-right: 2em;">↓</span></h2>
+
+      <h4 style="color:white; margin-left: 1em; margin-right: 2em;">Please click in the table below to indicate your valuation of the random payoff tree. </h4>
+
+      <table id="choice-table" class="table cut-table" data-stake="{{ stake }}">
+        <colgroup>
+          <col>
+          <col>
+        </colgroup>
+        <thead style="background-color: #181818; color: white; text-align: center;">
+          <tr>
+            <th style="text-align: center" colspan="2">I would prefer to...</th>
+          </tr>
+        </thead>
+        <tbody style="background-color: #d3d3d3; text-align: center">
+          {{ for row in choice_rows }}
+          <tr
+            data-index="{{ row.index }}"
+            data-field="{{ row.field_name }}"
+            data-amount="{{ row.amount }}"
+            data-lower-amount="{{ row.prev_amount }}"
+            data-refinement-series='{{ row.refinement_series|json }}'
+          >
+            {{if row.amount < 0}}
+            <td class="cut-left">...pay £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            {{ elif row.amount == 0 }}
+            <td class="cut-left">...neither pay nor receive anything.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            {{else}}
+            <td class="cut-left">...receive £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
+            {{ endif }}
+            <td class="cut-right">...obtain the outcomes of the random payoff tree.</td>
+          </tr>
+          {{ endfor }}
+        </tbody>
+      </table>
+
+      <div id="choice-hidden-inputs" style="display:none;">
+        {{ for row in choice_rows }}
+          <input type="hidden" name="{{ row.field_name }}" value="">
+        {{ endfor }}
+        <input type="hidden" name="cutoff_index" value="">
+        <input type="hidden" name="fine_cutoff_index" value="">
+      </div>
+
+      {{ if stake == 'hi' }}
+      <div id="fine-choice-panel" class="fine-panel hidden">
+        <h5>We would like to ask for more detail about your choice.</h5>
+        <p id="fine-range-message">
+          Please indicate your valuation of the same random payoff tree below.
+        </p>
+        <div id="fine-choice-warning" class="text-danger" style="display:none;">
+          Please select an option in the refinement list.
+        </div>
+        <table class="table cut-table fine-table">
+          <colgroup>
+            <col>
+            <col>
+          </colgroup>
+          <thead style="background-color: #1f1f1f; color:white; text-align:center;">
+            <tr>
+              <th style="text-align:center;" colspan="2">I would prefer to...</th>
+            </tr>
+          </thead>
+          <tbody style="background-color:#f5f5f5; text-align:center;"></tbody>
+        </table>
+      </div>
+      {{ endif }}
+
+      <p style="text-align:right;">
+        <br><br>
+        <button class="otree-btn-next btn btn-primary" style="margin-right: 2em;">Submit &raquo;</button>
+
+      </p>
+
+
+</div>
+
+</div> <!-- end main -->
+
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+
+<!-- JavaScript for setting up grid rows and drawing arrows -->
+
+<script>
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Django injects a JSON string; parse it
+
+  const lottery = JSON.parse('{{ display_lottery|safe }}');
+  const continuationStage = {{ continuation_stage|json }};
+  const realizedPeriod1 = {{ realized_period1|json }};
+  const realizedPeriod2 = {{ realized_period2|json }};
+  const realizedNodes = {};
+  if (realizedPeriod1) {
+    realizedNodes[1] = realizedPeriod1;
+  }
+  if (realizedPeriod2) {
+    realizedNodes[2] = realizedPeriod2;
+  }
+  const highlightPeriod = Number.isFinite(continuationStage) ? continuationStage : null;
+
+  // ---- layout constants ----
+
+  const H = 750;
+
+  const colW = 300, colGap = 22, leftPad = 16, topPad = 16;
+
+  const wheelR = 35;
+
+  const wheelCxOffset = colW / 2;
+
+  const groupTopPad = 48, groupGap = 28, outcomeGap = 120;
+
+  // period titles
+
+  const prettyTitle = i => (i === 0 ? '3 days ago [Session 1]' : i === 1 ? 'Today [Session 2]' : i === 2 ? 'In 3 days [Session 3]' : `In 6 days`);
+
+  // ---- build normalized periods array (0..max sorted) ----
+
+  const keys = Object.keys(lottery.periods)
+
+    .map(k => +k)
+
+    .sort((a, b) => a - b);
+
+  const periods = keys.map(k => lottery.periods[k]);
+  const periodsByKey = new Map();
+  keys.forEach((key, idx) => periodsByKey.set(key, periods[idx]));
+
+  const nodeKey = (node, fallback) => {
+    if (node && node.id != null) return String(node.id);
+    if (fallback != null) return String(fallback);
+    if (node && node.label != null) return String(node.label);
+    return '';
+  };
+
+  const labelKeyMapByPeriod = new Map();
+  const fromLabelKeyMapByPeriod = new Map();
+  keys.forEach((periodKey, idx) => {
+    const nodes = periods[idx] || [];
+    const map = new Map();
+    const fromMap = new Map();
+    nodes.forEach((node, nIdx) => {
+      const key = nodeKey(node, `${periodKey}:${nIdx}`);
+      node._key = key;
+      const label = node && node.label != null ? String(node.label) : '';
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(key);
+      const parentLabel = node && node.from != null ? String(node.from) : 'Start';
+      let byFrom = fromMap.get(parentLabel);
+      if (!byFrom) {
+        byFrom = new Map();
+        fromMap.set(parentLabel, byFrom);
+      }
+      if (!byFrom.has(label)) byFrom.set(label, []);
+      byFrom.get(label).push(key);
+    });
+    labelKeyMapByPeriod.set(periodKey, map);
+    fromLabelKeyMapByPeriod.set(periodKey, fromMap);
+  });
+
+  const realizedKeys = new Map();
+  function resolveNodeKeys(periodKey, node) {
+    if (!Number.isFinite(periodKey) || !node) return [];
+    if (node.id != null) return [String(node.id)];
+    const label = node.label != null ? String(node.label) : '';
+    const parentLabel = node.from != null ? String(node.from) : 'Start';
+    const fromMap = fromLabelKeyMapByPeriod.get(periodKey);
+    const byFrom = fromMap && fromMap.get(parentLabel);
+    const keysForLabel = byFrom && byFrom.get(label);
+    if (keysForLabel && keysForLabel.length) {
+      return [...keysForLabel];
+    }
+    const labelMap = labelKeyMapByPeriod.get(periodKey);
+    const fallbackKeys = labelMap && labelMap.get(label);
+    return fallbackKeys ? [...fallbackKeys] : [];
+  }
+  function addRealized(periodKey, node) {
+    if (!Number.isFinite(periodKey) || !node) return;
+    const set = realizedKeys.get(periodKey) || new Set();
+    resolveNodeKeys(periodKey, node).forEach(k => set.add(k));
+    if (set.size) {
+      realizedKeys.set(periodKey, set);
+    }
+  }
+  if (realizedPeriod1) addRealized(1, realizedPeriod1);
+  if (realizedPeriod2) addRealized(2, realizedPeriod2);
+
+  const experiencedEdges = new Set();
+  Object.entries(realizedNodes).forEach(([periodKey, node]) => {
+    const period = Number(periodKey);
+    if (!Number.isFinite(period) || !node) return;
+    const parentLabel = node.from || (period === 1 ? 'Start' : null);
+    if (!parentLabel) return;
+    const parentMap = labelKeyMapByPeriod.get(period - 1);
+    const parentKeys = parentMap && parentMap.get(String(parentLabel));
+    if (!parentKeys || !parentKeys.length) return;
+    const childKeys = new Set(resolveNodeKeys(period, node));
+    if (!childKeys.size) return;
+    parentKeys.forEach(parentKey => {
+      childKeys.forEach(childKey => {
+        experiencedEdges.add(`${parentKey}=>${childKey}`);
+      });
+    });
+  });
+
+  const relevantByPeriod = new Map();
+  const relevantLabelsByPeriod = new Map();
+  keys.forEach((key, idx) => {
+    const nodes = periodsByKey.get(key) || [];
+    if (idx === 0) {
+      relevantByPeriod.set(key, new Set(nodes.map(n => n._key)));
+      relevantLabelsByPeriod.set(key, new Set(nodes.map(n => n.label)));
+      return;
+    }
+    const prevKey = keys[idx - 1];
+    const prevRelevantLabels = relevantLabelsByPeriod.get(prevKey) || new Set();
+    const prevRelevantHasEntries = prevRelevantLabels.size > 0;
+    const realizedSet = realizedKeys.get(key);
+    const relevantSet = new Set();
+    const relevantLabels = new Set();
+    nodes.forEach(node => {
+      const parent = node.from || 'Start';
+      const parentRelevant = !prevRelevantHasEntries || prevRelevantLabels.has(parent);
+      if (!parentRelevant) {
+        return;
+      }
+      if (realizedSet && !realizedSet.has(node._key)) {
+        return;
+      }
+      relevantSet.add(node._key);
+      relevantLabels.add(node.label);
+    });
+    if (!realizedSet) {
+      nodes.forEach(node => {
+        const parent = node.from || 'Start';
+        if (!prevRelevantHasEntries || prevRelevantLabels.has(parent)) {
+          relevantSet.add(node._key);
+          relevantLabels.add(node.label);
+        }
+      });
+    }
+    relevantByPeriod.set(key, relevantSet);
+    relevantLabelsByPeriod.set(key, relevantLabels);
+  });
+
+  const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
+
+  // ---- helpers ----
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  const mk = (tag, attrs = {}, text = null) => {
+
+    const el = document.createElementNS(svgNS, tag);
+
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+
+    if (text != null) el.textContent = text;
+
+    return el;
+
+  };
+
+  const num = v => {
+
+    const n = typeof v === 'number' ? v : Number(v);
+
+    return Number.isFinite(n) ? n : 0;
+
+  };
+
+  const fmtProb = p => {
+
+    const pct = num(p) * 100;
+
+    const decimals = Math.abs(Math.round(pct) - pct) > 0.001 ? 1 : 0;
+
+    return pct.toFixed(decimals) + '%';
+
+  };
+
+  const normalizeAngle = angle => {
+    let a = angle;
+    while (a <= -Math.PI) a += 2 * Math.PI;
+    while (a > Math.PI) a -= 2 * Math.PI;
+    return a;
+  };
+
+  const palette = ['#73A5AF', '#e1d7c3', '#cfcfff', '#e0e0ff', '#ddd', '#e8e3d9', '#f0f0f0']; // light blues and grays
+
+  const pick = i => palette[i % palette.length];
+
+  const wheelXForGroup = (colX, group) => {
+    const outcomeCount = group && group.outcomes ? group.outcomes.length : 0;
+    if (outcomeCount >= 3) return colX + colW - wheelR - 24;
+    return colX + wheelCxOffset;
+  };
+
+
+
+  // Draw a wheel at (cx,cy) with radius r and slices [{ node, y, targetAngle }]
+  function drawWheel(g, cx, cy, r, slices) {
+
+    g.appendChild(mk('circle', { cx, cy, r: r + 4, class: 'ring' }));
+
+    let tot = slices.reduce((sum, s) => sum + num(s.node.probability), 0);
+    if (!tot) tot = 1;
+
+    const segments = slices.map(s => {
+      const raw = num(s.node.probability);
+      const p = raw / tot;
+      return { slice: s, p, size: p * 2 * Math.PI };
+    });
+
+    let cursor = -Math.PI / 2;
+    segments.forEach(seg => {
+      seg.start = cursor;
+      seg.end = cursor + seg.size;
+      seg.mid = (seg.start + seg.end) / 2;
+      cursor = seg.end;
+    });
+
+    const totalSize = segments.reduce((sum, seg) => sum + seg.size, 0) || 1;
+    let offset = 0;
+    if (segments.length) {
+      const weighted = segments.reduce((acc, seg) => {
+        const target = typeof seg.slice.targetAngle === 'number' ? seg.slice.targetAngle : seg.mid;
+        const diff = normalizeAngle(target - seg.mid);
+        return acc + diff * seg.size;
+      }, 0);
+      offset = weighted / totalSize;
+    }
+
+    const labelQueue = [];
+    const labelFontSize = 12;
+    const approxCharWidth = labelFontSize * 0.6;
+    const pointerAngle = -Math.PI / 2;
+    const pointerGuard = Math.PI / 12;
+
+    segments.forEach((seg, idx) => {
+      const start = seg.start + offset;
+      const end = seg.end + offset;
+      const mid = (start + end) / 2;
+      const large = (end - start) > Math.PI ? 1 : 0;
+      const x1 = cx + r * Math.cos(start), y1 = cy + r * Math.sin(start);
+      const x2 = cx + r * Math.cos(end), y2 = cy + r * Math.sin(end);
+      const path = `M ${cx},${cy} L ${x1},${y1} A ${r},${r} 0 ${large},1 ${x2},${y2} Z`;
+      g.appendChild(mk('path', { d: path, fill: pick(idx), stroke: '#333', 'stroke-width': 1.5 }));
+
+      if (seg.p > 0.07) {
+        const label = fmtProb(seg.p);
+        const arcLen = seg.size * r * 0.55;
+        const textWidth = label.length * approxCharWidth;
+        let labelRadius = r * 0.55;
+        let anchor = 'middle';
+        let offsetX = 0;
+        let useLeader = false;
+
+        if (arcLen < textWidth) {
+          labelRadius = r + 12;
+          anchor = Math.cos(mid) >= 0 ? 'start' : 'end';
+          offsetX = anchor === 'start' ? 4 : -4;
+          useLeader = true;
+        } else if (Math.abs(normalizeAngle(mid - pointerAngle)) < pointerGuard) {
+          labelRadius = r * 0.42;
+        }
+
+        const lx = cx + (labelRadius * Math.cos(mid)) + offsetX;
+        const ly = cy + labelRadius * Math.sin(mid);
+
+        if (useLeader) {
+          labelQueue.push({
+            type: 'line',
+            x1: cx + (r * 0.8) * Math.cos(mid),
+            y1: cy + (r * 0.8) * Math.sin(mid),
+            x2: lx + 4,
+            y2: ly,
+          });
+        }
+
+        labelQueue.push({
+          type: 'text',
+          x: lx,
+          y: ly,
+          anchor,
+          text: label,
+        });
+      }
+    });
+
+    const tri = `M ${cx},${cy - (r + 14)} l 8,12 l -16,0 z`;
+    g.appendChild(mk('path', { d: tri, fill: '#333' }));
+
+    labelQueue.forEach(item => {
+      if (item.type === 'line') {
+        g.appendChild(mk('line', {
+          x1: item.x1,
+          y1: item.y1,
+          x2: item.x2,
+          y2: item.y2,
+          stroke: '#666',
+          'stroke-width': 1,
+          'stroke-linecap': 'round',
+        }));
+        return;
+      }
+      g.appendChild(mk('text', {
+        x: item.x,
+        y: item.y,
+        'text-anchor': item.anchor,
+        'dominant-baseline': 'middle',
+        'font-size': labelFontSize,
+      }, item.text));
+    });
+  }
+
+  // Determine if a wheel is deterministic (i.e., one outcome with ~100% probability)
+  function isDeterministic(slices) {
+    const probs = slices.map(s => num(s.probability));
+    const total = probs.reduce((a, b) => a + b, 0);
+    if (total <= 0) return false;
+    const positive = probs.filter(p => p > 0);
+    if (positive.length !== 1) return false;
+    // Treat >= 99.9999% as effectively certain to be robust to rounding
+    return (positive[0] / total) >= 0.999999;
+  }
+
+  // Group nodes by their parent label
+  function groupByParent(nodes) {
+
+    const res = new Map();
+
+    nodes.forEach(node => {
+
+      const parent = node.from || 'Start'; // Use 'Start' for the initial period
+
+      if (!res.has(parent)) res.set(parent, []);
+
+      res.get(parent).push(node);
+
+    });
+
+    return Array.from(res.entries());
+
+  }
+// Build links between nodes in consecutive periods
+  function buildLinks(periodIdx) {
+
+    const cur = periods[periodIdx];
+
+    const nxt = periods[periodIdx + 1];
+
+    if (!cur || !nxt) return [];
+
+    const currentPeriodKey = keys[periodIdx];
+    const labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
+    const links = [];
+    nxt.forEach(child => {
+      const parentLabel = child.from;
+      const parentKeys = labelMap.get(parentLabel) || [];
+      if (!parentKeys.length) return;
+      const childKey = child._key;
+      parentKeys.forEach(parentKey => {
+        links.push({
+          parentKey,
+          childKey,
+          prob: num(child.probability)
+        });
+      });
+    });
+    return links;
+
+  }
+
+  // ---- layout ----
+  // Evenly distribute nodes vertically within each column and center horizontally
+  const columnLayouts = periods.map(nodes => {
+    const groups = [];
+    const nodeAnchors = new Map();
+
+    const innerTop = topPad + 60; // leave space for column title
+    const innerBottom = H - topPad - 40; // bottom padding
+    const count = Math.max(nodes.length, 1);
+    const span =  (innerBottom - innerTop);
+
+    // Assign evenly spaced y-positions to each node in this period
+    nodes.forEach((node, idx) => {
+      const y = innerTop + (idx + 0.5) * (span / count);
+      nodeAnchors.set(node._key, { y });
+    });
+
+    // Build groups and set wheel at the average outcome position for that group
+    groupByParent(nodes).forEach(([parent, children]) => {
+      const outcomes = children.map(child => {
+        const anchor = nodeAnchors.get(child._key);
+        const y = anchor ? anchor.y : innerTop;
+        return { node: child, y };
+      });
+      outcomes.sort((a, b) => a.y - b.y);
+      if (outcomes.length) {
+        const minY = outcomes[0].y;
+        const maxY = outcomes[outcomes.length - 1].y;
+        outcomes.forEach((o, idx) => {
+          let fraction;
+          if (maxY === minY) {
+            fraction = outcomes.length === 1 ? 0.5 : idx / Math.max(outcomes.length - 1, 1);
+          } else {
+            fraction = (o.y - minY) / (maxY - minY);
+          }
+          const angleRange = Math.PI; // distribute across top-to-bottom semicircle
+          o.targetAngle = -Math.PI / 2 + fraction * angleRange;
+        });
+      }
+      const wheelCy = outcomes.length
+        ? outcomes.reduce((s, o) => s + o.y, 0) / outcomes.length
+        : (innerTop + innerBottom) / 2;
+      groups.push({ parent, wheelCy, outcomes });
+    });
+
+    return { groups, nodeAnchors };
+  });
+
+  // ---- draw ----
+
+  const svg = mk('svg', { width: W, height: H, class: 'lotto' });
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+  svg.style.width = '100%';
+  svg.style.height = 'auto';
+  svg.style.maxWidth = `${W}px`;
+
+  const defs = mk('defs');
+
+  const marker = mk('marker', { id: 'ah', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: 'auto' });
+
+  marker.appendChild(mk('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#888' }));
+
+  defs.appendChild(marker);
+
+  svg.appendChild(defs);
+
+  // Collect overlay blocks to draw on top
+  const overlays = [];
+
+  columnLayouts.forEach((layout, i) => {
+
+    const x = leftPad + i * (colW + colGap);
+    const periodKey = keys[i];
+    const realizedNode = realizedNodes[periodKey];
+    const realizedSetForPeriod = realizedKeys.get(periodKey);
+    const relevantSet = relevantByPeriod.get(periodKey) || new Set();
+    const columnHasRealized = realizedSetForPeriod && realizedSetForPeriod.size > 0;
+    const columnHasRelevant = relevantSet.size > 0;
+    const isHighlightColumn = highlightPeriod != null && periodKey === highlightPeriod;
+    const isHighlightColumnNext = highlightPeriod != null && periodKey === highlightPeriod + 1;
+    const columnClass = isHighlightColumn ? 'col highlight-col' : isHighlightColumnNext ? 'col highlight-col' : columnHasRelevant ? 'col relevant-col' : 'col dim-col';
+
+    layout.colX = x; // left edge of column
+
+    layout.lineStartX = x + colW - 16; // right edge minus padding
+
+    layout.lineEndX = x + 16; // left edge plus padding
+
+    // column box
+    const columnRectAttrs = { x, y: topPad, width: colW, height: H - 2 * topPad, rx: 8, class: columnClass };
+
+    svg.appendChild(mk('rect', columnRectAttrs));
+
+    // title
+
+    svg.appendChild(mk('text', { x: leftPad + x, y: topPad + 18, class: 'title' }, prettyTitle(i)));
+
+    layout.groups.forEach(group => {
+      const wheelCx = wheelXForGroup(x, group);
+      const nodes = group.outcomes.map(o => o.node);
+      if (!isDeterministic(nodes)) {
+        const labelY = group.wheelCy;
+        const labelText = group.parent === '' ? '' : ``;
+        // Show label and draw wheel only when the transition is not deterministic
+        svg.appendChild(mk('text', { x: wheelCx - 100, y: labelY, class: 'prob', 'text-anchor': 'middle' }, labelText));
+        drawWheel(svg, wheelCx, group.wheelCy, wheelR, group.outcomes);
+      }
+
+      group.outcomes.forEach(outcome => {
+        const { node, y } = outcome;
+        const centerX = x + colW / 2;
+        const nodeKeyValue = node._key;
+        const realizedSet = realizedKeys.get(periodKey);
+        const isExperienced = (realizedSet && realizedSet.has(nodeKeyValue)) || (realizedNode && realizedNode.id && String(realizedNode.id) === nodeKeyValue);
+        const isRelevant = relevantSet.has(nodeKeyValue);
+        const state = isExperienced ? 'experienced' : (isRelevant ? 'relevant' : 'dim');
+
+        // Reserve an overlay panel (to be drawn after links)
+        overlays.push({
+          xLeft: centerX - 45,
+          xRight: centerX + 45,
+          y: y,
+          labelX: centerX,
+          probX: centerX + 30,
+          label: node.label,
+          prob: fmtProb(node.probability),
+          state: state
+        });
+
+        // Update anchors to be centered horizontally
+        layout.nodeAnchors.set(node._key, {
+          y: y,
+          inX: centerX,
+          outX: centerX
+        });
+      });
+
+    });
+
+  });
+
+  // draw links
+  for (let i = 0; i < periods.length - 1; i++) {
+
+    const links = buildLinks(i);
+
+    const current = columnLayouts[i];
+    const next = columnLayouts[i + 1];
+
+    const currentKey = keys[i];
+    const nextKey = keys[i + 1];
+    const currentRelevantSet = relevantByPeriod.get(currentKey) || new Set();
+    const currentRealizedSet = realizedKeys.get(currentKey) || new Set();
+    const nextRelevantSet = relevantByPeriod.get(nextKey) || new Set();
+    const nextRealizedSet = realizedKeys.get(nextKey) || new Set();
+
+    links.forEach(link => {
+
+      const fromAnchor = current.nodeAnchors.get(link.parentKey);
+
+      const toAnchor = next.nodeAnchors.get(link.childKey);
+
+      if (!fromAnchor || !toAnchor) return;
+
+      const fromX = fromAnchor.outX != null ? fromAnchor.outX : current.lineStartX;
+
+      const toX = toAnchor.inX != null ? toAnchor.inX : next.lineEndX;
+
+      const isParentRealized = currentRealizedSet.has(link.parentKey);
+      const isChildRealized = nextRealizedSet.has(link.childKey);
+      const isParentRelevant = currentRelevantSet.has(link.parentKey);
+      const isChildRelevant = nextRelevantSet.has(link.childKey);
+
+      const edgeKey = `${link.parentKey}=>${link.childKey}`;
+      const isExperiencedLink = experiencedEdges.has(edgeKey) || (isParentRealized && isChildRealized);
+
+      let linkState;
+      if (isExperiencedLink) {
+        linkState = 'experienced';
+      } else if (isParentRelevant && isChildRelevant) {
+        linkState = 'relevant';
+      } else {
+        linkState = 'dim';
+      }
+
+      const lineClasses = ['link'];
+      if (linkState === 'experienced') lineClasses.push('link-experienced');
+      else if (linkState === 'relevant') lineClasses.push('link-relevant');
+      else lineClasses.push('link-dim');
+
+      svg.appendChild(mk('line', {
+
+        x1: fromX,
+
+        y1: fromAnchor.y,
+
+        x2: toX,
+
+        y2: toAnchor.y,
+
+        class: lineClasses.join(' '),
+
+      }));
+
+      const midX = (fromX + toX) / 2;
+
+      const midY = (fromAnchor.y + toAnchor.y) / 2 - 10;
+
+      const probClasses = ['prob'];
+      if (linkState === 'experienced') probClasses.push('experienced-node');
+      else if (linkState === 'relevant') probClasses.push('relevant-node');
+      else probClasses.push('dim-node');
+
+      svg.appendChild(mk('text', { x: midX, y: midY, class: probClasses.join(' '), 'text-anchor': 'middle' }, fmtProb(link.prob)));
+
+    });
+
+  }
+
+  // Draw overlays on top of links: shaded rounded rect + texts
+  const padX = 2, padY = 6, rectH = 25;
+  overlays.forEach(o => {
+    const rectX = Math.min(o.xLeft, o.xRight); // ensure rect covers both label and prob
+    const rectW = Math.abs(o.xRight - o.xLeft); // width to cover both label and prob
+    const rectY = o.y - rectH + padY; // position so text baseline sits nicely
+    const state = o.state || 'relevant';
+    const rectAttrs = {
+      x: rectX,
+      y: rectY,
+      width: rectW,
+      height: rectH,
+      rx: 8,
+      fill: state === 'experienced' ? '#e6f4f3' : state === 'highlight' ? '#fff1b8' : state === 'relevant' ? '#fff8d1' : '#f5f5f5',
+      opacity: state === 'dim' ? 0.35 : 0.95,
+      stroke: state === 'experienced' ? '#1c7f7a' : state === 'highlight' ? '#f0b429' : state === 'relevant' ? '#f0d27c' : '#dddddd'
+    };
+    if (state === 'highlight' || state === 'experienced') {
+      rectAttrs['stroke-width'] = 2;
+    }
+    svg.appendChild(mk('rect', rectAttrs));
+
+    // Label text
+    const labelClasses = ['payout'];
+    if (state === 'experienced') {
+      labelClasses.push('experienced-node');
+    } else if (state === 'highlight') {
+      labelClasses.push('highlight-node');
+    } else if (state === 'relevant') {
+      labelClasses.push('relevant-node');
+    } else if (state === 'dim') {
+      labelClasses.push('dim-node');
+    }
+    const labelAttrs = {
+      x: o.labelX,
+      y: o.y,
+      class: labelClasses.join(' '),
+      'text-anchor': 'middle',
+      'dominant-baseline': 'top'
+    };
+    svg.appendChild(mk('text', labelAttrs, o.label));
+
+    // Probability text
+  });
+
+  const mount = document.getElementById('lottery-visualization');
+
+  mount.innerHTML = '';
+
+  mount.appendChild(svg);
+
+  // ----- selection table shading and mapping -----
+  const table = document.getElementById('choice-table');
+if (table) {
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    const radios = Array.from(table.querySelectorAll('input[name="cutoff"]'));
+    const hiddenInputs = new Map();
+    document.querySelectorAll('#choice-hidden-inputs input[type="hidden"]').forEach(input => {
+      hiddenInputs.set(input.name, input);
+    });
+    const cutoffField = hiddenInputs.get('cutoff_index');
+    const fineField = hiddenInputs.get('fine_cutoff_index');
+    const acceptLabel = {{ accept_label|json }};
+    const playLabel = {{ play_label|json }};
+    const stakeType = (table.dataset.stake || '').toLowerCase();
+    const isHighStake = stakeType === 'hi';
+    const finePanel = document.getElementById('fine-choice-panel');
+    const fineTable = finePanel ? finePanel.querySelector('tbody') : null;
+    const fineLowerEl = document.getElementById('fine-range-lower');
+    const fineUpperEl = document.getElementById('fine-range-upper');
+    const fineWarning = document.getElementById('fine-choice-warning');
+
+    function resolveLocalePreference(candidates) {
+      for (const hint of candidates) {
+        if (!hint) continue;
+        const norm = hint.toLowerCase();
+        if (norm.includes('ch')) return 'de-CH';
+        if (norm.includes('us')) return 'en-US';
+        if (norm.includes('en')) return 'en-US';
+        if (norm.includes('de')) return 'de-DE';
+        if (norm.includes('fr')) return 'fr-FR';
+        if (norm.includes('it')) return 'it-IT';
+        return hint;
+      }
+      return 'en-US';
+    }
+
+    const localeHints = [];
+    if (table.dataset.numberLocale) localeHints.push(table.dataset.numberLocale);
+    const htmlLang = document.documentElement ? document.documentElement.lang : null;
+    if (htmlLang) localeHints.push(htmlLang);
+    if (typeof navigator !== 'undefined') {
+      if (navigator.languages && navigator.languages.length) {
+        localeHints.push(...navigator.languages);
+      } else if (navigator.language) {
+        localeHints.push(navigator.language);
+      }
+    }
+    const resolvedLocale = resolveLocalePreference(localeHints);
+    let amountFormatter;
+    try {
+      amountFormatter = new Intl.NumberFormat(resolvedLocale, {
+        useGrouping: true,
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      });
+    } catch (err) {
+      amountFormatter = new Intl.NumberFormat('en-US', {
+        useGrouping: true,
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      });
+    }
+    let fineRows = [];
+    let fineRadios = [];
+    let currentFineValues = [];
+    let currentFineLower = null;
+
+    rows.forEach(tr => {
+      const left = tr.querySelector('.cut-left');
+      const amount = Number(tr.dataset.amount);
+      if (left && Number.isFinite(amount)) {
+        left.textContent = describeSafeOption(amount);
+      }
+      tr.addEventListener('click', () => {
+        const idx = Number(tr.dataset.index);
+        if (!Number.isInteger(idx)) return;
+        const radio = tr.querySelector('input[name="cutoff"]');
+        if (radio) radio.checked = true;
+        applyCutoff(idx);
+      });
+    });
+
+    function formatAmount(amount) {
+      if (!Number.isFinite(amount)) return '';
+      const formatted = amountFormatter.format(Math.abs(amount));
+      return amount < 0 ? `-£${formatted}` : `£${formatted}`;
+    }
+
+    function describeSafeOption(amount) {
+      if (!Number.isFinite(amount)) return '';
+      const formatted = amountFormatter.format(Math.abs(amount));
+      if (amount < 0) {
+        return `...pay £${formatted}.`;
+      }
+      if (amount === 0) {
+        return '...neither pay nor receive anything.';
+      }
+      return `...receive £${formatted}.`;
+    }
+
+    function resetFinePanel() {
+      if (!finePanel) return;
+      finePanel.classList.add('hidden');
+      if (fineTable) fineTable.innerHTML = '';
+      fineRows = [];
+      fineRadios = [];
+      currentFineValues = [];
+      currentFineLower = null;
+      if (fineLowerEl) fineLowerEl.textContent = '';
+      if (fineUpperEl) fineUpperEl.textContent = '';
+      if (fineWarning) fineWarning.style.display = 'none';
+      if (fineField) fineField.value = '';
+    }
+
+    function applyFineCutoff(idx) {
+      const hasIdx = Number.isInteger(idx);
+      fineRows.forEach((tr, i) => {
+        const left = tr.querySelector('.cut-left');
+        const right = tr.querySelector('.cut-right');
+        const shade = hasIdx ? i >= idx : false;
+        const shadeRight = hasIdx ? i < idx : false;
+        if (left) left.classList.toggle('shaded', shade);
+        if (right) right.classList.toggle('shaded', shadeRight);
+      });
+      fineRadios.forEach((radio, i) => {
+        radio.checked = hasIdx ? i === idx : false;
+      });
+      if (fineField) {
+        fineField.value = hasIdx ? idx : '';
+      }
+      if (hasIdx && fineWarning) {
+        fineWarning.style.display = 'none';
+      }
+    }
+
+    function buildFineRows(selectedIdx) {
+      if (!fineTable) return;
+      fineTable.innerHTML = '';
+      fineRows = [];
+      fineRadios = [];
+      currentFineValues.forEach((val, idx) => {
+        const amount = Number(val);
+        if (!Number.isFinite(amount)) return;
+        const tr = document.createElement('tr');
+        tr.dataset.value = amount;
+        const left = document.createElement('td');
+        left.className = 'cut-left';
+        left.textContent = describeSafeOption(amount);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'fine_cutoff';
+        radio.value = idx;
+        radio.className = 'fine-cutoff-input';
+        const right = document.createElement('td');
+        right.className = 'cut-right';
+        right.textContent = '...obtain the outcomes of the random payoff tree.';
+        left.appendChild(radio);
+        tr.appendChild(left);
+        tr.appendChild(right);
+        fineTable.appendChild(tr);
+        fineRows.push(tr);
+        fineRadios.push(radio);
+        radio.addEventListener('change', () => applyFineCutoff(idx));
+        tr.addEventListener('click', () => applyFineCutoff(idx));
+        if (Number.isInteger(selectedIdx) && idx === selectedIdx) {
+          radio.checked = true;
+        }
+      });
+      applyFineCutoff(Number.isInteger(selectedIdx) ? selectedIdx : null);
+    }
+
+    function renderFinePanel(idx, selectedIdx = null) {
+      if (!isHighStake || !finePanel) return;
+      const row = rows[idx];
+      if (!row) {
+        resetFinePanel();
+        return;
+      }
+      const lowerAttr = row.dataset.lowerAmount;
+      const seriesAttr = row.dataset.refinementSeries;
+      if (!lowerAttr || !seriesAttr || seriesAttr === '[]') {
+        resetFinePanel();
+        return;
+      }
+      const lower = Number(lowerAttr);
+      if (!Number.isFinite(lower)) {
+        resetFinePanel();
+        return;
+      }
+      let values;
+      try {
+        values = JSON.parse(seriesAttr);
+      } catch (err) {
+        values = [];
+      }
+      if (!Array.isArray(values) || !values.length) {
+        resetFinePanel();
+        return;
+      }
+      currentFineLower = lower;
+      currentFineValues = values.map(v => Number(v)).filter(v => Number.isFinite(v));
+      if (!currentFineValues.length) {
+        resetFinePanel();
+        return;
+      }
+      if (fineLowerEl) fineLowerEl.textContent = formatAmount(lower);
+      if (fineUpperEl) {
+        const last = currentFineValues[currentFineValues.length - 1];
+        fineUpperEl.textContent = formatAmount(last);
+      }
+      finePanel.classList.remove('hidden');
+      if (fineWarning) fineWarning.style.display = 'none';
+      const safeIdx = Number.isInteger(selectedIdx) ? Math.min(selectedIdx, currentFineValues.length - 1) : null;
+      buildFineRows(safeIdx);
+    }
+
+    function applyCutoff(idx, opts = {}) {
+      if (!Number.isInteger(idx)) return;
+
+      rows.forEach((tr, i) => {
+        const left = tr.querySelector('.cut-left');
+        const right = tr.querySelector('.cut-right');
+        if (left) left.classList.toggle('shaded', i >= idx);
+        if (right) right.classList.toggle('shaded', i < idx);
+
+        const fieldName = tr.dataset.field;
+        const hidden = hiddenInputs.get(fieldName);
+        if (hidden) {
+          hidden.value = i >= idx ? acceptLabel : playLabel;
+        }
+      });
+
+      if (cutoffField) {
+        cutoffField.value = idx;
+      }
+
+      if (isHighStake && finePanel) {
+        const preserve = opts && opts.preserveFineSelection;
+        let fineIdx = null;
+        if (preserve && fineField && fineField.value !== '') {
+          const parsed = Number(fineField.value);
+          if (Number.isInteger(parsed)) {
+            fineIdx = parsed;
+          }
+        }
+        renderFinePanel(idx, fineIdx);
+        if (!preserve && fineField) {
+          fineField.value = '';
+        }
+      } else if (finePanel) {
+        resetFinePanel();
+      }
+    }
+
+    radios.forEach(r => {
+      r.addEventListener('change', () => {
+        const idx = Number(r.value);
+        if (Number.isInteger(idx)) {
+          applyCutoff(idx);
+        }
+      });
+    });
+
+    const preselected = radios.find(r => r.checked);
+    if (preselected) {
+      const idx = Number(preselected.value);
+      if (Number.isInteger(idx)) {
+        applyCutoff(idx, { preserveFineSelection: true });
+      }
+    }
+
+    const form = document.querySelector('form');
+    if (form && isHighStake && finePanel) {
+      form.addEventListener('submit', event => {
+        const visibleFinePanel = !finePanel.classList.contains('hidden');
+        const missing = !fineField || fineField.value === '';
+        if (visibleFinePanel && missing) {
+          event.preventDefault();
+          if (fineWarning) {
+            fineWarning.style.display = 'block';
+          }
+          finePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+  }
+
+  const openBtn = document.getElementById('open-sidebar-btn');
+  if (openBtn) {
+    openBtn.addEventListener('click', event => {
+      event.preventDefault();
+      openNav();
+    });
+  }
+
+  const sidebar = document.getElementById('mySidebar');
+  document.addEventListener('click', event => {
+    if (!sidebar || !sidebar.classList.contains('open')) return;
+    const clickInsideSidebar = sidebar.contains(event.target);
+    const clickOnOpenBtn = openBtn && (event.target === openBtn || openBtn.contains(event.target));
+    if (!clickInsideSidebar && !clickOnOpenBtn) {
+      closeNav();
+    }
+  });
+
+});
+
+
+
+function openNav() {
+  const sb = document.getElementById('mySidebar');
+  const main = document.getElementById('main');
+  if (sb) sb.classList.add('open');
+  if (main) main.classList.add('shifted');
+
+}
+
+function closeNav() {
+  const sb = document.getElementById('mySidebar');
+  const main = document.getElementById('main');
+  if (sb) sb.classList.remove('open');
+  if (main) main.classList.remove('shifted');
+}
+</script>
+
+{{ endblock }}

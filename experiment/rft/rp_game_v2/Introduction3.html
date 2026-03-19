@@ -1,0 +1,249 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Instruction - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Instructions of the Game I - University of St.Gallen (HSG)</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+      .otree-body{
+        
+        max-width: 1280px;
+    }
+    /* CSS for the framework */
+    body {
+      font-family: 'Arial', sans-serif;
+      
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+      margin-top: 2rem;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <!-- Main jumbotron for primary marketing message -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h1 class="university-title">Information on sessions and payoffs</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="content-wrapper">
+        
+        <h2>Sessions</h2>
+        <p>In this first session, you will be asked to evaluate several random payoff trees. At the end of the session, one of these payoff trees will be randomly selected. This selected tree will become <i>your</i> payoff tree. Your subsequent two sessions of the study will be only about this selected payoff tree. </p>
+        <p>Please imagine that the outcomes of this payoff tree correspond to actual monetary gains or losses that may occur in the future. Although no real money will be gained or lost, it is important that you make your evaluations as if the outcomes were financially consequential. </p>
+        <p>In the second and third sessions, you will be informed about which random outcomes have been realised, and you will be asked to evaluate the remaining parts of your selected payoff tree.</p>
+
+
+        <h2>Payments</h2>
+        <p>You will receive the following financial reward for filling out the study questionnaire carefully and truthfully. You will receive £10 for Session 1, £5 for Session 2, and £5 for Session 3, plus an extra payment of £5 after Session 3. Payments for all sessions will be approved approximately three days after Session 3. Remember that you must be able to participate in all three sessions in order to take part in the study. All your payments will be made after the last session. <strong>It is important that you log in to complete these sessions in time, as there is only a limited time window (16 hours, 06:00 to 22:00) for these sessions to start!</strong> Furthermore, if you attend all three sessions and the quality of your responses is deemed sufficiently high, you will have the chance to win a prize of £300, awarded to one participant of the study.</p>
+
+        <p>At the end of Sessions 1 and 2, you will be shown the exact date of the following session.</p>
+
+        <p>You will not be paid for a session if one of the following applies:</p>
+        <p>a) your submission is rejected following Prolific's automated authenticity checks; or<br>
+        b) you do not start the session within its 16-hour window; or<br>
+        c) you do not complete the session within Prolific's required time. </p>
+
+        <p>If your submission is rejected for any session and there are later sessions, you will not be able to take part in those later sessions. In that case, you will also not be eligible for any completion bonus or for entry into the £300 prize draw.</p>
+
+        <strong>Please click 'Start' to begin the study. You will first be directed to a practice task to familiarise yourself with the interface.</strong>
+
+
+                <p style="text-align:right; margin-top: 1.5rem;">
+             
+              <button class="otree-btn-next btn btn-primary">Start &raquo;</button>
+            </p>
+
+
+        <strong>If you want to read the full instruction again, please <a href="https://guo-xiaoyi.github.io/full_instruction"  target="_blank">use this link.</a></strong>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Hidden form fields for oTree -->
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+{{ endblock }}

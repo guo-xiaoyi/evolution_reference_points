@@ -5,7 +5,13 @@ SESSION_CONFIGS = [
         name='rp_game',
         app_sequence=['rp_game'],
         num_demo_participants=3,
+    ),
+        dict(
+        name='rp_game_v2',
+        app_sequence=['rp_game_v2'],
+        num_demo_participants=3,
     )
+
 
 ]
 

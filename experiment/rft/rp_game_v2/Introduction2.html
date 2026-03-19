@@ -1,0 +1,821 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Instruction - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Instructions of the Game I - University of St.Gallen (HSG)</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron.css" rel="stylesheet">
+  
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+      .otree-body{
+        
+        max-width: 1280px;
+    }
+    /* CSS for the framework */
+    body {
+      font-family: 'Arial', sans-serif;
+      
+      background-color: #f5f5f5;
+    }
+    .jumbotron {
+      background-color: #e8e3d9;
+      color: #333;
+      padding: 2rem;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .display-3 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .main-container {
+      background-color: white;
+      padding: 2rem 0;
+    }
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .btn-primary {
+      background-color: #007095;
+      border-color: #007095;
+    }
+    .btn-primary:hover {
+      background-color: #005a79;
+      border-color: #005a79;
+    }
+    .university-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .footer {
+      padding: 2rem 0;
+      background-color: #f5f5f5;
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+    h2 {
+      font-weight: 500;
+      color: #333;
+      margin-top: 2rem;
+    }
+    .content-image {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .feature-box {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+
+    
+    p {
+        margin-bottom: 1em;
+    }
+    
+    /* Definition term styling */
+    .definition-term {
+        position: relative;
+        display: inline-block;
+        background-color: #e8e3d9; /* Light yellow background */
+        padding: 0 4px;
+        border-bottom: 1px dotted #ffc107;
+        cursor: help;
+    }
+    
+    /* Question mark indicator */
+    .definition-term::after {
+        content: "?";
+        display: inline-block;
+        font-size: 0.7em;
+        width: 12px;
+        height: 12px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #ffc107;
+        color: white;
+        margin-left: 0px;
+        position: relative;
+        top: -1px;
+    }
+    
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        visibility: hidden;
+        width: 250px;
+        background-color: #fff;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 0.9em;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* Arrow for tooltip */
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    
+    /* Show tooltip on hover and click */
+    .definition-term:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #efefef;
+      z-index: 1000;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #007095;
+      transition: width 0.2s ease;
+    }
+    body {
+      padding-top: 6px;
+    }
+
+    .focus-panel {
+      background: #f7f4ee;
+      border: 1px solid #e4dfd3;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .focus-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .focus-title {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+    .focus-status {
+      font-size: 0.95rem;
+      color: #5a5a5a;
+    }
+    .focus-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+    }
+    .focus-steps li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.4rem 0;
+    }
+    .focus-steps li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #b5b5b5;
+      flex: 0 0 auto;
+    }
+    .focus-steps li.is-done::before {
+      background: #007095;
+      border-color: #007095;
+    }
+    .focus-step {
+      border: none;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      font-size: 1rem;
+      color: inherit;
+      cursor: pointer;
+    }
+    .focus-steps li.is-active .focus-step {
+      color: #005a79;
+      font-weight: 600;
+    }
+    .focus-hint {
+      margin: 0.5rem 0 0;
+      font-size: 0.9rem;
+      color: #6a6a6a;
+    }
+
+    .key-points {
+      background: #f7f4ee;
+      border: 1px solid #e4dfd3;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin: 1.5rem 0;
+    }
+    .key-points summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .key-points[open] summary {
+      color: #005a79;
+    }
+    .key-points ul {
+      margin: 0.75rem 0 0 1.25rem;
+    }
+
+    .example-stack {
+      margin: 1.5rem 0;
+    }
+    .example-figure img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .figure-caption {
+      font-size: 0.9rem;
+      color: #6a6a6a;
+      margin-top: 0.5rem;
+    }
+    .example-text {
+      min-width: 0;
+      max-height: 45vh;
+      overflow-y: auto;
+      padding-right: 0.75rem;
+      scrollbar-width: thin;
+      scrollbar-color: #c9c2b6 #f5f1ea;
+    }
+    .example-text h3 {
+      margin-top: 0;
+    }
+    .example-text::-webkit-scrollbar {
+      width: 8px;
+    }
+    .example-text::-webkit-scrollbar-thumb {
+      background: #c9c2b6;
+      border-radius: 999px;
+    }
+    .example-text::-webkit-scrollbar-track {
+      background: #f5f1ea;
+    }
+
+    img.zoomable {
+      cursor: zoom-in;
+      border-radius: 6px;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    img.zoomable:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .quick-check {
+      background: #ffffff;
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 2rem 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+    .quick-check h3 {
+      margin-top: 0;
+    }
+    .quick-check-note {
+      margin-top: 0.25rem;
+      color: #6a6a6a;
+      font-size: 0.95rem;
+    }
+    .quick-check .question {
+      border-top: 1px solid #efefef;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+    .quick-check .question:first-of-type {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .quick-check .answers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .quick-check button {
+      border: 1px solid #d1d1d1;
+      background: #f8f8f8;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .quick-check button.is-selected {
+      border-color: #007095;
+      background: #eef6f9;
+    }
+    .quick-check button.is-correct {
+      border-color: #2c8a2c;
+      background: #e8f5e8;
+    }
+    .quick-check button.is-incorrect {
+      border-color: #c0392b;
+      background: #fdecea;
+    }
+    .quick-check .feedback {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .quick-check-gate {
+      margin: 1rem 0 0;
+      color: #c0392b;
+      font-size: 0.95rem;
+      display: none;
+    }
+    .quick-check-gate.is-visible {
+      display: block;
+    }
+    .btn-primary[disabled] {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+      padding: 1.5rem;
+    }
+    .image-modal.open {
+      display: flex;
+    }
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 82vh;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .image-modal .image-caption {
+      color: #f1f1f1;
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+    .image-modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .image-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .content-wrapper {
+        padding: 0 20px;
+      }
+      .example-figure img {
+        max-height: none;
+      }
+      .example-text {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+      .focus-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .quick-check .answers {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress-bar" id="readingProgress"></div>
+  </div>
+  <main role="main">
+    <!-- Main jumbotron for primary marketing message -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h1 class="university-title">Instructions for the decision tasks</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="content-wrapper">
+        <p>Please read this carefully. Afterwards, there will be further comprehension questions. </p>
+        <p>In this study, you will see several random payoff trees. Please find an example below. A random payoff tree contains four time periods. The first period is now. The second period is in three days (which is the time of Session 2 of this study). The third period is in six days (the time of Session 3 of this study). The fourth period is in nine days (three days after Session 3 of this study).</p>
+
+        <div class="example-stack">
+          <div class="example-figure">
+            <img src= "{{ static 'global/example_risky_prospect.png' }}" alt="random payoff tree" width="100%" class="zoomable">
+            <p class="figure-caption">Example payoff tree (click to zoom)</p>
+          </div>
+          <div class="example-text" role="region" aria-label="Explanation of the example tree" tabindex="0">
+            <h4 style="color: #7a7a7a;"> Please scroll to read more instructions about how to understand a random payoff tree.</h4>
+            <h3 id="section-example" tabindex="-1" style="margin-top: 0;">Understanding a random payoff tree</h3>
+            <p>In the example, the leftmost time period contains only the sign ‘Start’. This is because the random payoff tree does not yield any payoff in the current period. In the next column, corresponding to the time period in three days indicated by ‘In three days (Session 2)’, <strong style="color: #2c8a2c;">there are two possible outcomes, ‘+£10’ and ‘-£10’</strong>. You can also see a fortune wheel indicating 60% and 40% probabilities (these probabilities are also shown next to the lines from ‘Start’ to the outcomes). This means that there is a 60% probability that you receive £10 in three days. Similarly, there is a 40% probability of reaching the outcome ‘-£10’, which means that there is a 40% probability that you will lose £10  (<strong style="color: #2c8a2c;">remember that for all outcomes in the random payoff trees, for gains and losses alike, no real money is involved – but please imagine these to be real gains or losses</strong>). </p>
+            <p>The fortune wheel is an illustration of the probabilities. If you could spin this fortune wheel once, there would be a 60% probability of the arrow pointing to the blue region when the wheel stops (corresponding to the upper outcome where you gain £10) and a 40% probability of the arrow pointing to the beige region (corresponding to the lower outcome where you lose £10). </p>
+            <h4 id="section-timeline" tabindex="-1">Outcomes across sessions</h4>
+            <p>The outcome in the third period (in six days, when Session 3 will take place) <strong style="color: #2c8a2c;">will depend on</strong> the outcome at the time of Session 2. If the random outcome at the time of Session 2 is a gain of £10, there will be a gain at the time of Session 3 of £7. Note that this gain comes in addition to the £10 gained at the time of Session 2. If the random outcome at the time of Session 2 is a loss of £10, there will be a loss at the time of Session 3 of £12 (indicated by ‘-£12’). This loss comes in addition to the loss of £10 at the time of Session 2.</p>
+            <p>Similarly, the outcome in the fourth period (three days after Session 3) will depend on the outcome in the third period (Session 3). If the outcome in the third period is a gain of £7, there will be an 80% chance that the outcome in the last time period will be a gain of £8 (in addition to the outcomes in the earlier time periods) and a 20% chance that there will be no additional gain or loss (indicated by ‘+£0’). By contrast, if the outcome in the third period (Session 3) is a loss of £12, there will be a 50% chance that the outcome in the last time period will be a gain of £2 (in addition to the outcomes in earlier time periods) and a 50% chance that there will be a gain of £5. </p>
+          </div>
+        </div>
+
+            <details class="key-points">
+              <summary>Key points from the example (click to reveal)</summary>
+              <ul>
+                <li>There are four time periods in the random payoff tree, which correspond to Sessions 1, 2, 3, and to three days after Session 3.</li>
+                <li>The outcome of a session may depend on spinning a wheel of fortune in that session.</li>
+                <li>The outcome of a session may depend on previous sessions.</li>
+              </ul>
+            </details>
+
+        <div class="quick-check" id="quick-check">
+      <h3>Recall questions</h3>
+      <p class="quick-check-note">These questions help you stay focused. Your answers are not stored.</p>
+      <div class="question" data-answer="a" data-correct="Correct!" data-incorrect=" ">
+        <p><strong>1)</strong> In the example of the random payoff tree above, what are the numbers 60% and 40%?</p>
+        <div class="answers">
+          <button type="button" data-choice="a">The probabilities of the outcomes at the time of Session 2</button>
+          <button type="button" data-choice="b">The probabilities of outcomes in 9 days</button>
+        </div>
+        <div class="feedback" aria-live="polite"></div>
+      </div>
+      <div class="question" data-answer="a,c" data-correct="Correct!" data-incorrect=" ">
+        <p><strong>2)</strong> In the example, assume that you are at the node '-£12'. Which <strong>two options</strong> are correct?</p>
+        <div class="answers">
+          <button type="button" data-choice="a">You lost £10 before and then an additional £12.</button>
+          <button type="button" data-choice="b">You lost £10 before and then an additional £2.</button>
+          <button type="button" data-choice="c">In addition to your current losses, you may receive £2 or £5.</button>
+          <button type="button" data-choice="d">In addition to your current losses, you may receive £2, £5, £8, or £10.</button>
+        </div>
+        <div class="feedback" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <h3 id="section-evaluate" tabindex="-1" style="margin-top: 2rem;">How to evaluate a random payoff tree</h3>
+    <p> <strong style="color:#2c8a2c">Your main task in this study is to evaluate such random payoff trees. We want to know how much money such a random payoff tree would be worth to you.</strong> Therefore, we will present you with a series of alternative options. For each option, please indicate whether you would prefer to receive or pay the shown amount or receive the outcomes determined by the random payoff tree. The shown monetary amounts and outcomes are hypothetical and do not affect your payment. Imagine the fixed monetary amounts presented as alternative options to the outcomes of the random payoff tree to be received or paid immediately (which is different from the outcomes of the random payoff tree, which do not only depend on luck but also arrive with time delays). When you click on ‘Start evaluation’, you will see a pop-out sidebar as follows:</p>
+    <br> </br>
+<img src= "{{ static 'global/mcl.png' }}"  alt="Pop-out sidebar" width="100%" class="center zoomable">
+    <br> </br>
+    <p> You do not have to click on each single row in the table. If you make a choice for one row, other rows are filled automatically. Example: <strong style="color:#2c8a2c">if you click on ‘I would prefer to receive £8’, then automatically all options where you receive more than £8 will also be selected (for comparisons where you would receive less than £8, the option ‘I would prefer to obtain the outcomes of the random payoff tree.’ will then automatically be selected).</strong> If you click on another field, your choice will be updated. Once the indicated choices correspond to your preferences, click on ‘Submit’. </p>
+    <br></br>
+    <img src= "{{ static 'global/mcl_chosen_caption.png' }}"  alt="MPLChosen" width="100%" class="center zoomable">
+    <br></br>
+    <p> Sometimes, we will ask for more detail. This happens when the table uses larger increments (e.g., £20 steps). In that case, we show a follow-up table with smaller increments to pinpoint your preference. In that case you will see a similar table asking you for more detail regarding your choice, for instance, as shown below:</p>
+     <img src= "{{ static 'global/mcl_refinement.png' }}" alt="MPLChosen" width="100%" class="center zoomable">
+    
+    <details class="key-points">
+      <summary>Key points about the table (click to reveal)</summary>
+      <ul>
+        <li>You do not need to click each row; the table will fill automatically after one click.</li>
+        <li>Make a choice that matches your preference, then submit.</li>
+        <li>Sometimes a second table will appear with smaller steps</li>
+      </ul>
+    </details>
+
+
+    <p>After you click on ‘Submit’, you will proceed to the next random payoff tree. In Session 1, there are {{ session1_rounds }} random payoff trees to evaluate in total: {{ calibration_rounds }} calibration rounds followed by {{ evaluation_rounds }} evaluation rounds. When you have submitted a selection, your answer is recorded and you cannot go back and change it.</p>
+    <p>The decisions that you make here do not determine your payment. You are only providing us with insights on how you are valuing the random payoff trees; <strong style="color:#2c8a2c">you will neither actually participate in a random payoff tree nor receive or pay any of the money in the tables in which you indicate your choices.</strong></p>
+    <p><strong>Please click ‘Next’ to proceed to a few further comprehension questions.</strong></p>
+
+
+
+
+
+                <p class="quick-check-gate" id="quickCheckGate" role="status" aria-live="polite">
+                  Please select at least one option for each recall question to continue.
+                </p>
+                <p style="text-align:right; margin-top: 1.5rem;">
+              
+              <button class="otree-btn-next btn btn-primary" disabled aria-disabled="true">Next &raquo;</button>
+            </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <button type="button" class="image-close" aria-label="Close image">&times;</button>
+    <div class="image-modal-content">
+      <img src="" alt="" id="imageModalImg">
+      <p class="image-caption" id="imageModalCaption"></p>
+    </div>
+  </div>
+
+  <!-- Hidden form fields for oTree -->
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script>
+    (function () {
+      var progressBar = document.getElementById('readingProgress');
+      function updateProgress() {
+        if (!progressBar) return;
+        var doc = document.documentElement;
+        var scrollTop = doc.scrollTop || document.body.scrollTop;
+        var height = doc.scrollHeight - doc.clientHeight;
+        var percent = height > 0 ? (scrollTop / height) * 100 : 0;
+        progressBar.style.width = Math.min(100, percent) + '%';
+      }
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+
+      var steps = Array.prototype.slice.call(document.querySelectorAll('#focusSteps li'));
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('.focus-step'));
+      var status = document.getElementById('focusStatus');
+      var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function updateStatus() {
+        if (!status) return;
+        var doneCount = 0;
+        for (var i = 0; i < steps.length; i += 1) {
+          if (steps[i].classList.contains('is-done')) doneCount += 1;
+        }
+        status.textContent = doneCount + '/' + steps.length + ' completed';
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var targetId = button.getAttribute('data-target');
+          var target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      function stepForTarget(targetId) {
+        for (var i = 0; i < steps.length; i += 1) {
+          var stepButton = steps[i].querySelector('.focus-step');
+          if (stepButton && stepButton.getAttribute('data-target') === targetId) {
+            return steps[i];
+          }
+        }
+        return null;
+      }
+
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var targetId = entry.target.getAttribute('id');
+            var step = stepForTarget(targetId);
+            if (!step) return;
+            if (entry.isIntersecting) {
+              steps.forEach(function (item) { item.classList.remove('is-active'); });
+              step.classList.add('is-active');
+              step.classList.add('is-done');
+              updateStatus();
+            }
+          });
+        }, { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 });
+
+        ['section-example', 'section-timeline', 'section-evaluate'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
+      } else {
+        updateStatus();
+      }
+
+      var questions = document.querySelectorAll('.quick-check .question');
+      var nextButton = document.querySelector('.otree-btn-next');
+      var gateMessage = document.getElementById('quickCheckGate');
+
+      function isQuestionAnswered(question) {
+        var selectedCount = question.querySelectorAll('button.is-selected').length;
+        return selectedCount > 0;
+      }
+
+      function updateNextState() {
+        if (!nextButton) return;
+        if (!questions.length) {
+          nextButton.disabled = false;
+          nextButton.removeAttribute('aria-disabled');
+          if (gateMessage) gateMessage.classList.remove('is-visible');
+          return;
+        }
+        var allAnswered = true;
+        questions.forEach(function (question) {
+          if (!isQuestionAnswered(question)) {
+            allAnswered = false;
+          }
+        });
+        nextButton.disabled = !allAnswered;
+        if (allAnswered) {
+          nextButton.removeAttribute('aria-disabled');
+        } else {
+          nextButton.setAttribute('aria-disabled', 'true');
+        }
+        if (gateMessage) {
+          gateMessage.classList.toggle('is-visible', !allAnswered);
+        }
+      }
+      questions.forEach(function (question) {
+        var answerAttr = question.getAttribute('data-answer') || '';
+        var correctChoices = answerAttr.split(',').map(function (item) {
+          return item.trim();
+        }).filter(Boolean);
+        var isMulti = correctChoices.length > 1;
+        var correctText = question.getAttribute('data-correct') || 'Correct.';
+        var incorrectText = question.getAttribute('data-incorrect') || 'Not quite.';
+        var feedback = question.querySelector('.feedback');
+        var optionButtons = question.querySelectorAll('button[data-choice]');
+
+        function updateFeedback(selectedChoices) {
+          var hasAllCorrect = selectedChoices.length === correctChoices.length &&
+            selectedChoices.every(function (choice) { return correctChoices.indexOf(choice) !== -1; });
+          if (selectedChoices.length === 0) {
+            if (feedback) feedback.textContent = '';
+          } else if (hasAllCorrect) {
+            if (feedback) feedback.textContent = correctText;
+          } else {
+            if (feedback) feedback.textContent = incorrectText;
+          }
+        }
+
+        optionButtons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (!isMulti) {
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-selected', 'is-correct', 'is-incorrect');
+              });
+              btn.classList.add('is-selected');
+            } else {
+              btn.classList.toggle('is-selected');
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-correct', 'is-incorrect');
+              });
+            }
+
+            var selectedButtons = Array.prototype.slice.call(optionButtons).filter(function (b) {
+              return b.classList.contains('is-selected');
+            });
+            var selectedChoices = selectedButtons.map(function (b) {
+              return b.getAttribute('data-choice');
+            });
+
+            if (!isMulti) {
+              if (selectedChoices[0] === correctChoices[0]) {
+                btn.classList.add('is-correct');
+              } else {
+                btn.classList.add('is-incorrect');
+              }
+              updateFeedback(selectedChoices);
+              updateNextState();
+              return;
+            }
+
+            selectedButtons.forEach(function (selectedBtn) {
+              if (correctChoices.indexOf(selectedBtn.getAttribute('data-choice')) !== -1) {
+                selectedBtn.classList.add('is-correct');
+              } else {
+                selectedBtn.classList.add('is-incorrect');
+              }
+            });
+            updateFeedback(selectedChoices);
+            updateNextState();
+          });
+        });
+      });
+      updateNextState();
+
+      var modal = document.getElementById('imageModal');
+      var modalImg = document.getElementById('imageModalImg');
+      var modalCaption = document.getElementById('imageModalCaption');
+      var closeBtn = document.querySelector('.image-close');
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        if (modalImg) modalImg.src = '';
+        if (modalCaption) modalCaption.textContent = '';
+      }
+
+      document.querySelectorAll('img.zoomable').forEach(function (img) {
+        img.addEventListener('click', function () {
+          if (!modal || !modalImg) return;
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          if (modalCaption) modalCaption.textContent = img.alt || '';
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+        });
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+      if (modal) {
+        modal.addEventListener('click', function (event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+      }
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
+{{ endblock }}
