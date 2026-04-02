@@ -4,13 +4,13 @@
     "stake": "lo",
     "max_payoff": 110,
     "min_payoff": 63,
-    "description": "gains",
+    "description": "treatment",
     "periods": {
       "0": [
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -87,7 +87,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -158,13 +158,13 @@
     "stake": "lo",
     "max_payoff": 121,
     "min_payoff": 74,
-    "description": "gains",
+    "description": "treatment",
     "periods": {
       "0": [
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -241,7 +241,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -318,7 +318,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -395,7 +395,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -472,7 +472,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],
@@ -549,7 +549,7 @@
         {
           "label": "Start",
           "probability": 1,
-          "from": None,
+          "from": null,
           "abs_prob": 1
         }
       ],

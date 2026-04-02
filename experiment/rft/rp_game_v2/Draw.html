@@ -376,6 +376,19 @@
               </noscript>
               <br>
 
+              {% if not is_revision %}
+              {% if is_treatment_eligible %}
+              <div class="alert alert-success treatment-eligibility-notice" id="treatment-notice" role="alert" style="display:none;">
+                <h5 class="alert-heading">&#10003; Additional Payment Opportunity</h5>
+                <p style="margin-bottom:0;">You have drawn an <strong>eligible payoff tree</strong>. At the end of Session 3, you will be eligible for an additional payment based on this tree. Please review the payment instructions you received at the beginning of the study for details.</p>
+              </div>
+              {% elif is_treatment_group %}
+              <div class="alert alert-info treatment-eligibility-notice" id="treatment-notice" role="alert" style="display:none;">
+                <p style="margin-bottom:0;">The drawn payoff tree is not an eligible tree. You will receive all standard payments as described.</p>
+              </div>
+              {% endif %}
+              {% endif %}
+
             </div>
 
       </div>
@@ -948,6 +961,11 @@
           data = lotteriesByName[finalName];
         }
         renderLotteryPreview(data);
+        // Show treatment eligibility notice (if present) after the reveal
+        var treatmentNotice = document.getElementById('treatment-notice');
+        if (treatmentNotice) {
+          window.setTimeout(function() { treatmentNotice.style.display = ''; }, 600);
+        }
       }
 
       function startDraw() {

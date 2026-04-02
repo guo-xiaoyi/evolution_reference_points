@@ -1,0 +1,435 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Additional Payment Determination - University of St. Gallen">
+  <meta name="author" content="University of St. Gallen">
+  <title>Additional Payment Determination - University of St.Gallen (HSG)</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="jumbotron.css" rel="stylesheet">
+
+  <style>
+  .otree-timer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .otree-body {
+    max-width: 1280px;
+  }
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+  }
+  .jumbotron {
+    background-color: #e8e3d9;
+    color: #333;
+    padding: 2rem;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+  .main-container {
+    background-color: white;
+    padding: 2rem 0;
+  }
+  .content-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .btn-primary {
+    background-color: #007095;
+    border-color: #007095;
+  }
+  .btn-primary:hover {
+    background-color: #005a79;
+    border-color: #005a79;
+  }
+  .university-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+  .footer {
+    padding: 2rem 0;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e7e7e7;
+    margin-top: 2rem;
+  }
+  h2 {
+    font-weight: 500;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Die roll section ── */
+  .die-section {
+    text-align: center;
+    padding: 2rem 0;
+  }
+  .die-container {
+    display: inline-block;
+    cursor: pointer;
+  }
+  .die-face {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border: 3px solid #007095;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #007095;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+    user-select: none;
+  }
+  .die-face.rolling {
+    animation: dieRoll 1.6s ease-out forwards;
+  }
+  @keyframes dieRoll {
+    0%   { transform: rotate(0deg)   scale(1);    }
+    15%  { transform: rotate(90deg)  scale(1.1);  }
+    30%  { transform: rotate(180deg) scale(0.95); }
+    45%  { transform: rotate(270deg) scale(1.05); }
+    60%  { transform: rotate(360deg) scale(0.98); }
+    75%  { transform: rotate(420deg) scale(1.02); }
+    90%  { transform: rotate(450deg) scale(1);    }
+    100% { transform: rotate(450deg) scale(1);    }
+  }
+  .die-roll-btn {
+    margin-top: 1.2rem;
+    background-color: #007095;
+    border-color: #007095;
+    font-size: 1rem;
+    padding: 0.6rem 2rem;
+  }
+  .die-roll-btn:hover {
+    background-color: #005a79;
+  }
+  .die-result-label {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+    min-height: 1.5rem;
+  }
+
+  /* ── Steps sections ── */
+  .step-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: #fafafa;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .step-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .step-number {
+    display: inline-block;
+    background: #007095;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 0.6rem;
+    font-size: 1rem;
+  }
+  .step-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  /* ── Comparison table ── */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  .comparison-table th {
+    background-color: #e8e3d9;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 16px;
+    border: 1px solid #ccc;
+  }
+  .comparison-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    font-size: 16px;
+  }
+  .comparison-table tr:nth-child(even) td {
+    background-color: #f9f9f9;
+  }
+
+  /* ── Result banner ── */
+  .result-banner {
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+  }
+  .result-banner.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .result-accepted {
+    background-color: #d4edda;
+    border: 2px solid #28a745;
+    color: #155724;
+  }
+  .result-declined {
+    background-color: #d1ecf1;
+    border: 2px solid #17a2b8;
+    color: #0c5460;
+  }
+  .result-amount {
+    font-size: 1.8rem;
+    font-weight: bold;
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  .tree-version-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background-color: #007095;
+    color: white;
+    margin-left: 0.4rem;
+  }
+
+  .next-btn-wrapper {
+    text-align: right;
+    margin-top: 2rem;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.3s;
+  }
+  .next-btn-wrapper.visible {
+    opacity: 1;
+  }
+  </style>
+</head>
+
+<body>
+  <main role="main">
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-9">
+            <h1 class="university-title">Additional Payment Determination</h1>
+            <p class="lead">You drew an eligible payoff tree. Your additional payment will now be determined.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="content-wrapper">
+
+        <!-- Step 1: Die Roll -->
+        <h2><span class="step-number">1</span><span class="step-title">Roll the Die</span></h2>
+        <p>Click the die below to roll it. The result determines which version of your payoff tree will be used.</p>
+
+        <div class="die-section">
+          <div class="die-container">
+            <div class="die-face" id="die-face">?</div>
+          </div>
+          <br>
+          <button class="btn btn-primary die-roll-btn" id="roll-btn">Roll the Die</button>
+          <div class="die-result-label" id="die-result-label"></div>
+        </div>
+
+        <!-- Step 2: Tree version result (hidden until roll) -->
+        <div class="step-card" id="tree-version-card">
+          <p style="margin:0;">
+            <strong>Die result: {{ die_roll }}</strong> &mdash;
+            The following payoff tree version has been selected:
+            {% if tree_version == 'session1' %}
+            <span class="tree-version-badge">Full payoff tree from Session 1</span>
+            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers all three periods of your payoff tree.</small>
+            {% elif tree_version == 'session2' %}
+            <span class="tree-version-badge">Remaining tree from Session 2</span>
+            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers periods 2 and 3, given the period 1 outcome already realised.</small>
+            {% else %}
+            <span class="tree-version-badge">Remaining tree from Session 3</span>
+            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers period 3 only, given the periods 1 and 2 outcomes already realised.</small>
+            {% endif %}
+          </p>
+        </div>
+
+        <!-- Step 3: Offer (hidden until roll) -->
+        <div class="step-card" id="offer-card">
+          <h2 style="margin-top:0;"><span class="step-number">2</span><span class="step-title">Monetary Offer</span></h2>
+          <p>A random monetary offer has been drawn from the range of possible outcomes of the selected tree version.</p>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Range of possible outcomes</td>
+                <td>£{{ offer_min }} &ndash; £{{ offer_max }}</td>
+              </tr>
+              <tr>
+                <td><strong>Monetary offer drawn</strong></td>
+                <td><strong>£{{ offer }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Step 4: Comparison (hidden until roll) -->
+        <div class="step-card" id="comparison-card">
+          <h2 style="margin-top:0;"><span class="step-number">3</span><span class="step-title">Comparison with Your Reported Value</span></h2>
+          <p>We compare the offer with your reported value from the evaluation table of the corresponding session.</p>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monetary offer</td>
+                <td>£{{ offer }}</td>
+              </tr>
+              <tr>
+                <td>Your reported value</td>
+                <td>£{{ reported_value }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Step 5: Result banner (hidden until roll) -->
+        <div class="result-banner {% if offer_accepted %}result-accepted{% else %}result-declined{% endif %}" id="result-banner">
+          {% if offer_accepted %}
+          <strong>The offer exceeds your reported value.</strong>
+          <span class="result-amount">You receive £{{ offer }} as your additional payment.</span>
+          {% else %}
+          <strong>The offer does not exceed your reported value.</strong>
+          You remain in the payoff tree.
+          <span class="result-amount">Your additional payment from the tree outcome is £{{ tree_realized_outcome }}.</span>
+          {% endif %}
+        </div>
+
+        <!-- Next button (hidden until roll) -->
+        <div class="next-btn-wrapper" id="next-btn-wrapper">
+          <button class="otree-btn-next btn btn-primary">Continue &raquo;</button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center"></div>
+      </div>
+    </div>
+  </footer>
+
+  <div style="display:none;">
+    {{ formfields }}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+
+  <script>
+    var FINAL_DIE_ROLL = {{ die_roll }};
+    var DIE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    var rolled = false;
+
+    function revealResults() {
+      var cards = ['tree-version-card', 'offer-card', 'comparison-card'];
+      cards.forEach(function(id, idx) {
+        setTimeout(function() {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('visible');
+        }, idx * 300);
+      });
+      setTimeout(function() {
+        var banner = document.getElementById('result-banner');
+        if (banner) banner.classList.add('visible');
+        var nextBtn = document.getElementById('next-btn-wrapper');
+        if (nextBtn) nextBtn.classList.add('visible');
+      }, cards.length * 300 + 200);
+    }
+
+    document.getElementById('roll-btn').addEventListener('click', function() {
+      if (rolled) return;
+      rolled = true;
+      var btn = this;
+      btn.disabled = true;
+
+      var dieFace = document.getElementById('die-face');
+      var label = document.getElementById('die-result-label');
+      dieFace.textContent = '?';
+      dieFace.classList.add('rolling');
+
+      // Animate through random faces during roll
+      var count = 0;
+      var maxFlashes = 14;
+      var interval = setInterval(function() {
+        var randomFace = Math.floor(Math.random() * 6);
+        dieFace.textContent = DIE_FACES[randomFace];
+        count++;
+        if (count >= maxFlashes) {
+          clearInterval(interval);
+          // Show final result
+          dieFace.textContent = DIE_FACES[FINAL_DIE_ROLL - 1];
+          dieFace.style.borderColor = '#28a745';
+          dieFace.style.color = '#28a745';
+          var versionMap = {
+            'session1': 'Full payoff tree (Session 1)',
+            'session2': 'Remaining tree (Session 2)',
+            'session3': 'Remaining tree (Session 3)'
+          };
+          label.textContent = 'Result: ' + FINAL_DIE_ROLL + ' \u2014 ' + (versionMap['{{ tree_version }}'] || '');
+          // Show result sections after a short delay
+          setTimeout(revealResults, 500);
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
+{{ endblock }}

@@ -106,6 +106,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    treatment_group = models.BooleanField(blank=True)
     num_failed_attempts = models.IntegerField(initial=0)
     failed_too_many_1 = models.BooleanField(initial=False)
     failed_too_many_2 = models.BooleanField(initial=False)
@@ -223,6 +224,21 @@ def _continuation_has_time(player, prefix, min_seconds=CONTINUATION_MIN_SECONDS)
     return seconds_left > min_seconds
 
 
+def _is_treatment_group(player):
+    return bool(player.participant.vars.get('treatment_group', False))
+
+
+def _is_treatment_eligible(player):
+    if not _is_treatment_group(player):
+        return False
+    store = ensure_payment_setup(player)
+    lottery_id = store.get('lottery_id')
+    if not lottery_id:
+        return False
+    lottery = Constants.lotteries.get(lottery_id, {})
+    return lottery.get('description') == 'treatment'
+
+
 # Dynamically add the multiple choice list fields (supports up to long list length)
 for i in range(1, Constants.max_choice_count + 1):
     setattr(
@@ -285,6 +301,15 @@ class Introduction3(Page):
     def is_displayed(player):
         return player.round_number == 1
     pass
+
+
+class TreatmentInstructions(Page):
+    allow_back_button = True
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.vars.get('treatment_group', False)
+
 
 class LotterySet1(Page):
     @staticmethod
@@ -540,6 +565,11 @@ class Draw(Page):
         store = ensure_payment_lottery_selected(player)
         full_lottery = get_selected_lottery(player, store=store)
         realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
+        is_treatment = player.participant.vars.get('treatment_group', False)
+        is_eligible = (
+            is_treatment
+            and Constants.lotteries.get(store.get('lottery_id', ''), {}).get('description') == 'treatment'
+        )
         return {
             'selected_round': store.get('selected_round'),
             'selected_choice': store.get('selected_choice'),
@@ -555,6 +585,8 @@ class Draw(Page):
             'final_payoff_text': final_payoff_text,
             'current_session_number': None,
             'evaluation_rounds': Constants.main_evaluation_rounds,
+            'is_treatment_group': is_treatment,
+            'is_treatment_eligible': is_eligible,
         }
 
     @staticmethod
@@ -717,6 +749,8 @@ class Play2(Session2TimedPage):
         lottery = get_conditional_lottery(player, realized_up_to=1)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
+        store['selected_amount_s2'] = player.selected_amount
+        persist_payment_store(player, store)
 
 class Play3(Session3TimedPage):
     form_model = 'player'
@@ -775,6 +809,7 @@ class Play3(Session3TimedPage):
         lottery = get_conditional_lottery(player, realized_up_to=2)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
+        store['selected_amount_s3'] = player.selected_amount
         ensure_realized_up_to(player, 3, store=store)
         final_payoff = compute_final_payoff(store)
         if final_payoff is not None:
@@ -892,6 +927,75 @@ class WheelSession3(Session3TimedPage):
 
 
 
+class TreatmentPayoff(Session3TimedPage):
+    """Die roll + monetary offer page for treatment-eligible participants (Session 3)."""
+
+    @staticmethod
+    def is_displayed(player):
+        if player.round_number != Constants.continuation_rounds[1]:
+            return False
+        if not _continuation_has_time(player, 'session3'):
+            return False
+        return _is_treatment_eligible(player)
+
+    @staticmethod
+    def vars_for_template(player):
+        store = ensure_payment_setup(player)
+        t_store = player.participant.vars.setdefault('treatment_store', {})
+
+        if 'die_roll' not in t_store:
+            die_roll = rng.randint(1, 6)
+            if die_roll <= 2:
+                tree_version = 'session1'
+                lottery_for_range = get_selected_lottery(player, store=store)
+                start_period = 1
+                reported_value = store.get('selected_amount')
+            elif die_roll <= 4:
+                tree_version = 'session2'
+                lottery_for_range = get_conditional_lottery(player, realized_up_to=1)
+                start_period = 2
+                reported_value = store.get('selected_amount_s2')
+            else:
+                tree_version = 'session3'
+                lottery_for_range = get_conditional_lottery(player, realized_up_to=2)
+                start_period = 3
+                reported_value = store.get('selected_amount_s3')
+
+            min_outcome, max_outcome = compute_upcoming_payoff_range(lottery_for_range, start_period)
+            if min_outcome is None or max_outcome is None:
+                min_outcome = store.get('lottery_id') and Constants.lotteries.get(store.get('lottery_id', ''), {}).get('min_payoff', 0)
+                max_outcome = store.get('lottery_id') and Constants.lotteries.get(store.get('lottery_id', ''), {}).get('max_payoff', 0)
+                min_outcome = min_outcome or 0
+                max_outcome = max_outcome or 0
+
+            offer = rng.randint(int(min_outcome), int(max_outcome)) if max_outcome > min_outcome else int(min_outcome)
+            offer_accepted = (reported_value is not None) and (offer > reported_value)
+
+            realized_nodes = store.get('realized_nodes', {})
+            if tree_version == 'session1':
+                tree_realized_outcome = compute_realized_offset(realized_nodes)
+            elif tree_version == 'session2':
+                tree_realized_outcome = (
+                    compute_realized_offset(realized_nodes) - compute_realized_offset(realized_nodes, upto_period=1)
+                )
+            else:
+                node3 = realized_nodes.get(3, {})
+                tree_realized_outcome = parse_payoff_label(node3.get('label'))
+
+            t_store.update(
+                die_roll=die_roll,
+                tree_version=tree_version,
+                offer=offer,
+                offer_min=int(min_outcome),
+                offer_max=int(max_outcome),
+                reported_value=reported_value,
+                offer_accepted=offer_accepted,
+                tree_realized_outcome=tree_realized_outcome,
+            )
+
+        return dict(t_store)
+
+
 class Post(Session3TimedPage):
     form_model = 'player'
     form_fields = ['quiz6', 'quiz7', 'quiz8']
@@ -903,6 +1007,19 @@ class Thankyou(Session3TimedPage):
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
+
+    @staticmethod
+    def vars_for_template(player):
+        t_store = player.participant.vars.get('treatment_store', {})
+        return {
+            'is_treatment_eligible': _is_treatment_eligible(player),
+            'treatment_die_roll': t_store.get('die_roll'),
+            'treatment_tree_version': t_store.get('tree_version'),
+            'treatment_offer': t_store.get('offer'),
+            'treatment_reported_value': t_store.get('reported_value'),
+            'treatment_offer_accepted': t_store.get('offer_accepted'),
+            'treatment_realized_outcome': t_store.get('tree_realized_outcome'),
+        }
 
 
 class WelcomeSession2(Session2TimedPage):
@@ -984,6 +1101,7 @@ page_sequence = [
     Check2,
     Failed,
     Introduction3,
+    TreatmentInstructions,
     Failed,
     PracticePlay,
     LotterySet1,
@@ -1003,6 +1121,7 @@ page_sequence = [
     RevisionSession3,
     Session3,
     Play3,
+    TreatmentPayoff,
     Post,
     Thankyou,
     BridgeSession2,
@@ -1013,6 +1132,12 @@ page_sequence = [
 # SESSION HOOKS
 def creating_session(subsession: Subsession):
     """Assign separate Session 1 lottery orders for calibration and evaluation."""
+    if subsession.round_number == 1:
+        for player in subsession.get_players():
+            if 'treatment_group' not in player.participant.vars:
+                player.participant.vars['treatment_group'] = (rng.random() < 0.5)
+            player.treatment_group = player.participant.vars['treatment_group']
+
     for player in subsession.get_players():
         if _is_calibration_round_number(subsession.round_number):
             lottery_order = get_participant_lottery_order(
@@ -1089,6 +1214,12 @@ def custom_export(players):
         'realized_period3_abs_prob',
         'final_outcome_label',
         'final_payoff',
+        'treatment_group',
+        'treatment_die_roll',
+        'treatment_tree_version',
+        'treatment_offer',
+        'treatment_reported_value',
+        'treatment_offer_accepted',
     ] + choice_fields
 
     ordered_players = sorted(
@@ -1170,6 +1301,12 @@ def custom_export(players):
             realized_3.get('abs_prob'),
             store.get('final_outcome_label'),
             store.get('final_payoff'),
+            participant.vars.get('treatment_group'),
+            (participant.vars.get('treatment_store') or {}).get('die_roll'),
+            (participant.vars.get('treatment_store') or {}).get('tree_version'),
+            (participant.vars.get('treatment_store') or {}).get('offer'),
+            (participant.vars.get('treatment_store') or {}).get('reported_value'),
+            (participant.vars.get('treatment_store') or {}).get('offer_accepted'),
         ]
         row.extend(get_player_field(player, field) for field in choice_fields)
         yield row

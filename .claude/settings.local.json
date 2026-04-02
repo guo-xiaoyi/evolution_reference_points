@@ -2,10 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(cd:*)",
-      "Bash(xargs ls:*)",
-      "Bash(git -C /home/ubuntu/evolution_reference_points check-ignore -v .venv)",
-      "Bash(python -c \"import ast; ast.parse\\(open\\(''Simulation/discrete_searcher_distinct_rp.py''\\).read\\(\\)\\); print\\(''Syntax OK''\\)\")",
-      "Bash(python -:*)"
+      "Bash(grep -r \"treatment\\\\|eligible\" '/c/Users/XGuo/OneDrive - Universitaet St.Gallen/Dokumente/GitHub/reference-point/evolution_reference_points/experiment/rft/rp_game_v2/' --include=*.html --include=*.py)"
     ]
   }
 }
