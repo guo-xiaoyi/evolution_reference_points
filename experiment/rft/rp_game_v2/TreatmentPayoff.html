@@ -4,240 +4,111 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Additional Payment Determination - University of St. Gallen">
-  <meta name="author" content="University of St. Gallen">
   <title>Additional Payment Determination - University of St.Gallen (HSG)</title>
-
-  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
   <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="jumbotron.css" rel="stylesheet">
-
   <style>
-  .otree-timer {
-    display: none !important;
-    visibility: hidden !important;
-  }
-  .otree-body {
-    max-width: 1280px;
-  }
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-  }
-  .jumbotron {
-    background-color: #e8e3d9;
-    color: #333;
-    padding: 2rem;
-    margin-bottom: 0;
-    border-radius: 0;
-  }
-  .main-container {
-    background-color: white;
-    padding: 2rem 0;
-  }
-  .content-wrapper {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
-  .btn-primary {
-    background-color: #007095;
-    border-color: #007095;
-  }
-  .btn-primary:hover {
-    background-color: #005a79;
-    border-color: #005a79;
-  }
-  .university-title {
-    font-size: 2.5rem;
-    font-weight: 300;
-    margin-bottom: 0.5rem;
-  }
-  .footer {
-    padding: 2rem 0;
-    background-color: #f5f5f5;
-    border-top: 1px solid #e7e7e7;
-    margin-top: 2rem;
-  }
-  h2 {
-    font-weight: 500;
-    color: #333;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-  p {
-    font-size: 17px;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
+  .otree-timer { display: none !important; visibility: hidden !important; }
+  .otree-body { max-width: 1280px; }
+  body { font-family: 'Arial', sans-serif; background-color: #f5f5f5; }
+  .jumbotron { background-color: #e8e3d9; color: #333; padding: 2rem; margin-bottom: 0; border-radius: 0; }
+  .main-container { background-color: white; padding: 2rem 0; }
+  .content-wrapper { max-width: 920px; margin: 0 auto; padding: 0 40px; }
+  .btn-primary { background-color: #007095; border-color: #007095; }
+  .btn-primary:hover { background-color: #005a79; border-color: #005a79; }
+  .university-title { font-size: 2.4rem; font-weight: 300; margin-bottom: 0.5rem; }
+  .footer { padding: 2rem 0; background-color: #f5f5f5; border-top: 1px solid #e7e7e7; margin-top: 2rem; }
+  h2 { font-weight: 500; color: #333; margin-top: 2rem; margin-bottom: 0.8rem; }
+  p { font-size: 17px; line-height: 1.6; margin-bottom: 1rem; }
 
-  /* ── Die roll section ── */
-  .die-section {
-    text-align: center;
-    padding: 2rem 0;
-  }
-  .die-container {
-    display: inline-block;
-    cursor: pointer;
-  }
+  /* ── Die roll ── */
+  .die-section { text-align: center; padding: 1.5rem 0; }
   .die-face {
-    width: 100px;
-    height: 100px;
-    background: white;
-    border: 3px solid #007095;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    font-weight: bold;
-    color: #007095;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 96px; height: 96px;
+    background: white; border: 3px solid #007095; border-radius: 16px;
+    font-size: 2.8rem; font-weight: bold; color: #007095;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.1s;
     user-select: none;
   }
-  .die-face.rolling {
-    animation: dieRoll 1.6s ease-out forwards;
-  }
+  .die-face.rolling { animation: dieRoll 1.6s ease-out forwards; }
   @keyframes dieRoll {
     0%   { transform: rotate(0deg)   scale(1);    }
-    15%  { transform: rotate(90deg)  scale(1.1);  }
-    30%  { transform: rotate(180deg) scale(0.95); }
-    45%  { transform: rotate(270deg) scale(1.05); }
-    60%  { transform: rotate(360deg) scale(0.98); }
-    75%  { transform: rotate(420deg) scale(1.02); }
-    90%  { transform: rotate(450deg) scale(1);    }
+    20%  { transform: rotate(120deg) scale(1.08); }
+    40%  { transform: rotate(240deg) scale(0.95); }
+    60%  { transform: rotate(360deg) scale(1.04); }
+    80%  { transform: rotate(420deg) scale(0.98); }
     100% { transform: rotate(450deg) scale(1);    }
   }
-  .die-roll-btn {
-    margin-top: 1.2rem;
-    background-color: #007095;
-    border-color: #007095;
-    font-size: 1rem;
-    padding: 0.6rem 2rem;
-  }
-  .die-roll-btn:hover {
-    background-color: #005a79;
-  }
-  .die-result-label {
-    margin-top: 1rem;
-    font-size: 1.1rem;
-    color: #333;
-    min-height: 1.5rem;
-  }
+  .roll-btn { margin-top: 1rem; font-size: 1rem; padding: 0.55rem 2rem; }
+  .die-result-label { margin-top: 0.8rem; font-size: 1rem; color: #333; min-height: 1.4rem; }
 
-  /* ── Steps sections ── */
+  /* ── Step cards ── */
   .step-card {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    background: #fafafa;
-    opacity: 0;
-    transform: translateY(10px);
+    border: 1px solid #dee2e6; border-radius: 8px; padding: 1.4rem 1.5rem;
+    margin-bottom: 1.4rem; background: #fafafa;
+    opacity: 0; transform: translateY(10px);
     transition: opacity 0.4s ease, transform 0.4s ease;
   }
-  .step-card.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .step-card.visible { opacity: 1; transform: translateY(0); }
+  .step-num {
+    display: inline-block; background: #007095; color: white;
+    border-radius: 50%; width: 30px; height: 30px; line-height: 30px;
+    text-align: center; font-weight: bold; font-size: 0.95rem; margin-right: 0.5rem;
   }
-  .step-number {
-    display: inline-block;
-    background: #007095;
-    color: white;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    font-weight: bold;
-    margin-right: 0.6rem;
-    font-size: 1rem;
-  }
-  .step-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #333;
+  .step-title { font-weight: 600; font-size: 1.05rem; color: #333; }
+
+  /* ── Tree version badge ── */
+  .tree-badge {
+    display: inline-block; padding: 0.3rem 0.9rem; border-radius: 20px;
+    font-weight: 600; font-size: 0.9rem;
+    background-color: #007095; color: white; margin-left: 0.3rem;
   }
 
-  /* ── Comparison table ── */
-  .comparison-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
+  /* ── Lottery visualization (same as Draw.html) ── */
+  .lottery-preview {
+    margin-top: 1.5rem; padding: 1.5rem;
+    background-color: rgba(255,255,255,0.96);
+    border-radius: 12px; border: 1px solid #d4e4eb;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
   }
-  .comparison-table th {
-    background-color: #e8e3d9;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 16px;
-    border: 1px solid #ccc;
-  }
-  .comparison-table td {
-    padding: 0.75rem 1rem;
-    border: 1px solid #dee2e6;
-    font-size: 16px;
-  }
-  .comparison-table tr:nth-child(even) td {
-    background-color: #f9f9f9;
-  }
+  .preview-title { font-size: 1.2rem; font-weight: 600; color: #005a79; margin-bottom: 0.5rem; }
+  #lottery-visualization { display: flex; justify-content: center; width: 100%; margin-top: 1rem; }
+  #lottery-visualization svg { display: block; margin: 0; width: 100%; height: auto; }
+  .col { fill: #f5f5f7; stroke: #d5d5d5; }
+  .col.highlight-col { fill: #fff1b8; stroke: #f0b429; stroke-width: 2; }
+  .link { stroke: #8a8a8a; stroke-width: 2; }
+  .link.link-highlight { stroke: #dc3545; stroke-width: 3.5; }
+  .payout { font-size: 15px; fill: #1c3b4d; }
+  .payout.highlight-node { fill: #b56600; font-weight: 600; }
+  .prob.highlight-node { fill: #dc3545; font-weight: 600; }
+  .title { font-size: 15px; font-weight: 600; fill: #333; }
+  .prob { font-size: 12px; fill: #2a8f2a; }
+  .ring { fill: none; stroke: #f0a500; stroke-width: 8; }
+
+  /* ── Payment schedule table ── */
+  .pay-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .pay-table th { background-color: #e8e3d9; padding: 0.7rem 1rem; text-align: left; font-weight: 600; font-size: 15px; border: 1px solid #ccc; }
+  .pay-table td { padding: 0.7rem 1rem; border: 1px solid #dee2e6; font-size: 15px; }
+  .pay-table tr:nth-child(even) td { background-color: #f9f9f9; }
+  .pay-amount { font-weight: 600; color: #007095; }
+  .pay-when { color: #555; }
 
   /* ── Result banner ── */
   .result-banner {
-    border-radius: 8px;
-    padding: 1.5rem 2rem;
-    margin: 1.5rem 0;
-    font-size: 1.1rem;
-    line-height: 1.5;
-    opacity: 0;
-    transform: translateY(8px);
+    border-radius: 8px; padding: 1.4rem 1.8rem; margin: 1.4rem 0;
+    font-size: 1.05rem; line-height: 1.5;
+    opacity: 0; transform: translateY(8px);
     transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
   }
-  .result-banner.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .result-accepted {
-    background-color: #d4edda;
-    border: 2px solid #28a745;
-    color: #155724;
-  }
-  .result-declined {
-    background-color: #d1ecf1;
-    border: 2px solid #17a2b8;
-    color: #0c5460;
-  }
-  .result-amount {
-    font-size: 1.8rem;
-    font-weight: bold;
-    display: block;
-    margin-top: 0.3rem;
-  }
+  .result-banner.visible { opacity: 1; transform: translateY(0); }
+  .result-accepted { background-color: #d4edda; border: 2px solid #28a745; color: #155724; }
+  .result-tree { background-color: #d1ecf1; border: 2px solid #17a2b8; color: #0c5460; }
+  .result-amount { font-size: 1.6rem; font-weight: bold; display: block; margin-top: 0.3rem; }
 
-  .tree-version-badge {
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    background-color: #007095;
-    color: white;
-    margin-left: 0.4rem;
-  }
-
-  .next-btn-wrapper {
-    text-align: right;
-    margin-top: 2rem;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.3s;
-  }
-  .next-btn-wrapper.visible {
-    opacity: 1;
-  }
+  .next-wrapper { text-align: right; margin-top: 2rem; opacity: 0; transition: opacity 0.5s ease 0.3s; }
+  .next-wrapper.visible { opacity: 1; }
   </style>
 </head>
-
 <body>
   <main role="main">
     <div class="jumbotron">
@@ -254,101 +125,99 @@
     <div class="main-container">
       <div class="content-wrapper">
 
-        <!-- Step 1: Die Roll -->
-        <h2><span class="step-number">1</span><span class="step-title">Roll the Die</span></h2>
-        <p>Click the die below to roll it. The result determines which version of your payoff tree will be used.</p>
+        <!-- Step 1: Your payoff tree -->
+        <h2><span class="step-num">1</span><span class="step-title">Your Payoff Tree</span></h2>
+        <p>Below is your selected payoff tree. The highlighted (golden) nodes and path show the outcomes that have been realised in Sessions 2 and 3.</p>
+        <div class="lottery-preview">
+          <p class="preview-title">{{ lottery_name }}</p>
+          <div id="lottery-visualization" aria-live="polite"></div>
+        </div>
 
+        <!-- Step 2: Die roll -->
+        <h2><span class="step-num">2</span><span class="step-title">Roll the Die</span></h2>
+        <p>Click the die to roll it. The result determines which version of your payoff tree will be used for the additional payment.</p>
         <div class="die-section">
-          <div class="die-container">
-            <div class="die-face" id="die-face">?</div>
-          </div>
-          <br>
-          <button class="btn btn-primary die-roll-btn" id="roll-btn">Roll the Die</button>
+          <div class="die-face" id="die-face">?</div><br>
+          <button class="btn btn-primary roll-btn" id="roll-btn">Roll the Die</button>
           <div class="die-result-label" id="die-result-label"></div>
         </div>
 
-        <!-- Step 2: Tree version result (hidden until roll) -->
-        <div class="step-card" id="tree-version-card">
+        <!-- Step 3: Tree version selected (revealed after roll) -->
+        <div class="step-card" id="version-card">
           <p style="margin:0;">
-            <strong>Die result: {{ die_roll }}</strong> &mdash;
-            The following payoff tree version has been selected:
+            <strong>Die result: {{ die_roll }}</strong> &mdash; Selected version:
             {% if tree_version == 'session1' %}
-            <span class="tree-version-badge">Full payoff tree from Session 1</span>
-            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers all three periods of your payoff tree.</small>
+            <span class="tree-badge">Full payoff tree (Session 1)</span>
+            <br><small style="color:#666; margin-top:0.4rem; display:block;">All three periods of your payoff tree are used. Payments follow a 3-period schedule.</small>
             {% elif tree_version == 'session2' %}
-            <span class="tree-version-badge">Remaining tree from Session 2</span>
-            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers periods 2 and 3, given the period 1 outcome already realised.</small>
+            <span class="tree-badge">Remaining tree from Session 2</span>
+            <br><small style="color:#666; margin-top:0.4rem; display:block;">Periods 2 and 3, given the Period 1 outcome already realised.</small>
             {% else %}
-            <span class="tree-version-badge">Remaining tree from Session 3</span>
-            <br><small style="color:#666; margin-top:0.5rem; display:block;">This covers period 3 only, given the periods 1 and 2 outcomes already realised.</small>
+            <span class="tree-badge">Remaining tree from Session 3</span>
+            <br><small style="color:#666; margin-top:0.4rem; display:block;">Period 3 only, given Periods 1 and 2 outcomes already realised.</small>
             {% endif %}
           </p>
         </div>
 
-        <!-- Step 3: Offer (hidden until roll) -->
-        <div class="step-card" id="offer-card">
-          <h2 style="margin-top:0;"><span class="step-number">2</span><span class="step-title">Monetary Offer</span></h2>
-          <p>A random monetary offer has been drawn from the range of possible outcomes of the selected tree version.</p>
-
-          <table class="comparison-table">
+        <!-- Step 4: Realised outcomes & payment dates (revealed after roll) -->
+        <div class="step-card" id="schedule-card">
+          <h2 style="margin-top:0;"><span class="step-num">3</span><span class="step-title">Payment Schedule &amp; Dates</span></h2>
+          <p>If you remain in the payoff tree, we will pay out the realised outcomes according to the following schedule, starting from today.</p>
+          <table class="pay-table">
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Value</th>
+                <th>Period</th>
+                <th>Realised Outcome</th>
+                <th>Payment Timing</th>
               </tr>
             </thead>
             <tbody>
+              {% for item in payment_schedule %}
               <tr>
-                <td>Range of possible outcomes</td>
-                <td>£{{ offer_min }} &ndash; £{{ offer_max }}</td>
+                <td>Period {{ item.period }}</td>
+                <td class="pay-amount">{{ item.label }}</td>
+                <td class="pay-when">+{{ item.days }} days from today</td>
               </tr>
-              <tr>
-                <td><strong>Monetary offer drawn</strong></td>
-                <td><strong>£{{ offer }}</strong></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
 
-        <!-- Step 4: Comparison (hidden until roll) -->
-        <div class="step-card" id="comparison-card">
-          <h2 style="margin-top:0;"><span class="step-number">3</span><span class="step-title">Comparison with Your Reported Value</span></h2>
-          <p>We compare the offer with your reported value from the evaluation table of the corresponding session.</p>
-
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Value</th>
-              </tr>
-            </thead>
+        <!-- Step 5: Offer vs reported value (revealed after roll) -->
+        <div class="step-card" id="offer-card">
+          <h2 style="margin-top:0;"><span class="step-num">4</span><span class="step-title">Offer vs. Your Reported Value</span></h2>
+          <p>A random monetary offer was drawn and compared against the value you reported for this payoff tree in
+          {% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %}.
+          Recall: you reported £{{ reported_value }} as your valuation of the selected tree version in that session.</p>
+          <table class="pay-table">
+            <thead><tr><th>Item</th><th>Value</th></tr></thead>
             <tbody>
               <tr>
-                <td>Monetary offer</td>
-                <td>£{{ offer }}</td>
+                <td><strong>Offer drawn</strong></td>
+                <td><strong>£{{ offer }}</strong></td>
               </tr>
               <tr>
-                <td>Your reported value</td>
+                <td>Your reported value
+                  ({% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %})</td>
                 <td>£{{ reported_value }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Step 5: Result banner (hidden until roll) -->
-        <div class="result-banner {% if offer_accepted %}result-accepted{% else %}result-declined{% endif %}" id="result-banner">
+        <!-- Result (revealed after roll) -->
+        <div class="result-banner {% if offer_accepted %}result-accepted{% else %}result-tree{% endif %}" id="result-banner">
           {% if offer_accepted %}
           <strong>The offer exceeds your reported value.</strong>
-          <span class="result-amount">You receive £{{ offer }} as your additional payment.</span>
+          <span class="result-amount">You receive £{{ offer }} as your additional payment. This will be paid immediately after the experiment.</span>
           {% else %}
-          <strong>The offer does not exceed your reported value.</strong>
-          You remain in the payoff tree.
-          <span class="result-amount">Your additional payment from the tree outcome is £{{ tree_realized_outcome }}.</span>
+          <strong>The offer does not exceed your reported value. You remain in the payoff tree.</strong>
+          <span class="result-amount">Your additional payment(s) will be paid according to the schedule above.</span>
           {% endif %}
         </div>
 
-        <!-- Next button (hidden until roll) -->
-        <div class="next-btn-wrapper" id="next-btn-wrapper">
+        <!-- Next button (revealed after roll) -->
+        <div class="next-wrapper" id="next-wrapper">
           <button class="otree-btn-next btn btn-primary">Continue &raquo;</button>
         </div>
 
@@ -357,16 +226,9 @@
   </main>
 
   <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center"></div>
-      </div>
-    </div>
+    <div class="container"><div class="row"><div class="col-12 text-center"></div></div></div>
   </footer>
-
-  <div style="display:none;">
-    {{ formfields }}
-  </div>
+  <div style="display:none;">{{ formfields }}</div>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
@@ -374,61 +236,325 @@
   <script src="../../dist/js/bootstrap.min.js"></script>
 
   <script>
-    var FINAL_DIE_ROLL = {{ die_roll }};
+  (function () {
+    /* ── Data from server ── */
+    var FINAL_DIE = {{ die_roll }};
+    var TREE_VERSION = {{ tree_version|json }};
     var DIE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
-    var rolled = false;
+    var versionLabels = {
+      'session1': 'Full payoff tree (Session 1)',
+      'session2': 'Remaining tree (Session 2)',
+      'session3': 'Remaining tree (Session 3)'
+    };
 
-    function revealResults() {
-      var cards = ['tree-version-card', 'offer-card', 'comparison-card'];
-      cards.forEach(function(id, idx) {
-        setTimeout(function() {
-          var el = document.getElementById(id);
-          if (el) el.classList.add('visible');
-        }, idx * 300);
-      });
-      setTimeout(function() {
-        var banner = document.getElementById('result-banner');
-        if (banner) banner.classList.add('visible');
-        var nextBtn = document.getElementById('next-btn-wrapper');
-        if (nextBtn) nextBtn.classList.add('visible');
-      }, cards.length * 300 + 200);
+    /* ── Lottery visualization data ── */
+    var realizedNodesData = {{ realized_nodes_json|safe }};
+    if (!realizedNodesData || typeof realizedNodesData !== 'object') { realizedNodesData = {}; }
+    var selectedLottery = null;
+    try { selectedLottery = {{ selected_lottery|safe }}; } catch (e) {}
+
+    /* ── Active column periods per tree version (null = no dimming) ── */
+    var versionActivePeriods = {
+      'session1': null,            // all columns active
+      'session2': new Set([1, 2, 3]),  // dim period 0 (Session 1 col)
+      'session3': new Set([2, 3])      // dim periods 0,1 (Session 1 & 2 cols)
+    };
+
+    /* ── Render tree WITHOUT highlights on load (die not yet rolled) ── */
+    var mount = document.getElementById('lottery-visualization');
+    if (selectedLottery && mount) {
+      renderLotteryPreview(selectedLottery, {}, mount, null);
     }
 
-    document.getElementById('roll-btn').addEventListener('click', function() {
+    /* ── Reveal result sections one by one ── */
+    function revealResults() {
+      var ids = ['version-card','schedule-card','offer-card'];
+      ids.forEach(function (id, i) {
+        setTimeout(function () {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('visible');
+        }, i * 320);
+      });
+      setTimeout(function () {
+        var b = document.getElementById('result-banner');
+        if (b) b.classList.add('visible');
+        var n = document.getElementById('next-wrapper');
+        if (n) n.classList.add('visible');
+      }, ids.length * 320 + 200);
+    }
+
+    /* ── Die roll interaction ── */
+    var rolled = false;
+    document.getElementById('roll-btn').addEventListener('click', function () {
       if (rolled) return;
       rolled = true;
-      var btn = this;
-      btn.disabled = true;
-
-      var dieFace = document.getElementById('die-face');
+      this.disabled = true;
+      var face = document.getElementById('die-face');
       var label = document.getElementById('die-result-label');
-      dieFace.textContent = '?';
-      dieFace.classList.add('rolling');
-
-      // Animate through random faces during roll
-      var count = 0;
-      var maxFlashes = 14;
-      var interval = setInterval(function() {
-        var randomFace = Math.floor(Math.random() * 6);
-        dieFace.textContent = DIE_FACES[randomFace];
-        count++;
-        if (count >= maxFlashes) {
-          clearInterval(interval);
-          // Show final result
-          dieFace.textContent = DIE_FACES[FINAL_DIE_ROLL - 1];
-          dieFace.style.borderColor = '#28a745';
-          dieFace.style.color = '#28a745';
-          var versionMap = {
-            'session1': 'Full payoff tree (Session 1)',
-            'session2': 'Remaining tree (Session 2)',
-            'session3': 'Remaining tree (Session 3)'
-          };
-          label.textContent = 'Result: ' + FINAL_DIE_ROLL + ' \u2014 ' + (versionMap['{{ tree_version }}'] || '');
-          // Show result sections after a short delay
+      face.classList.add('rolling');
+      var count = 0, maxFlashes = 14;
+      var iv = setInterval(function () {
+        face.textContent = DIE_FACES[Math.floor(Math.random() * 6)];
+        if (++count >= maxFlashes) {
+          clearInterval(iv);
+          face.textContent = DIE_FACES[FINAL_DIE - 1];
+          face.style.borderColor = '#28a745';
+          face.style.color = '#28a745';
+          label.textContent = 'Result: ' + FINAL_DIE + ' — ' + (versionLabels[TREE_VERSION] || '');
+          // Re-render tree with highlighting for the selected periods
+          if (selectedLottery && mount) {
+            renderLotteryPreview(selectedLottery, realizedNodesData, mount,
+              versionActivePeriods[TREE_VERSION] || null);
+          }
           setTimeout(revealResults, 500);
         }
       }, 100);
     });
+
+    /* ══════════════════════════════════════════════
+       Lottery tree rendering (ported from Draw.html)
+       ══════════════════════════════════════════════ */
+    function renderLotteryPreview(lotteryData, realizedNodes, mountEl, activePeriods) {
+      if (!mountEl || !lotteryData) return;
+      var lottery = JSON.parse(JSON.stringify(lotteryData));
+      var periodsByIdx = lottery.periods || {};
+      var keys = Object.keys(periodsByIdx).map(Number).filter(function(n){ return !isNaN(n); }).sort(function(a,b){ return a-b; });
+      if (!keys.length) { mountEl.innerHTML = '<p style="color:#555;">Lottery structure unavailable.</p>'; return; }
+      var periods = keys.map(function(idx){
+        var nodes = periodsByIdx[idx];
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map(function(node){ return Object.assign({}, node); });
+      });
+      var nodeKey = function(node, fallback){
+        if (node && node.id != null) return String(node.id);
+        if (node && node.label != null) return String(node.label);
+        return fallback != null ? String(fallback) : '';
+      };
+      var labelKeyMapByPeriod = new Map();
+      keys.forEach(function(periodKey, idx){
+        var nodes = periods[idx] || [];
+        var map = new Map();
+        nodes.forEach(function(node, nIdx){
+          var key = nodeKey(node, periodKey+':'+nIdx);
+          node._key = key;
+          var label = node && node.label != null ? String(node.label) : '';
+          if (!map.has(label)) map.set(label, []);
+          map.get(label).push(key);
+        });
+        labelKeyMapByPeriod.set(periodKey, map);
+      });
+      var realizedSetByPeriod = new Map();
+      function addRealized(period, node){
+        if (!isFinite(period) || !node || keys.indexOf(period)===-1) return;
+        var set = realizedSetByPeriod.get(period);
+        if (!set){ set = new Set(); realizedSetByPeriod.set(period, set); }
+        if (node.id != null){ set.add(String(node.id)); return; }
+        if (node.label != null){
+          var map = labelKeyMapByPeriod.get(period);
+          var ks = map && map.get(String(node.label));
+          if (ks && ks.length) ks.forEach(function(k){ set.add(k); });
+        }
+      }
+      Object.keys(realizedNodes || {}).forEach(function(k){ addRealized(Number(k), realizedNodes[k]); });
+      /* ── Step 1: trace `from` backward to find the root of the payment subtree ──
+         realizedNodes only contains payment-period nodes; for session3 that's just
+         period 3, so we need to walk back to find which node in period 2 leads there. ── */
+      var pathSetByPeriod = new Map();
+      realizedSetByPeriod.forEach(function(set, period) {
+        pathSetByPeriod.set(period, new Set(set));
+      });
+      for (var _ti = periods.length - 1; _ti > 0; _ti--) {
+        var _currKey = keys[_ti], _prevKey = keys[_ti - 1];
+        var _currPath = pathSetByPeriod.get(_currKey);
+        if (!_currPath || !_currPath.size) continue;
+        var _currNodes = periods[_ti] || [];
+        var _prevMap = labelKeyMapByPeriod.get(_prevKey) || new Map();
+        var _ancestors = new Set();
+        _currPath.forEach(function(nodeKey) {
+          var node = _currNodes.find(function(n) { return n._key === nodeKey; });
+          if (node && node.from != null) {
+            (_prevMap.get(String(node.from)) || []).forEach(function(k) { _ancestors.add(k); });
+          }
+        });
+        if (_ancestors.size) {
+          var _existing = pathSetByPeriod.get(_prevKey);
+          if (!_existing) { _existing = new Set(); pathSetByPeriod.set(_prevKey, _existing); }
+          _ancestors.forEach(function(k) { _existing.add(k); });
+        }
+      }
+      /* ── Step 2: forward-traverse from the payment root to collect ALL branch edges ──
+         For session3 the root is the period-2 ancestor (+£31); we then mark every edge
+         going forward from it — both +£24 and +£21 — so the full payment lottery is
+         highlighted in red, not just the realised outcome.                          ── */
+      var paymentRootKey = activePeriods
+        ? Math.min.apply(null, Array.from(activePeriods))
+        : (keys.length ? keys[0] : null);
+      var hlEdges = new Set();
+      if (paymentRootKey != null) {
+        var hlFrontier = new Set(pathSetByPeriod.get(paymentRootKey) || []);
+        var hlStartIdx = keys.indexOf(paymentRootKey);
+        for (var hli = hlStartIdx; hli < periods.length - 1; hli++) {
+          var hlCurrKey = keys[hli];
+          var hlNextNodes = periods[hli + 1] || [];
+          var hlParentMap = labelKeyMapByPeriod.get(hlCurrKey) || new Map();
+          var hlNextFrontier = new Set();
+          hlNextNodes.forEach(function(child) {
+            if (child.from == null) return;
+            (hlParentMap.get(String(child.from)) || []).forEach(function(pk) {
+              if (hlFrontier.has(pk)) {
+                hlEdges.add(pk + '|' + child._key);
+                hlNextFrontier.add(child._key);
+              }
+            });
+          });
+          hlFrontier = hlNextFrontier;
+        }
+      }
+      var H=750, colW=300, colGap=22, leftPad=16, topPad=16, wheelR=35, wheelCxOffset=colW/2;
+      var W = periods.length*colW + (periods.length-1)*colGap + leftPad*2;
+      var svgNS = 'http://www.w3.org/2000/svg';
+      var mk = function(tag, attrs, text){
+        var el = document.createElementNS(svgNS, tag);
+        Object.keys(attrs||{}).forEach(function(k){ if(attrs[k]!=null) el.setAttribute(k,attrs[k]); });
+        if (text != null) el.textContent = text;
+        return el;
+      };
+      var num = function(v){ var n=Number(v); return isFinite(n)?n:0; };
+      var fmtProb = function(p){ var pct=num(p)*100; return pct.toFixed(Math.abs(Math.round(pct)-pct)>0.001?1:0)+'%'; };
+      var normalizeAngle = function(a){ while(a<=-Math.PI) a+=2*Math.PI; while(a>Math.PI) a-=2*Math.PI; return a; };
+      var palette = ['#73A5AF','#e1d7c3','#cfcfff','#e0e0ff','#ddd','#e8e3d9','#f0f0f0'];
+      var pick = function(i){ return palette[i%palette.length]; };
+      var wheelXForGroup = function(colX, group){
+        return (group&&group.outcomes&&group.outcomes.length>=3) ? colX+colW-wheelR-24 : colX+wheelCxOffset;
+      };
+      var groupByParent = function(nodes){
+        var res = new Map();
+        nodes.forEach(function(node){ var p=node.from||'Start'; if(!res.has(p)) res.set(p,[]); res.get(p).push(node); });
+        return Array.from(res.entries());
+      };
+      var isDeterministic = function(slices){
+        var probs = slices.map(function(s){ return num(s.probability); });
+        var tot = probs.reduce(function(a,b){ return a+b; },0);
+        if (!tot) return false;
+        var pos = probs.filter(function(p){ return p>0; });
+        return pos.length===1 && pos[0]/tot>=0.999999;
+      };
+      var svg = mk('svg',{width:W,height:H,class:'lotto'});
+      svg.setAttribute('viewBox','0 0 '+W+' '+H);
+      svg.setAttribute('preserveAspectRatio','xMinYMin meet');
+      svg.style.width='100%'; svg.style.height='auto'; svg.style.maxWidth=W+'px';
+      var defs = mk('defs');
+      var marker = mk('marker',{id:'ah2',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:8,markerHeight:8,orient:'auto'});
+      marker.appendChild(mk('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'#888'}));
+      defs.appendChild(marker); svg.appendChild(defs);
+      var overlays = [];
+      var columnLayouts = periods.map(function(nodes, idx){
+        var layout = {groups:[], nodeAnchors:new Map()};
+        var periodKey = keys[idx];
+        layout.periodKey = periodKey;
+        layout.realizedSet = realizedSetByPeriod.get(periodKey)||null;
+        var innerTop=topPad+60, innerBottom=H-topPad-40, count=Math.max(nodes.length,1), span=innerBottom-innerTop;
+        nodes.forEach(function(node,nIdx){ layout.nodeAnchors.set(node._key,{y:innerTop+(nIdx+0.5)*(span/count)}); });
+        groupByParent(nodes).forEach(function(entry){
+          var parent=entry[0], children=entry[1];
+          var outcomes = children.map(function(child){ var a=layout.nodeAnchors.get(child._key); return {node:child,y:a?a.y:innerTop}; });
+          outcomes.sort(function(a,b){ return a.y-b.y; });
+          if (outcomes.length){
+            var minY=outcomes[0].y, maxY=outcomes[outcomes.length-1].y;
+            outcomes.forEach(function(o,i){
+              var frac = maxY===minY ? (outcomes.length===1?0.5:i/Math.max(outcomes.length-1,1)) : (o.y-minY)/(maxY-minY);
+              o.targetAngle = -Math.PI/2 + frac*Math.PI;
+            });
+          }
+          var wheelCy = outcomes.length ? outcomes.reduce(function(s,o){ return s+o.y; },0)/outcomes.length : (innerTop+innerBottom)/2;
+          layout.groups.push({parent:parent, wheelCy:wheelCy, outcomes:outcomes});
+        });
+        return layout;
+      });
+      columnLayouts.forEach(function(layout, i){
+        var x=leftPad+i*(colW+colGap);
+        layout.colX=x; layout.lineStartX=x+colW-16; layout.lineEndX=x+16;
+        var periodKey=layout.periodKey;
+        var colClass='col'+(layout.realizedSet&&layout.realizedSet.size?' highlight-col':'');
+        svg.appendChild(mk('rect',{x:x,y:topPad,width:colW,height:H-2*topPad,rx:8,class:colClass}));
+        var titleLabel = periodKey===0?'Session 1':periodKey===1?'Session 2':periodKey===2?'Session 3':'After session 3';
+        svg.appendChild(mk('text',{x:x+colW/2,y:topPad+18,class:'title','text-anchor':'middle'},titleLabel));
+        layout.groups.forEach(function(group){
+          var wheelCx=wheelXForGroup(x,group);
+          var nodes=group.outcomes.map(function(o){ return o.node; });
+          if (!isDeterministic(nodes)) drawWheel(svg,wheelCx,group.wheelCy,wheelR,group.outcomes,layout.realizedSet);
+          group.outcomes.forEach(function(outcome){
+            var node=outcome.node, y=outcome.y, centerX=x+colW/2;
+            var isRealized=layout.realizedSet&&layout.realizedSet.has(node._key);
+            overlays.push({xLeft:centerX-50,xRight:centerX+50,y:y,labelX:centerX,label:node.label,state:isRealized?'highlight':'normal'});
+            layout.nodeAnchors.set(node._key,{y:y,inX:centerX,outX:centerX,realized:isRealized});
+          });
+        });
+      });
+      function drawWheel(target,cx,cy,r,slices,highlightSet){
+        target.appendChild(mk('circle',{cx:cx,cy:cy,r:r+4,class:'ring'}));
+        var tot=slices.reduce(function(s,sl){ return s+num(sl.node.probability); },0)||1;
+        var segments=slices.map(function(s){ var p=num(s.node.probability)/tot; return {slice:s,p:p,size:p*2*Math.PI}; });
+        var cursor=-Math.PI/2;
+        segments.forEach(function(seg){ seg.start=cursor; seg.end=cursor+seg.size; seg.mid=(seg.start+seg.end)/2; cursor=seg.end; });
+        var totalSize=segments.reduce(function(s,seg){ return s+seg.size; },0)||1;
+        var weighted=segments.reduce(function(acc,seg){
+          var ta=typeof seg.slice.targetAngle==='number'?seg.slice.targetAngle:seg.mid;
+          return acc+normalizeAngle(ta-seg.mid)*seg.size;
+        },0);
+        var offset=weighted/totalSize;
+        segments.forEach(function(seg,idx){
+          var start=seg.start+offset, end=seg.end+offset, mid=(start+end)/2;
+          var large=(end-start)>Math.PI?1:0;
+          var x1=cx+r*Math.cos(start),y1=cy+r*Math.sin(start),x2=cx+r*Math.cos(end),y2=cy+r*Math.sin(end);
+          var path='M '+cx+','+cy+' L '+x1+','+y1+' A '+r+','+r+' 0 '+large+',1 '+x2+','+y2+' Z';
+          var isHL=highlightSet&&highlightSet.has(seg.slice.node._key);
+          target.appendChild(mk('path',{d:path,fill:isHL?'#f0b429':pick(idx),stroke:isHL?'#b56600':'#333','stroke-width':isHL?2:1.5}));
+          if (seg.p>0.07){
+            var lx=cx+(r*0.55)*Math.cos(mid),ly=cy+(r*0.55)*Math.sin(mid);
+            target.appendChild(mk('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'middle','font-size':12,'fill':isHL?'#b56600':'#333'},fmtProb(seg.p)));
+          }
+        });
+        target.appendChild(mk('path',{d:'M '+cx+','+(cy-(r+14))+' l 8,12 l -16,0 z',fill:'#333'}));
+      }
+      var linkLayer=mk('g'); svg.appendChild(linkLayer);
+      for (var i=0;i<periods.length-1;i++){
+        var current=columnLayouts[i], next=columnLayouts[i+1];
+        var nextNodes=periods[i+1]||[];
+        var currentPeriodKey=keys[i];
+        var labelMap=labelKeyMapByPeriod.get(currentPeriodKey)||new Map();
+        nextNodes.forEach(function(child){
+          var parentKeys=labelMap.get(child.from)||[];
+          parentKeys.forEach(function(parentKey){
+            var fromA=current.nodeAnchors.get(parentKey), toA=next.nodeAnchors.get(child._key);
+            if (!fromA||!toA) return;
+            var isHL=hlEdges.has(parentKey+'|'+child._key);
+            linkLayer.appendChild(mk('line',{x1:fromA.outX||current.lineStartX,y1:fromA.y,x2:toA.inX||next.lineEndX,y2:toA.y,class:'link'+(isHL?' link-highlight':'')}));
+            var midX=(fromA.outX+toA.inX)/2, midY=(fromA.y+toA.y)/2-10;
+            var isHLProb=isHL;
+            linkLayer.appendChild(mk('text',{x:midX,y:midY,class:'prob'+(isHLProb?' highlight-node':''),'text-anchor':'middle',fill:isHLProb?'#dc3545':'#2a8f2a'},fmtProb(child.probability)));
+          });
+        });
+      }
+      overlays.forEach(function(o){
+        var isHL=o.state==='highlight';
+        svg.appendChild(mk('rect',{x:o.xLeft,y:o.y-19,width:o.xRight-o.xLeft,height:25,rx:8,fill:isHL?'#fff3c9':'#ffffff',opacity:0.95,stroke:isHL?'#f0b429':'#dddddd'}));
+        svg.appendChild(mk('text',{x:o.labelX,y:o.y,class:isHL?'payout highlight-node':'payout','text-anchor':'middle','dominant-baseline':'top',fill:isHL?'#b56600':'#1c3b4d'},o.label));
+      });
+      /* ── Dim non-payment columns ── */
+      if (activePeriods) {
+        columnLayouts.forEach(function(layout) {
+          if (!activePeriods.has(layout.periodKey)) {
+            svg.appendChild(mk('rect', {
+              x: layout.colX, y: topPad, width: colW, height: H - 2*topPad, rx: 8,
+              fill: '#888888', 'fill-opacity': '0.38', 'pointer-events': 'none'
+            }));
+          }
+        });
+      }
+      mountEl.innerHTML=''; mountEl.appendChild(svg);
+    }
+  })();
   </script>
 </body>
 </html>

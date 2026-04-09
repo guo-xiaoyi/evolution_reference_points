@@ -277,30 +277,44 @@ class Session1(Page):
 
 class Introduction1(Page):
     allow_back_button = True
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+
     @staticmethod
     def vars_for_template(player):
-        return _session1_round_context()
-    pass
+        ctx = _session1_round_context()
+        ctx['is_treatment_group'] = player.participant.vars.get('treatment_group', False)
+        return ctx
+
 
 class Introduction2(Page):
     allow_back_button = True
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+
     @staticmethod
     def vars_for_template(player):
-        return _session1_round_context()
-    pass
+        ctx = _session1_round_context()
+        ctx['is_treatment_group'] = player.participant.vars.get('treatment_group', False)
+        return ctx
+
 
 class Introduction3(Page):
     allow_back_button = True
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
-    pass
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+        }
 
 
 class TreatmentInstructions(Page):
@@ -982,6 +996,24 @@ class TreatmentPayoff(Session3TimedPage):
                 node3 = realized_nodes.get(3, {})
                 tree_realized_outcome = parse_payoff_label(node3.get('label'))
 
+            realized_nodes = store.get('realized_nodes', {})
+            # Build per-period payment schedule (days from today = Session 3)
+            if tree_version == 'session1':
+                payment_schedule = [
+                    {'period': 1, 'label': (realized_nodes.get(1) or {}).get('label', ''), 'days': 3},
+                    {'period': 2, 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 6},
+                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 9},
+                ]
+            elif tree_version == 'session2':
+                payment_schedule = [
+                    {'period': 2, 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 3},
+                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 6},
+                ]
+            else:
+                payment_schedule = [
+                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 3},
+                ]
+
             t_store.update(
                 die_roll=die_roll,
                 tree_version=tree_version,
@@ -991,9 +1023,28 @@ class TreatmentPayoff(Session3TimedPage):
                 reported_value=reported_value,
                 offer_accepted=offer_accepted,
                 tree_realized_outcome=tree_realized_outcome,
+                payment_schedule=payment_schedule,
             )
 
-        return dict(t_store)
+        # Always build visualization data fresh (not persisted in t_store)
+        full_lottery = get_selected_lottery(player, store=store)
+        realized_nodes = store.get('realized_nodes', {})
+
+        # Filter realized nodes to only the periods used for payment
+        tree_version = t_store.get('tree_version')
+        if tree_version == 'session1':
+            display_periods = {1, 2, 3}
+        elif tree_version == 'session2':
+            display_periods = {2, 3}
+        else:
+            display_periods = {3}
+        display_realized = {p: n for p, n in realized_nodes.items() if p in display_periods}
+
+        ctx = dict(t_store)
+        ctx['selected_lottery'] = json.dumps(full_lottery)
+        ctx['realized_nodes_json'] = json.dumps(display_realized)
+        ctx['lottery_name'] = store.get('lottery_name', '')
+        return ctx
 
 
 class Post(Session3TimedPage):

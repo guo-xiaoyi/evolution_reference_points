@@ -208,8 +208,18 @@
         c) you do not complete the session within Prolific's required time. </p>
 
         <p>If your submission is rejected for any session and there are later sessions, you will not be able to take part in those later sessions. In that case, you will also not be eligible for any completion bonus or for entry into the £300 prize draw.</p>
+        {% if is_treatment_group %}
 
-        <strong>Please click 'Start' to begin the study. You will first be directed to a practice task to familiarise yourself with the interface.</strong>
+        <p style="text-align:right; margin-top: 1.5rem;">
+             
+              <button class="otree-btn-next btn btn-primary">Next &raquo;</button>
+            </p>
+
+        
+
+        {% else %}
+          
+      <strong>Please click 'Start' to begin the study. You will first be directed to a practice task to familiarise yourself with the interface.</strong>
 
 
                 <p style="text-align:right; margin-top: 1.5rem;">
@@ -217,8 +227,7 @@
               <button class="otree-btn-next btn btn-primary">Start &raquo;</button>
             </p>
 
-
-        <strong>If you want to read the full instruction again, please <a href="https://guo-xiaoyi.github.io/full_instruction"  target="_blank">use this link.</a></strong>
+        {% endif %}
       </div>
     </div>
   </main>
