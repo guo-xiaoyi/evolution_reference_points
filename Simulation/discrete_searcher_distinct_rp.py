@@ -15,7 +15,7 @@ The ``--run_all`` flag sweeps all 12 combinations
 and collects 5 solutions per combination.
 
 Usage examples (CLI):
-  python Simulation/discrete_searcher_distinct_rp.py --outcomes 4 --stake lo --sign mixed
+  python Simulation/discrete_searcher_distinct_rp.py --outcomes 4 --stake lo --sign gain
   python Simulation/discrete_searcher_distinct_rp.py --outcomes 6 --stake hi --sign gain
   python Simulation/discrete_searcher_distinct_rp.py --run_all
   python Simulation/discrete_searcher_distinct_rp.py --run_all --cores 4
@@ -47,8 +47,8 @@ except ImportError:
     PSUTIL_AVAILABLE = False
 
 
-DEFAULT_RANDOM_SEED = 10
-DEFAULT_NUMPY_SEED = 15
+DEFAULT_RANDOM_SEED = 15
+DEFAULT_NUMPY_SEED = 20
 
 ALL_COMBINATIONS: List[Tuple[int, str, str]] = [
     (4, 'lo', 'gain'), (4, 'lo', 'loss'), (4, 'lo', 'mixed'),
@@ -197,19 +197,19 @@ class OptimizedConfig:
 
     # Discrete parameter ranges
     lottery_min_bound: int = -101
-    lottery_min: int = -26
-    lottery_max: int = 26
+    lottery_min: int = -15
+    lottery_max: int = 15
     lottery_max_bound: int = 101
     prob_choices: List[float] = None
 
     # Optimization settings
-    num_attempts: int = 1000000
+    num_attempts: int = 5000000
     violation_threshold: float = 1.0
     num_cores: Optional[int] = None
     progress_position: int = 0
 
     # Minimum separation required between any two reference points
-    distinct_threshold: float = 10
+    distinct_threshold: float = 3
 
     # Performance settings
     batch_size: int = 10000
@@ -567,6 +567,20 @@ class DistinctRPLotteryOptimizer:
                 return 100.0
             return 0.0
 
+    # ---------- Nominal outcome bound (lo stake) ----------
+
+    def _nominal_bound_violation(self, outcomes_base: np.ndarray) -> float:
+        """Return penalty when nominal total outcomes exceed 25 (lo stake only)."""
+        if self.config.stake != 'lo':
+            return 0.0
+        sign = self.sign
+        if sign == 'gain':
+            return float(sum(max(0.0, z - 25) for z in outcomes_base))
+        elif sign == 'loss':
+            return float(sum(max(0.0, -z - 25) for z in outcomes_base))
+        else:  # mixed
+            return float(sum(max(0.0, abs(z) - 25) for z in outcomes_base))
+
     # ---------- Distinct-RP violation ----------
 
     def _distinct_rp_violation(self, R_values: List[Optional[float]]) -> float:
@@ -719,13 +733,14 @@ class DistinctRPLotteryOptimizer:
         Z, p, outcomes_base = self.create_lottery_structure(params)
         expected_value = float(np.sum(Z * p))
         sign_viol = self._sign_violation(Z)
-        total_viol = sign_viol
+        bound_viol = self._nominal_bound_violation(outcomes_base)
+        total_viol = sign_viol + bound_viol
 
         if return_structure:
             structure = LotteryStructure(Z=Z, p=p, outcomes_base=outcomes_base,
                                          expected_value=expected_value)
-            return (sign_viol > 0), total_viol, structure
-        return (sign_viol > 0), total_viol
+            return (total_viol > 0), total_viol, structure
+        return (total_viol > 0), total_viol
 
     def check_full_constraints(self, params, track_stats: bool = True,
                                precomputed: Optional[LotteryStructure] = None):
@@ -758,6 +773,11 @@ class DistinctRPLotteryOptimizer:
             violations['sign'] = sign_viol
             total_violations += sign_viol
 
+            # 1b. Nominal outcome bound (lo stake: max total outcome <= 25)
+            bound_viol = self._nominal_bound_violation(structure.outcomes_base)
+            violations['nominal_bound'] = bound_viol
+            total_violations += bound_viol
+
             # 2. Model reference points pairwise distinct per sub-lottery
             model_rp = self._compute_model_reference_points(Z, p, params)
             model_rp_viol = self._model_rp_violation(model_rp)
@@ -789,10 +809,11 @@ class DistinctRPLotteryOptimizer:
             if base_structure is not None and r_override is None:
                 Z = base_structure.Z
                 p = base_structure.p
+                outcomes_base = base_structure.outcomes_base
             else:
-                Z, p, _ = self.create_lottery_structure(params, r_override)
+                Z, p, outcomes_base = self.create_lottery_structure(params, r_override)
 
-            total_violations = self._sign_violation(Z)
+            total_violations = self._sign_violation(Z) + self._nominal_bound_violation(outcomes_base)
             model_rp = self._compute_model_reference_points(Z, p, params)
             total_violations += self._model_rp_violation(model_rp)
 
