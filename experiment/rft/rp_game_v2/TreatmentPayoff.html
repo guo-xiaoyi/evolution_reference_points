@@ -148,7 +148,7 @@
             <strong>Die result: {{ die_roll }}</strong> &mdash; Selected version:
             {% if tree_version == 'session1' %}
             <span class="tree-badge">Full payoff tree (Session 1)</span>
-            <br><small style="color:#666; margin-top:0.4rem; display:block;">All three periods of your payoff tree are used. Payments follow a 3-period schedule.</small>
+            <br><small style="color:#666; margin-top:0.4rem; display:block;">All three periods of your payoff tree are used. </small>
             {% elif tree_version == 'session2' %}
             <span class="tree-badge">Remaining tree from Session 2</span>
             <br><small style="color:#666; margin-top:0.4rem; display:block;">Periods 2 and 3, given the Period 1 outcome already realised.</small>
@@ -162,7 +162,7 @@
         <!-- Step 4: Realised outcomes & payment dates (revealed after roll) -->
         <div class="step-card" id="schedule-card">
           <h2 style="margin-top:0;"><span class="step-num">3</span><span class="step-title">Payment Schedule &amp; Dates</span></h2>
-          <p>If you remain in the payoff tree, we will pay out the realised outcomes according to the following schedule, starting from today.</p>
+          <p>If your additional payment is determined by the payoff tree, the realised outcomes will be paid according to the following schedule.</p>
           <table class="pay-table">
             <thead>
               <tr>
@@ -183,12 +183,10 @@
           </table>
         </div>
 
-        <!-- Step 5: Offer vs reported value (revealed after roll) -->
+        <!-- Step 5: Offer vs cutoff rows (revealed after roll) -->
         <div class="step-card" id="offer-card">
-          <h2 style="margin-top:0;"><span class="step-num">4</span><span class="step-title">Offer vs. Your Reported Value</span></h2>
-          <p>A random monetary offer was drawn and compared against the value you reported for this payoff tree in
-          {% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %}.
-          Recall: you reported £{{ reported_value }} as your valuation of the selected tree version in that session.</p>
+          <h2 style="margin-top:0;"><span class="step-num">4</span><span class="step-title">Monetary Offer Comparison</span></h2>
+          <p>A random monetary offer was drawn and compared with the cutoff choices you made for this payoff tree in {% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %}.</p>
           <table class="pay-table">
             <thead><tr><th>Item</th><th>Value</th></tr></thead>
             <tbody>
@@ -197,9 +195,24 @@
                 <td><strong>£{{ offer }}</strong></td>
               </tr>
               <tr>
-                <td>Your reported value
-                  ({% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %})</td>
-                <td>£{{ reported_value }}</td>
+                <td>Last fixed amount for which you chose the random payoff tree</td>
+                <td>
+                  {% if last_stay_value != None %}
+                  £{{ last_stay_value }}
+                  {% else %}
+                  No lower fixed amount in the table
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>First fixed amount for which you chose the fixed payment</td>
+                <td>
+                  {% if first_accept_value != None %}
+                  £{{ first_accept_value }}
+                  {% else %}
+                  Not available
+                  {% endif %}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -208,10 +221,10 @@
         <!-- Result (revealed after roll) -->
         <div class="result-banner {% if offer_accepted %}result-accepted{% else %}result-tree{% endif %}" id="result-banner">
           {% if offer_accepted %}
-          <strong>The offer exceeds your reported value.</strong>
+          <strong>The offer is at least as high as the first fixed amount for which you chose the fixed payment.</strong>
           <span class="result-amount">You receive £{{ offer }} as your additional payment. This will be paid immediately after the experiment.</span>
           {% else %}
-          <strong>The offer does not exceed your reported value. You remain in the payoff tree.</strong>
+          <strong>The offer is below the first fixed amount for which you chose the fixed payment.</strong>
           <span class="result-amount">Your additional payment(s) will be paid according to the schedule above.</span>
           {% endif %}
         </div>

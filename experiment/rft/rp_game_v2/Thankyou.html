@@ -92,10 +92,10 @@
             <div style="background-color:#e8f4f8; border-left:4px solid #007095; padding:1rem 1.5rem; margin:1.2rem 0; border-radius:0 4px 4px 0;">
               <h5 style="color:#007095; margin-bottom:0.5rem;">Additional Payment Result</h5>
               {% if treatment_offer_accepted %}
-              <p style="margin-bottom:0.3rem;">Your monetary offer (£{{ treatment_offer }}) exceeded your reported value (£{{ treatment_reported_value }}).</p>
+              <p style="margin-bottom:0.3rem;">Your monetary offer (£{{ treatment_offer }}) was at least as high as the first fixed amount you chose to accept (£{{ treatment_first_accept_value }}).</p>
               <p style="margin-bottom:0;"><strong>Your additional payment is £{{ treatment_offer }}.</strong></p>
               {% else %}
-              <p style="margin-bottom:0.3rem;">The monetary offer (£{{ treatment_offer }}) did not exceed your reported value (£{{ treatment_reported_value }}). You remain in the payoff tree.</p>
+              <p style="margin-bottom:0.3rem;">The monetary offer (£{{ treatment_offer }}) was below the first fixed amount you chose to accept (£{{ treatment_first_accept_value }}). Your additional payment is determined by the payoff tree.</p>
               <p style="margin-bottom:0;"><strong>Your additional payment from the tree outcome is £{{ treatment_realized_outcome }}.</strong></p>
               {% endif %}
             </div>

@@ -481,7 +481,7 @@
     <div class="main-container">
       <div class="content-wrapper">
         <p>Please read this carefully. Afterwards, there will be further comprehension questions. </p>
-        <p>In this study, you will see several random payoff trees. Please find an example below. A random payoff tree contains four time periods. The first period is now. The second period is in three days (which is the time of Session 2 of this study). The third period is in six days (the time of Session 3 of this study). The fourth period is in nine days (three days after Session 3 of this study).</p>
+        <p>In this study, you will see several random payoff trees. Please find an example below. A random payoff tree contains at most four time periods. The first period is now. The second period is in three days (which is the time of Session 2 of this study). The third period is in six days (the time of Session 3 of this study). The fourth period is in nine days (three days after Session 3 of this study).</p>
 
         <div class="example-stack">
           <div class="example-figure">
@@ -491,7 +491,8 @@
           <div class="example-text" role="region" aria-label="Explanation of the example tree" tabindex="0">
             <h4 style="color: #7a7a7a;"> Please scroll to read more instructions about how to understand a random payoff tree.</h4>
             <h3 id="section-example" tabindex="-1" style="margin-top: 0;">Understanding a random payoff tree</h3>
-            <p>In the example, the leftmost time period contains only the sign ‘Start’. This is because the random payoff tree does not yield any payoff in the current period. In the next column, corresponding to the time period in three days indicated by ‘In three days (Session 2)’, <strong style="color: #2c8a2c;">there are two possible outcomes, ‘+£10’ and ‘-£10’</strong>. You can also see a fortune wheel indicating 60% and 40% probabilities (these probabilities are also shown next to the lines from ‘Start’ to the outcomes). This means that there is a 60% probability that you receive £10 in three days. Similarly, there is a 40% probability of reaching the outcome ‘-£10’, which means that there is a 40% probability that you will lose £10  (<strong style="color: #2c8a2c;">remember that for all outcomes in the random payoff trees, for gains and losses alike, no real money is involved – but please imagine these to be real gains or losses</strong>). </p>
+            <p>In the example, the leftmost time period contains only the sign ‘Start’. This is because the random payoff tree does not yield any payoff in the current period. In the next column, corresponding to the time period in three days indicated by ‘In three days (Session 2)’, <strong style="color: #2c8a2c;">there are two possible outcomes, ‘+£10’ and ‘-£10’</strong>. You can also see a fortune wheel indicating 60% and 40% probabilities (these probabilities are also shown next to the lines from ‘Start’ to the outcomes). This means that there is a 60% probability that you receive £10 in three days. </p>
+            <p>Similarly, there is a 40% probability of reaching the outcome ‘-£10’, which means that there is a 40% probability that you will lose £10  {% if is_treatment_group == False %} (<strong style="color: #2c8a2c;">note  that for all outcomes in the random payoff trees, for gains and losses alike, no real money is involved – but please imagine these to be real gains or losses</strong>). {% endif %} </p>
             <p>The fortune wheel is an illustration of the probabilities. If you could spin this fortune wheel once, there would be a 60% probability of the arrow pointing to the blue region when the wheel stops (corresponding to the upper outcome where you gain £10) and a 40% probability of the arrow pointing to the beige region (corresponding to the lower outcome where you lose £10). </p>
             <h4 id="section-timeline" tabindex="-1">Outcomes across sessions</h4>
             <p>The outcome in the third period (in six days, when Session 3 will take place) <strong style="color: #2c8a2c;">will depend on</strong> the outcome at the time of Session 2. If the random outcome at the time of Session 2 is a gain of £10, there will be a gain at the time of Session 3 of £7. Note that this gain comes in addition to the £10 gained at the time of Session 2. If the random outcome at the time of Session 2 is a loss of £10, there will be a loss at the time of Session 3 of £12 (indicated by ‘-£12’). This loss comes in addition to the loss of £10 at the time of Session 2.</p>
@@ -553,8 +554,12 @@
     </details>
 
 
-    <p>After you click on ‘Submit’, you will proceed to the next random payoff tree. In Session 1, there are {{ session1_rounds }} random payoff trees to evaluate in total: {{ calibration_rounds }} calibration rounds followed by {{ evaluation_rounds }} evaluation rounds. When you have submitted a selection, your answer is recorded and you cannot go back and change it.</p>
+    <p>After you click on ‘Submit’, you will proceed to the next random payoff tree. In Session 1, there are {{ session1_rounds }} random payoff trees to evaluate: the first  {{ calibration_rounds }} are simple, followed by {{ evaluation_rounds }} more complex ones. When you have submitted a selection, your answer is recorded and you cannot go back and change it.</p>
+    {% if is_treatment_group %}
+    <p>The decisions that you make for the more complex random payoff trees may lead to an additional payment (details will be provided later).</p>
+    {% else %}
     <p>The decisions that you make here do not determine your payment. You are only providing us with insights on how you are valuing the random payoff trees; <strong style="color:#2c8a2c">you will neither actually participate in a random payoff tree nor receive or pay any of the money in the tables in which you indicate your choices.</strong></p>
+    {% endif %}
     <p><strong>Please click ‘Next’ to proceed to a few further comprehension questions.</strong></p>
 
 

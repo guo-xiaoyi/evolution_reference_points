@@ -239,6 +239,67 @@ def _is_treatment_eligible(player):
     return lottery.get('description') == 'treatment'
 
 
+def _int_or_none(value):
+    try:
+        return int(round(float(value)))
+    except (TypeError, ValueError):
+        return None
+
+
+def _number_or_none(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _player_in_round_or_none(player, round_number):
+    round_int = _int_or_none(round_number)
+    if round_int is None or round_int < 1 or round_int > Constants.num_rounds:
+        return None
+    return player.in_round(round_int)
+
+
+def _cutoff_values_from_player(source_player, first_accept_fallback=None):
+    if source_player is None:
+        return None, first_accept_fallback
+
+    first_accept_value = get_player_field(source_player, 'fine_selected_amount')
+    if first_accept_value is None:
+        first_accept_value = get_player_field(source_player, 'selected_amount')
+    if first_accept_value is None:
+        first_accept_value = first_accept_fallback
+
+    last_stay_value = get_player_field(source_player, 'fine_cutoff_amount')
+    if last_stay_value is None:
+        cutoff_index = _int_or_none(get_player_field(source_player, 'cutoff_index'))
+        last_stay_value = None if cutoff_index == 0 else get_player_field(source_player, 'cutoff_amount')
+
+    return last_stay_value, first_accept_value
+
+
+def _treatment_cutoff_values(player, store, tree_version):
+    if tree_version == 'session1':
+        source_player = _player_in_round_or_none(player, store.get('selected_round'))
+        return _cutoff_values_from_player(source_player, store.get('selected_amount'))
+    if tree_version == 'session2':
+        source_player = _player_in_round_or_none(player, Constants.continuation_rounds[0])
+        return _cutoff_values_from_player(source_player, store.get('selected_amount_s2'))
+    if tree_version == 'session3':
+        return _cutoff_values_from_player(player, store.get('selected_amount_s3'))
+    return None, None
+
+
+def _offer_accepted(offer, first_accept_value):
+    offer_number = _number_or_none(offer)
+    first_accept_number = _number_or_none(first_accept_value)
+    return (
+        offer_number is not None
+        and first_accept_number is not None
+        and offer_number >= first_accept_number
+    )
+
+
 # Dynamically add the multiple choice list fields (supports up to long list length)
 for i in range(1, Constants.max_choice_count + 1):
     setattr(
@@ -258,6 +319,12 @@ class Welcome(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
+    
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+        }
 
     @staticmethod
     def error_message(player, values):
@@ -336,6 +403,13 @@ class LotterySet2(Page):
     def is_displayed(player):
         return player.round_number == Constants.calibration_rounds + 1
     pass
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+        }
+
 
 class PracticePlay(Page):
     form_model = 'player'
@@ -764,6 +838,10 @@ class Play2(Session2TimedPage):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
         store['selected_amount_s2'] = player.selected_amount
+        store['cutoff_index_s2'] = player.cutoff_index
+        store['cutoff_amount_s2'] = player.cutoff_amount
+        store['fine_selected_amount_s2'] = player.fine_selected_amount
+        store['fine_cutoff_amount_s2'] = player.fine_cutoff_amount
         persist_payment_store(player, store)
 
 class Play3(Session3TimedPage):
@@ -824,6 +902,10 @@ class Play3(Session3TimedPage):
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
         store['selected_amount_s3'] = player.selected_amount
+        store['cutoff_index_s3'] = player.cutoff_index
+        store['cutoff_amount_s3'] = player.cutoff_amount
+        store['fine_selected_amount_s3'] = player.fine_selected_amount
+        store['fine_cutoff_amount_s3'] = player.fine_cutoff_amount
         ensure_realized_up_to(player, 3, store=store)
         final_payoff = compute_final_payoff(store)
         if final_payoff is not None:
@@ -834,6 +916,7 @@ class Play3(Session3TimedPage):
             if final_node:
                 store['final_outcome_label'] = final_node.get('label')
             player.participant.vars['session1_final_payoff'] = final_payoff
+        persist_payment_store(player, store)
 
 
 class RevisionSession2(Session2TimedPage):
@@ -982,8 +1065,13 @@ class TreatmentPayoff(Session3TimedPage):
                 min_outcome = min_outcome or 0
                 max_outcome = max_outcome or 0
 
+            last_stay_value, first_accept_value = _treatment_cutoff_values(player, store, tree_version)
+            if first_accept_value is None:
+                first_accept_value = reported_value
+            reported_value = first_accept_value
+
             offer = rng.randint(int(min_outcome), int(max_outcome)) if max_outcome > min_outcome else int(min_outcome)
-            offer_accepted = (reported_value is not None) and (offer > reported_value)
+            offer_accepted = _offer_accepted(offer, first_accept_value)
 
             realized_nodes = store.get('realized_nodes', {})
             if tree_version == 'session1':
@@ -1000,18 +1088,18 @@ class TreatmentPayoff(Session3TimedPage):
             # Build per-period payment schedule (days from today = Session 3)
             if tree_version == 'session1':
                 payment_schedule = [
-                    {'period': 1, 'label': (realized_nodes.get(1) or {}).get('label', ''), 'days': 3},
-                    {'period': 2, 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 6},
-                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 9},
+                    {'period': "Period 2", 'label': (realized_nodes.get(1) or {}).get('label', ''), 'days': 3},
+                    {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 6},
+                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 9},
                 ]
             elif tree_version == 'session2':
                 payment_schedule = [
-                    {'period': 2, 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 3},
-                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 6},
+                    {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 3},
+                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 6},
                 ]
             else:
                 payment_schedule = [
-                    {'period': 3, 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 3},
+                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 3},
                 ]
 
             t_store.update(
@@ -1021,10 +1109,20 @@ class TreatmentPayoff(Session3TimedPage):
                 offer_min=int(min_outcome),
                 offer_max=int(max_outcome),
                 reported_value=reported_value,
+                last_stay_value=last_stay_value,
+                first_accept_value=first_accept_value,
                 offer_accepted=offer_accepted,
                 tree_realized_outcome=tree_realized_outcome,
                 payment_schedule=payment_schedule,
             )
+
+        last_stay_value, first_accept_value = _treatment_cutoff_values(player, store, t_store.get('tree_version'))
+        if first_accept_value is not None:
+            t_store['first_accept_value'] = first_accept_value
+            t_store['reported_value'] = first_accept_value
+            t_store['offer_accepted'] = _offer_accepted(t_store.get('offer'), first_accept_value)
+        if last_stay_value is not None or 'last_stay_value' not in t_store:
+            t_store['last_stay_value'] = last_stay_value
 
         # Always build visualization data fresh (not persisted in t_store)
         full_lottery = get_selected_lottery(player, store=store)
@@ -1068,6 +1166,8 @@ class Thankyou(Session3TimedPage):
             'treatment_tree_version': t_store.get('tree_version'),
             'treatment_offer': t_store.get('offer'),
             'treatment_reported_value': t_store.get('reported_value'),
+            'treatment_last_stay_value': t_store.get('last_stay_value'),
+            'treatment_first_accept_value': t_store.get('first_accept_value'),
             'treatment_offer_accepted': t_store.get('offer_accepted'),
             'treatment_realized_outcome': t_store.get('tree_realized_outcome'),
         }
@@ -1270,6 +1370,8 @@ def custom_export(players):
         'treatment_tree_version',
         'treatment_offer',
         'treatment_reported_value',
+        'treatment_last_stay_value',
+        'treatment_first_accept_value',
         'treatment_offer_accepted',
     ] + choice_fields
 
@@ -1357,6 +1459,8 @@ def custom_export(players):
             (participant.vars.get('treatment_store') or {}).get('tree_version'),
             (participant.vars.get('treatment_store') or {}).get('offer'),
             (participant.vars.get('treatment_store') or {}).get('reported_value'),
+            (participant.vars.get('treatment_store') or {}).get('last_stay_value'),
+            (participant.vars.get('treatment_store') or {}).get('first_accept_value'),
             (participant.vars.get('treatment_store') or {}).get('offer_accepted'),
         ]
         row.extend(get_player_field(player, field) for field in choice_fields)

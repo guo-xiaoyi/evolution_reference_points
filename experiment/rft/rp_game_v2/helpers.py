@@ -311,6 +311,9 @@ def ensure_payment_lottery_selected(player):
         selected_amount=get_player_field(paying_player, 'selected_amount'),
         selected_choice=get_player_field(paying_player, 'selected_choice'),
         cutoff_index=get_player_field(paying_player, 'cutoff_index'),
+        cutoff_amount=get_player_field(paying_player, 'cutoff_amount'),
+        fine_selected_amount=get_player_field(paying_player, 'fine_selected_amount'),
+        fine_cutoff_amount=get_player_field(paying_player, 'fine_cutoff_amount'),
     )
     player.participant.vars['selected_lottery_name'] = store.get('lottery_name')
 
