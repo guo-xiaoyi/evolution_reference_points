@@ -79,7 +79,7 @@
   .link { stroke: #8a8a8a; stroke-width: 2; }
   .link.link-highlight { stroke: #dc3545; stroke-width: 3.5; }
   .payout { font-size: 15px; fill: #1c3b4d; }
-  .payout.highlight-node { fill: #b56600; font-weight: 600; }
+  .payout.highlight-node { fill: #005b8c; font-weight: 600; }
   .prob.highlight-node { fill: #dc3545; font-weight: 600; }
   .title { font-size: 15px; font-weight: 600; fill: #333; }
   .prob { font-size: 12px; fill: #2a8f2a; }
@@ -174,7 +174,7 @@
             <tbody>
               {% for item in payment_schedule %}
               <tr>
-                <td>Period {{ item.period }}</td>
+                <td>{{ item.period }}</td>
                 <td class="pay-amount">{{ item.label }}</td>
                 <td class="pay-when">+{{ item.days }} days from today</td>
               </tr>
@@ -551,8 +551,8 @@
       }
       overlays.forEach(function(o){
         var isHL=o.state==='highlight';
-        svg.appendChild(mk('rect',{x:o.xLeft,y:o.y-19,width:o.xRight-o.xLeft,height:25,rx:8,fill:isHL?'#fff3c9':'#ffffff',opacity:0.95,stroke:isHL?'#f0b429':'#dddddd'}));
-        svg.appendChild(mk('text',{x:o.labelX,y:o.y,class:isHL?'payout highlight-node':'payout','text-anchor':'middle','dominant-baseline':'top',fill:isHL?'#b56600':'#1c3b4d'},o.label));
+        svg.appendChild(mk('rect',{x:o.xLeft,y:o.y-19,width:o.xRight-o.xLeft,height:25,rx:8,fill:isHL?'#57bff7':'#ffffff',opacity:0.95,stroke:isHL?'#f0b429':'#dddddd'}));
+        svg.appendChild(mk('text',{x:o.labelX,y:o.y,class:isHL?'payout highlight-node':'payout','text-anchor':'middle','dominant-baseline':'top',fill:isHL?'#005b8c':'#1c3b4d'},o.label));
       });
       /* ── Dim non-payment columns ── */
       if (activePeriods) {

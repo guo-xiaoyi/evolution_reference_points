@@ -837,11 +837,11 @@ class Play2(Session2TimedPage):
         lottery = get_conditional_lottery(player, realized_up_to=1)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=2)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
-        store['selected_amount_s2'] = player.selected_amount
-        store['cutoff_index_s2'] = player.cutoff_index
-        store['cutoff_amount_s2'] = player.cutoff_amount
-        store['fine_selected_amount_s2'] = player.fine_selected_amount
-        store['fine_cutoff_amount_s2'] = player.fine_cutoff_amount
+        store['selected_amount_s2'] = get_player_field(player, 'selected_amount')
+        store['cutoff_index_s2'] = get_player_field(player, 'cutoff_index')
+        store['cutoff_amount_s2'] = get_player_field(player, 'cutoff_amount')
+        store['fine_selected_amount_s2'] = get_player_field(player, 'fine_selected_amount')
+        store['fine_cutoff_amount_s2'] = get_player_field(player, 'fine_cutoff_amount')
         persist_payment_store(player, store)
 
 class Play3(Session3TimedPage):
@@ -901,11 +901,11 @@ class Play3(Session3TimedPage):
         lottery = get_conditional_lottery(player, realized_up_to=2)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=3)
         store_cutoff_choice(player, choice_lottery, base_offset=0)
-        store['selected_amount_s3'] = player.selected_amount
-        store['cutoff_index_s3'] = player.cutoff_index
-        store['cutoff_amount_s3'] = player.cutoff_amount
-        store['fine_selected_amount_s3'] = player.fine_selected_amount
-        store['fine_cutoff_amount_s3'] = player.fine_cutoff_amount
+        store['selected_amount_s3'] = get_player_field(player, 'selected_amount')
+        store['cutoff_index_s3'] = get_player_field(player, 'cutoff_index')
+        store['cutoff_amount_s3'] = get_player_field(player, 'cutoff_amount')
+        store['fine_selected_amount_s3'] = get_player_field(player, 'fine_selected_amount')
+        store['fine_cutoff_amount_s3'] = get_player_field(player, 'fine_cutoff_amount')
         ensure_realized_up_to(player, 3, store=store)
         final_payoff = compute_final_payoff(store)
         if final_payoff is not None:

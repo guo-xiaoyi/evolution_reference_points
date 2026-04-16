@@ -89,6 +89,16 @@
     border-radius: 0 4px 4px 0;
     font-size: 18px;
   }
+      img.zoomable {
+      cursor: zoom-in;
+      border-radius: 6px;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    img.zoomable:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
   </style>
 </head>
 
@@ -120,7 +130,7 @@
         <p> Of these eight payoff trees, two are eligible for an additional payment. You will be informed whether the selected payoff tree is one of these two. If the randomly selected tree is an eligible payoff tree, you will receive an additional payment at the end of Session 3. If you do not draw an eligible tree, you will still receive all standard payments as described before. </p>
         <p>The eligible random payoff trees always involve gains only — you will never incur a loss from the eligible trees.</p> 
         <p>For example, if you have drawn an eligible tree, you will see:</p>
-        <h3> PLACEHOLDER PLACEHOLDER PLACEHOLDER PLACEHOLDER </h3>
+        <img src= "{{ static 'global/eligible_note.png' }}" alt="MPLChosen" width="80%" class="center zoomable">
 
 
         <h2>Step 2: Die Roll at the End of Session 3 (if eligible)</h2>
@@ -132,7 +142,8 @@
         </ol>
 
         <p>For example, imagine that you receive the following eligible random payoff tree:</p>
-                <h3> PLACEHOLDER PLACEHOLDER PLACEHOLDER PLACEHOLDER </h3>
+        <img src= "{{ static 'global/example_eligible_tree.png' }}" alt="MPLChosen" width="80%" class="center zoomable">
+    
 
         <p>Imagine further that the outcomes in Session 2, 3, and thereafter are +£11, +£31, and +£21, and that you are now at the end of Session 3. After rolling the die, one of the following happens:</p>
         <ol>
@@ -177,6 +188,221 @@
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
   <script src="../../assets/js/vendor/popper.min.js"></script>
   <script src="../../dist/js/bootstrap.min.js"></script>
+  <script>
+    (function () {
+      var progressBar = document.getElementById('readingProgress');
+      function updateProgress() {
+        if (!progressBar) return;
+        var doc = document.documentElement;
+        var scrollTop = doc.scrollTop || document.body.scrollTop;
+        var height = doc.scrollHeight - doc.clientHeight;
+        var percent = height > 0 ? (scrollTop / height) * 100 : 0;
+        progressBar.style.width = Math.min(100, percent) + '%';
+      }
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+
+      var steps = Array.prototype.slice.call(document.querySelectorAll('#focusSteps li'));
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('.focus-step'));
+      var status = document.getElementById('focusStatus');
+      var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function updateStatus() {
+        if (!status) return;
+        var doneCount = 0;
+        for (var i = 0; i < steps.length; i += 1) {
+          if (steps[i].classList.contains('is-done')) doneCount += 1;
+        }
+        status.textContent = doneCount + '/' + steps.length + ' completed';
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var targetId = button.getAttribute('data-target');
+          var target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      function stepForTarget(targetId) {
+        for (var i = 0; i < steps.length; i += 1) {
+          var stepButton = steps[i].querySelector('.focus-step');
+          if (stepButton && stepButton.getAttribute('data-target') === targetId) {
+            return steps[i];
+          }
+        }
+        return null;
+      }
+
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var targetId = entry.target.getAttribute('id');
+            var step = stepForTarget(targetId);
+            if (!step) return;
+            if (entry.isIntersecting) {
+              steps.forEach(function (item) { item.classList.remove('is-active'); });
+              step.classList.add('is-active');
+              step.classList.add('is-done');
+              updateStatus();
+            }
+          });
+        }, { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 });
+
+        ['section-example', 'section-timeline', 'section-evaluate'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
+      } else {
+        updateStatus();
+      }
+
+      var questions = document.querySelectorAll('.quick-check .question');
+      var nextButton = document.querySelector('.otree-btn-next');
+      var gateMessage = document.getElementById('quickCheckGate');
+
+      function isQuestionAnswered(question) {
+        var selectedCount = question.querySelectorAll('button.is-selected').length;
+        return selectedCount > 0;
+      }
+
+      function updateNextState() {
+        if (!nextButton) return;
+        if (!questions.length) {
+          nextButton.disabled = false;
+          nextButton.removeAttribute('aria-disabled');
+          if (gateMessage) gateMessage.classList.remove('is-visible');
+          return;
+        }
+        var allAnswered = true;
+        questions.forEach(function (question) {
+          if (!isQuestionAnswered(question)) {
+            allAnswered = false;
+          }
+        });
+        nextButton.disabled = !allAnswered;
+        if (allAnswered) {
+          nextButton.removeAttribute('aria-disabled');
+        } else {
+          nextButton.setAttribute('aria-disabled', 'true');
+        }
+        if (gateMessage) {
+          gateMessage.classList.toggle('is-visible', !allAnswered);
+        }
+      }
+      questions.forEach(function (question) {
+        var answerAttr = question.getAttribute('data-answer') || '';
+        var correctChoices = answerAttr.split(',').map(function (item) {
+          return item.trim();
+        }).filter(Boolean);
+        var isMulti = correctChoices.length > 1;
+        var correctText = question.getAttribute('data-correct') || 'Correct.';
+        var incorrectText = question.getAttribute('data-incorrect') || 'Not quite.';
+        var feedback = question.querySelector('.feedback');
+        var optionButtons = question.querySelectorAll('button[data-choice]');
+
+        function updateFeedback(selectedChoices) {
+          var hasAllCorrect = selectedChoices.length === correctChoices.length &&
+            selectedChoices.every(function (choice) { return correctChoices.indexOf(choice) !== -1; });
+          if (selectedChoices.length === 0) {
+            if (feedback) feedback.textContent = '';
+          } else if (hasAllCorrect) {
+            if (feedback) feedback.textContent = correctText;
+          } else {
+            if (feedback) feedback.textContent = incorrectText;
+          }
+        }
+
+        optionButtons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (!isMulti) {
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-selected', 'is-correct', 'is-incorrect');
+              });
+              btn.classList.add('is-selected');
+            } else {
+              btn.classList.toggle('is-selected');
+              optionButtons.forEach(function (b) {
+                b.classList.remove('is-correct', 'is-incorrect');
+              });
+            }
+
+            var selectedButtons = Array.prototype.slice.call(optionButtons).filter(function (b) {
+              return b.classList.contains('is-selected');
+            });
+            var selectedChoices = selectedButtons.map(function (b) {
+              return b.getAttribute('data-choice');
+            });
+
+            if (!isMulti) {
+              if (selectedChoices[0] === correctChoices[0]) {
+                btn.classList.add('is-correct');
+              } else {
+                btn.classList.add('is-incorrect');
+              }
+              updateFeedback(selectedChoices);
+              updateNextState();
+              return;
+            }
+
+            selectedButtons.forEach(function (selectedBtn) {
+              if (correctChoices.indexOf(selectedBtn.getAttribute('data-choice')) !== -1) {
+                selectedBtn.classList.add('is-correct');
+              } else {
+                selectedBtn.classList.add('is-incorrect');
+              }
+            });
+            updateFeedback(selectedChoices);
+            updateNextState();
+          });
+        });
+      });
+      updateNextState();
+
+      var modal = document.getElementById('imageModal');
+      var modalImg = document.getElementById('imageModalImg');
+      var modalCaption = document.getElementById('imageModalCaption');
+      var closeBtn = document.querySelector('.image-close');
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        if (modalImg) modalImg.src = '';
+        if (modalCaption) modalCaption.textContent = '';
+      }
+
+      document.querySelectorAll('img.zoomable').forEach(function (img) {
+        img.addEventListener('click', function () {
+          if (!modal || !modalImg) return;
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          if (modalCaption) modalCaption.textContent = img.alt || '';
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+        });
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+      if (modal) {
+        modal.addEventListener('click', function (event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+      }
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
 {{ endblock }}
