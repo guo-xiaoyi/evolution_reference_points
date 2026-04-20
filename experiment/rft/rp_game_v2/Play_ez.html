@@ -834,18 +834,47 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   const labelKeyMapByPeriod = new Map();
+  const nodeMapByPeriod = new Map();
   keys.forEach((periodKey, idx) => {
     const nodes = periods[idx] || [];
     const map = new Map();
+    const nodeMap = new Map();
     nodes.forEach((node, nIdx) => {
       const key = nodeKey(node, `${periodKey}:${nIdx}`);
       node._key = key;
+      nodeMap.set(key, node);
       const label = node && node.label != null ? String(node.label) : '';
       if (!map.has(label)) map.set(label, []);
       map.get(label).push(key);
     });
     labelKeyMapByPeriod.set(periodKey, map);
+    nodeMapByPeriod.set(periodKey, nodeMap);
   });
+
+  function resolveParentKeys(childPeriodIdx, child) {
+    if (!child || childPeriodIdx <= 0) return [];
+    if (child.parent_id != null) return [String(child.parent_id)];
+    const parentPeriodKey = keys[childPeriodIdx - 1];
+    const parentLabel = child.from != null ? String(child.from) : 'Start';
+    const labelMap = labelKeyMapByPeriod.get(parentPeriodKey) || new Map();
+    let parentKeys = labelMap.get(parentLabel) || [];
+    if (parentKeys.length > 1 && child.parent != null) {
+      const parentHint = String(child.parent);
+      const nodeMap = nodeMapByPeriod.get(parentPeriodKey) || new Map();
+      const filtered = parentKeys.filter(parentKey => {
+        const parentNode = nodeMap.get(parentKey);
+        const grandParentLabel = parentNode && parentNode.from != null ? String(parentNode.from) : 'Start';
+        return grandParentLabel === parentHint;
+      });
+      if (filtered.length) parentKeys = filtered;
+    }
+    return parentKeys;
+  }
+
+  function primaryParentKey(childPeriodIdx, child) {
+    const parentKeys = resolveParentKeys(childPeriodIdx, child);
+    return parentKeys.length ? parentKeys[0] : (child && child.from != null ? String(child.from) : 'Start');
+  }
 
   const W = periods.length * colW + (periods.length - 1) * colGap + leftPad * 2;
 
@@ -1029,22 +1058,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return (positive[0] / total) >= 0.999999;
   }
 
-  // Group nodes by their parent label
-  function groupByParent(nodes) {
+  function groupByParent(nodes, childPeriodIdx) {
 
     const res = new Map();
 
     nodes.forEach(node => {
 
-      const parent = node.from || 'Start'; // Use 'Start' for the initial period
+      const parentKey = primaryParentKey(childPeriodIdx, node);
+      const parentLabel = node.from || 'Start';
 
-      if (!res.has(parent)) res.set(parent, []);
+      if (!res.has(parentKey)) res.set(parentKey, { label: parentLabel, children: [] });
 
-      res.get(parent).push(node);
+      res.get(parentKey).children.push(node);
 
     });
 
-    return Array.from(res.entries());
+    return Array.from(res.values()).map(group => [group.label, group.children]);
 
   }
 // Build links between nodes in consecutive periods
@@ -1056,12 +1085,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!cur || !nxt) return [];
 
-    const currentPeriodKey = keys[periodIdx];
-    const labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
     const links = [];
     nxt.forEach(child => {
-      const parentLabel = child.from;
-      const parentKeys = labelMap.get(parentLabel) || [];
+      const parentKeys = resolveParentKeys(periodIdx + 1, child);
       if (!parentKeys.length) return;
       const childKey = child._key;
       parentKeys.forEach(parentKey => {
@@ -1078,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ---- layout ----
   // Evenly distribute nodes vertically within each column and center horizontally
-  const columnLayouts = periods.map(nodes => {
+  const columnLayouts = periods.map((nodes, periodIdx) => {
     const groups = [];
     const nodeAnchors = new Map();
 
@@ -1094,7 +1120,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Build groups and set wheel at the average outcome position for that group
-    groupByParent(nodes).forEach(([parent, children]) => {
+    groupByParent(nodes, periodIdx).forEach(([parent, children]) => {
       const outcomes = children.map(child => {
         const anchor = nodeAnchors.get(child._key);
         const y = anchor ? anchor.y : innerTop;

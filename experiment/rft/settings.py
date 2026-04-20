@@ -6,10 +6,12 @@ SESSION_CONFIGS = [
         app_sequence=['rp_game'],
         num_demo_participants=3,
     ),
-        dict(
+    dict(
         name='rp_game_v2',
         app_sequence=['rp_game_v2'],
         num_demo_participants=10,
+        # Set to True to show a demo-only assignment selector before Welcome.
+        demo_assignment_selector=True,
     )
 
 

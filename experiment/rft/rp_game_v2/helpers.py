@@ -69,11 +69,14 @@ def verify_turnstile_token(token, remoteip=None, secret=None):
     return bool(data.get('success')), data
 
 def _assign_lottery_node_ids(lottery_id, lottery):
-    """Attach stable node ids for rendering, without changing labels."""
+    """Attach stable node ids and parent ids, without changing labels."""
     periods = (lottery or {}).get('periods', {})
     if not isinstance(periods, dict):
         return
-    for period_key, nodes in periods.items():
+    period_keys = sorted(periods.keys())
+
+    for period_key in period_keys:
+        nodes = periods.get(period_key)
         if not isinstance(nodes, list):
             continue
         for idx, node in enumerate(nodes):
@@ -82,6 +85,34 @@ def _assign_lottery_node_ids(lottery_id, lottery):
             if node.get('id'):
                 continue
             node['id'] = f"{lottery_id}:{period_key}:{idx}"
+
+    for period_idx, period_key in enumerate(period_keys):
+        if period_idx == 0:
+            continue
+        previous_key = period_keys[period_idx - 1]
+        previous_nodes = periods.get(previous_key, [])
+        nodes = periods.get(period_key, [])
+        if not isinstance(previous_nodes, list) or not isinstance(nodes, list):
+            continue
+        for node in nodes:
+            if not isinstance(node, dict) or node.get('parent_id'):
+                continue
+            parent_label = str(node.get('from') or 'Start')
+            candidates = [
+                parent_node for parent_node in previous_nodes
+                if isinstance(parent_node, dict)
+                and str(parent_node.get('label') or 'Start') == parent_label
+            ]
+            if len(candidates) > 1 and node.get('parent') is not None:
+                parent_hint = str(node.get('parent'))
+                filtered = [
+                    parent_node for parent_node in candidates
+                    if str(parent_node.get('from') or 'Start') == parent_hint
+                ]
+                if filtered:
+                    candidates = filtered
+            if len(candidates) == 1 and candidates[0].get('id'):
+                node['parent_id'] = str(candidates[0]['id'])
 
 
 def _load_lottery_file(path):
@@ -254,13 +285,48 @@ def _weighted_choice(nodes):
     return nodes[-1]
 
 
-def _sample_period_node(period_nodes, parent_label):
-    """Return a deep copy of a randomly selected node that descends from parent_label."""
-    parent_label = parent_label or 'Start'
+def _node_id(node):
+    if isinstance(node, dict) and node.get('id'):
+        return str(node.get('id'))
+    return None
+
+
+def _node_label(node, default='Start'):
+    if isinstance(node, dict):
+        return str(node.get('label') or default)
+    return str(node or default)
+
+
+def _node_parent_label(node, default='Start'):
+    if isinstance(node, dict):
+        return str(node.get('from') or default)
+    return default
+
+
+def _node_descends_from(node, parent_node):
+    """Return True when node is an immediate child of parent_node."""
+    if not isinstance(node, dict):
+        return False
+    parent_id = _node_id(parent_node)
+    node_parent_id = node.get('parent_id')
+    if parent_id and node_parent_id is not None:
+        return str(node_parent_id) == parent_id
+
+    if _node_parent_label(node) != _node_label(parent_node):
+        return False
+
+    parent_hint = node.get('parent')
+    if parent_hint is not None:
+        return str(parent_hint) == _node_parent_label(parent_node)
+    return True
+
+
+def _sample_period_node(period_nodes, parent_node):
+    """Return a deep copy of a randomly selected child node."""
     candidates = [
         node for node in period_nodes
-        if (node.get('from') or 'Start') == parent_label
-    ]  # Filter nodes by parent
+        if _node_descends_from(node, parent_node)
+    ]
     chosen = _weighted_choice(candidates)
     return copy.deepcopy(chosen) if chosen else None
 
@@ -287,6 +353,27 @@ def persist_payment_store(player, store):
     player.participant.vars[PAYMENT_STORE_KEY] = store
 
 
+def _forced_payment_round(player):
+    """Return a forced payment round for demo assignment tests, if configured."""
+    force_eligible = player.participant.vars.get('demo_force_eligible_lottery')
+    if force_eligible is None:
+        return None
+
+    Constants = _constants()
+    candidates = []
+    for round_no in Constants.paying_round_numbers:
+        round_player = player.in_round(round_no)
+        lottery_id = round_player.lottery_id or Constants.default_lottery
+        lottery = Constants.lotteries.get(lottery_id, {})
+        is_eligible = lottery.get('description') == 'treatment'
+        if is_eligible == bool(force_eligible):
+            candidates.append(round_no)
+
+    if not candidates:
+        return None
+    return rng.choice(candidates)
+
+
 def ensure_payment_lottery_selected(player):
     """Select the paying round/lottery once (after the main evaluation rounds)."""
     Constants = _constants()
@@ -298,7 +385,7 @@ def ensure_payment_lottery_selected(player):
                 player.participant.vars['selected_lottery_name'] = lottery_name
         return store
 
-    paying_round = rng.choice(Constants.paying_round_numbers)
+    paying_round = _forced_payment_round(player) or rng.choice(Constants.paying_round_numbers)
     paying_player = player.in_round(paying_round)
     lottery_id = paying_player.lottery_id or Constants.default_lottery
     base_lottery = Constants.lotteries.get(lottery_id, Constants.lotteries[Constants.default_lottery])
@@ -346,19 +433,20 @@ def ensure_realized_up_to(player, period, store=None):
     realized = store.setdefault('realized_nodes', {})
     changed = False
 
-    parent_label = 'Start'
+    start_nodes = periods.get(0, [])
+    parent_node = start_nodes[0] if start_nodes else {'label': 'Start'}
     for period_key in lottery_period_keys(base_lottery, include_start=False):
         if period_key > period:
             break
         if period_key in realized:
-            parent_label = realized[period_key].get('label') or parent_label
+            parent_node = realized[period_key]
             continue
-        node = _sample_period_node(periods.get(period_key, []), parent_label)
+        node = _sample_period_node(periods.get(period_key, []), parent_node)
         if not node:
             break
         node['realized'] = True
         realized[period_key] = node
-        parent_label = node.get('label') or parent_label
+        parent_node = node
         changed = True
 
     store['realized_nodes'] = realized
@@ -381,32 +469,48 @@ def build_conditional_lottery(base_lottery, realized_nodes):
     realized_nodes = realized_nodes or {}
     periods = base_lottery.get('periods', {})
     truncated_periods = {}
-    allowed_parents = {'Start'}
+    allowed_parent_ids = set()
+    allowed_parent_labels = {'Start'}
+
+    def node_matches_allowed_parent(node):
+        if not isinstance(node, dict):
+            return False
+        node_parent_id = node.get('parent_id')
+        if allowed_parent_ids and node_parent_id is not None:
+            return str(node_parent_id) in allowed_parent_ids
+        return not allowed_parent_labels or _node_parent_label(node) in allowed_parent_labels
 
     for idx in sorted(periods.keys()):
         if idx == 0:
             truncated_periods[idx] = [copy.deepcopy(node) for node in periods[idx]]
-            allowed_parents = {node.get('label') for node in truncated_periods[idx]}
+            allowed_parent_ids = {
+                str(node.get('id')) for node in truncated_periods[idx] if node.get('id')
+            }
+            allowed_parent_labels = {_node_label(node) for node in truncated_periods[idx]}
             continue
 
         if idx in realized_nodes:
             realized_node = copy.deepcopy(realized_nodes[idx])
-            parent_label = next(iter(allowed_parents or {'Start'}))
-            realized_node['from'] = parent_label
+            if allowed_parent_ids and realized_node.get('parent_id') is None and len(allowed_parent_ids) == 1:
+                realized_node['parent_id'] = next(iter(allowed_parent_ids))
+            if allowed_parent_labels and not realized_node.get('from'):
+                realized_node['from'] = next(iter(allowed_parent_labels))
             realized_node['probability'] = 1
             realized_node['abs_prob'] = 1
             realized_node['realized'] = True
             truncated_periods[idx] = [realized_node]
-            allowed_parents = {realized_node.get('label')}
+            allowed_parent_ids = {str(realized_node.get('id'))} if realized_node.get('id') else set()
+            allowed_parent_labels = {_node_label(realized_node)}
             continue
 
         filtered = [
             copy.deepcopy(node)
             for node in periods[idx]
-            if not allowed_parents or (node.get('from') or 'Start') in allowed_parents
+            if node_matches_allowed_parent(node)
         ]
         truncated_periods[idx] = filtered
-        allowed_parents = {node.get('label') for node in filtered}
+        allowed_parent_ids = {str(node.get('id')) for node in filtered if node.get('id')}
+        allowed_parent_labels = {_node_label(node) for node in filtered}
 
     conditional = copy.deepcopy(base_lottery)
     conditional['periods'] = truncated_periods
@@ -482,13 +586,19 @@ def compute_upcoming_payoff_range(lottery, start_period):
         return None, None
     last_period = max(periods.keys())
 
-    def _collect_totals(period, parent_labels):
+    def _collect_totals(period, parent_ids=None, parent_labels=None):
         nodes = periods.get(period, [])
-        if parent_labels is not None:
-            nodes = [
-                node for node in nodes
-                if (node.get('from') or 'Start') in parent_labels
-            ]
+        if parent_ids is not None or parent_labels is not None:
+            filtered = []
+            for node in nodes:
+                node_parent_id = node.get('parent_id') if isinstance(node, dict) else None
+                if parent_ids and node_parent_id is not None:
+                    if str(node_parent_id) in parent_ids:
+                        filtered.append(node)
+                    continue
+                if parent_labels is None or _node_parent_label(node) in parent_labels:
+                    filtered.append(node)
+            nodes = filtered
         if not nodes:
             return []
         totals = []
@@ -499,14 +609,19 @@ def compute_upcoming_payoff_range(lottery, start_period):
             if period >= last_period:
                 totals.append(value)
                 continue
-            child_totals = _collect_totals(period + 1, {node.get('label')})
+            child_parent_ids = {str(node.get('id'))} if node.get('id') else None
+            child_totals = _collect_totals(
+                period + 1,
+                child_parent_ids,
+                {_node_label(node)},
+            )
             if child_totals:
                 totals.extend([value + child for child in child_totals])
             else:
                 totals.append(value)
         return totals
 
-    totals = _collect_totals(start_period, None)
+    totals = _collect_totals(start_period)
     if not totals:
         return None, None
     return min(totals), max(totals)
@@ -727,18 +842,25 @@ def build_wheel_segments(lottery, period, realized_nodes=None):
         return []
 
     if period == 1:
+        start_nodes = periods.get(0, [])
+        start_node = start_nodes[0] if start_nodes else {}
+        parent_ids = {str(start_node.get('id'))} if start_node.get('id') else None
         parent_labels = {'Start'}
     else:
         prev = realized_nodes.get(period - 1) or {}
+        parent_ids = {str(prev.get('id'))} if prev.get('id') else None
         parent_label = prev.get('label')
-        parent_labels = {parent_label} if parent_label else None
+        parent_labels = {str(parent_label)} if parent_label else None
 
     segments = []
     for idx, node in enumerate(nodes):
         if not isinstance(node, dict):
             continue
-        parent = node.get('from') or 'Start'
-        if parent_labels and parent not in parent_labels:
+        node_parent_id = node.get('parent_id')
+        if parent_ids and node_parent_id is not None:
+            if str(node_parent_id) not in parent_ids:
+                continue
+        elif parent_labels and _node_parent_label(node) not in parent_labels:
             continue
         label = node.get('label') or f'Outcome {idx + 1}'
         probability = node.get('probability')

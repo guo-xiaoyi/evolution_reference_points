@@ -107,6 +107,22 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     treatment_group = models.BooleanField(blank=True)
+    demo_treatment_assignment = models.StringField(
+        choices=[
+            ['treatment', 'Treatment group'],
+            ['control', 'Control group'],
+        ],
+        label='Which group should this demo participant be assigned to?',
+        widget=widgets.RadioSelect,
+    )
+    demo_eligible_lottery_assignment = models.StringField(
+        choices=[
+            ['eligible', 'Receive an eligible payoff tree'],
+            ['ineligible', 'Receive a non-eligible payoff tree'],
+        ],
+        label='Which payment-tree draw should this demo participant receive?',
+        widget=widgets.RadioSelect,
+    )
     num_failed_attempts = models.IntegerField(initial=0)
     failed_too_many_1 = models.BooleanField(initial=False)
     failed_too_many_2 = models.BooleanField(initial=False)
@@ -228,6 +244,14 @@ def _is_treatment_group(player):
     return bool(player.participant.vars.get('treatment_group', False))
 
 
+def _demo_assignment_selector_enabled(player):
+    return (
+        player.round_number == 1
+        and bool(getattr(player.session, 'is_demo', False))
+        and bool(player.session.config.get('demo_assignment_selector', False))
+    )
+
+
 def _is_treatment_eligible(player):
     if not _is_treatment_group(player):
         return False
@@ -312,6 +336,43 @@ for i in range(1, Constants.max_choice_count + 1):
 
 
 # PAGES
+class DemoAssignment(Page):
+    form_model = 'player'
+    form_fields = ['demo_treatment_assignment', 'demo_eligible_lottery_assignment']
+
+    @staticmethod
+    def is_displayed(player):
+        return _demo_assignment_selector_enabled(player)
+
+    @staticmethod
+    def vars_for_template(player):
+        eligible_count = sum(
+            1
+            for lottery in Constants.evaluation_lotteries.values()
+            if lottery.get('description') == 'treatment'
+        )
+        ineligible_count = max(0, len(Constants.evaluation_lotteries) - eligible_count)
+        return {
+            'eligible_lottery_count': eligible_count,
+            'ineligible_lottery_count': ineligible_count,
+        }
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        treatment_group = player.demo_treatment_assignment == 'treatment'
+        force_eligible_lottery = player.demo_eligible_lottery_assignment == 'eligible'
+
+        player.participant.vars['treatment_group'] = treatment_group
+        player.participant.vars['demo_force_eligible_lottery'] = force_eligible_lottery
+
+        for round_player in player.in_all_rounds():
+            round_player.treatment_group = treatment_group
+
+        player.participant.vars.pop(PAYMENT_STORE_KEY, None)
+        player.participant.vars.pop('selected_lottery_name', None)
+        player.participant.vars.pop('treatment_store', None)
+
+
 class Welcome(Page):
     form_model = 'player'
     form_fields = ['turnstile_token']
@@ -1244,6 +1305,7 @@ class RevisionSession1(Session2TimedPage):
 
 # ------------- Page Sequence Control -------------
 page_sequence = [
+    DemoAssignment,
     Welcome,
     Session1,
     Check1,

@@ -513,12 +513,15 @@
           return fallback != null ? String(fallback) : '';
         };
         var labelKeyMapByPeriod = new Map();
+        var nodeMapByPeriod = new Map();
         keys.forEach(function (periodKey, idx) {
           var nodes = periods[idx] || [];
           var map = new Map();
+          var nodeMap = new Map();
           nodes.forEach(function (node, nIdx) {
             var key = nodeKey(node, periodKey + ':' + nIdx);
             node._key = key;
+            nodeMap.set(key, node);
             var label = node && node.label != null ? String(node.label) : '';
             if (!map.has(label)) {
               map.set(label, []);
@@ -526,7 +529,37 @@
             map.get(label).push(key);
           });
           labelKeyMapByPeriod.set(periodKey, map);
+          nodeMapByPeriod.set(periodKey, nodeMap);
         });
+        var resolveParentKeys = function (childPeriodIdx, child) {
+          if (!child || childPeriodIdx <= 0) {
+            return [];
+          }
+          if (child.parent_id != null) {
+            return [String(child.parent_id)];
+          }
+          var parentPeriodKey = keys[childPeriodIdx - 1];
+          var parentLabel = child.from != null ? String(child.from) : 'Start';
+          var labelMap = labelKeyMapByPeriod.get(parentPeriodKey) || new Map();
+          var parentKeys = labelMap.get(parentLabel) || [];
+          if (parentKeys.length > 1 && child.parent != null) {
+            var parentHint = String(child.parent);
+            var nodeMap = nodeMapByPeriod.get(parentPeriodKey) || new Map();
+            var filtered = parentKeys.filter(function (parentKey) {
+              var parentNode = nodeMap.get(parentKey);
+              var grandParentLabel = parentNode && parentNode.from != null ? String(parentNode.from) : 'Start';
+              return grandParentLabel === parentHint;
+            });
+            if (filtered.length) {
+              parentKeys = filtered;
+            }
+          }
+          return parentKeys;
+        };
+        var primaryParentKey = function (childPeriodIdx, child) {
+          var parentKeys = resolveParentKeys(childPeriodIdx, child);
+          return parentKeys.length ? parentKeys[0] : (child && child.from != null ? String(child.from) : 'Start');
+        };
         var realizedSetByPeriod = new Map();
         function addRealized(period, node) {
           if (!Number.isFinite(period) || !node) {
@@ -616,16 +649,19 @@
           }
           return colX + wheelCxOffset;
         };
-        var groupByParent = function (nodes) {
+        var groupByParent = function (nodes, childPeriodIdx) {
           var res = new Map();
           nodes.forEach(function (node) {
-            var parent = node.from || 'Start';
-            if (!res.has(parent)) {
-              res.set(parent, []);
+            var parentKey = primaryParentKey(childPeriodIdx, node);
+            var parentLabel = node.from || 'Start';
+            if (!res.has(parentKey)) {
+              res.set(parentKey, { label: parentLabel, children: [] });
             }
-            res.get(parent).push(node);
+            res.get(parentKey).children.push(node);
           });
-          return Array.from(res.entries());
+          return Array.from(res.values()).map(function (group) {
+            return [group.label, group.children];
+          });
         };
         var isDeterministic = function (slices) {
           var probs = slices.map(function (s) {
@@ -670,7 +706,7 @@
             var y = innerTop + (idx + 0.5) * (span / count);
             layout.nodeAnchors.set(node._key, { y: y });
           });
-          groupByParent(nodes).forEach(function (entry) {
+          groupByParent(nodes, idx).forEach(function (entry) {
             var parent = entry[0];
             var children = entry[1];
             var outcomes = children.map(function (child) {
@@ -833,12 +869,9 @@
           if (!current.length || !next.length) {
             return [];
           }
-          var currentPeriodKey = keys[periodIdx];
-          var labelMap = labelKeyMapByPeriod.get(currentPeriodKey) || new Map();
           var links = [];
           next.forEach(function (child) {
-            var parentLabel = child.from;
-            var parentKeys = labelMap.get(parentLabel) || [];
+            var parentKeys = resolveParentKeys(periodIdx + 1, child);
             if (!parentKeys.length) {
               return;
             }

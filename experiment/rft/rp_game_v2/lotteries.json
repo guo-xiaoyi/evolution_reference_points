@@ -2,8 +2,8 @@
     "name": "Apple",
     "outcome_number": 4,
     "stake": "lo",
-    "max_payoff": 110,
-    "min_payoff": 63,
+    "max_payoff": 19,
+    "min_payoff": 11,
     "description": "treatment",
     "periods": {
       "0": [
@@ -17,59 +17,59 @@
       "1": [
         {
           "label": "+£11",
-          "probability": 0.4,
+          "probability": 0.5,
           "from": "Start",
-          "abs_prob": 0.4
+          "abs_prob": 0.5
         },
         {
-          "label": "+£33",
-          "probability": 0.6,
+          "label": "+£8",
+          "probability": 0.5,
           "from": "Start",
-          "abs_prob": 0.6
+          "abs_prob": 0.5
         }
       ],
       "2": [
         {
-          "label": "+£31",
+          "label": "+£2",
           "probability": 1,
           "from": "+£11",
           "abs_prob": 0.4
         },
         {
-          "label": "+£27",
+          "label": "+£1",
           "probability": 1,
-          "from": "+£33",
+          "from": "+£8",
           "abs_prob": 0.6
         }
       ],
       "3": [
         {
-          "label": "+£24",
-          "probability": 0.3,
-          "from": "+£31",
+          "label": "+£6",
+          "probability": 0.9,
+          "from": "+£2",
           "parent": "+£11",
-          "abs_prob": 0.12
+          "abs_prob": 0.45
         },
         {
-          "label": "+£21",
-          "probability": 0.7,
-          "from": "+£31",
+          "label": "+£5",
+          "probability": 0.1,
+          "from": "+£2",
           "parent": "+£11",
-          "abs_prob": 0.28
+          "abs_prob": 0.05
         },
         {
-          "label": "+£34",
+          "label": "+£2",
           "probability": 0.4,
-          "from": "+£27",
-          "parent": "+£33",
-          "abs_prob": 0.24
+          "from": "+£1",
+          "parent": "+£8",
+          "abs_prob": 0.2
         },
         {
-          "label": "+£50",
+          "label": "+£6",
           "probability": 0.6,
-          "from": "+£27",
-          "parent": "+£33",
-          "abs_prob": 0.36
+          "from": "+£1",
+          "parent": "+£8",
+          "abs_prob": 0.3
         }
       ]
     }
@@ -170,60 +170,60 @@
       ],
       "1": [
         {
-          "label": "+£35",
-          "probability": 0.6,
-          "from": "Start",
-          "abs_prob": 0.6
-        },
-        {
-          "label": "+£42",
+          "label": "+£4",
           "probability": 0.4,
           "from": "Start",
           "abs_prob": 0.4
+        },
+        {
+          "label": "+£10",
+          "probability": 0.6,
+          "from": "Start",
+          "abs_prob": 0.6
         }
       ],
       "2": [
         {
-          "label": "+£27",
+          "label": "+£3",
           "probability": 1,
-          "from": "+£35",
-          "abs_prob": 0.6
+          "from": "+£4",
+          "abs_prob": 0.4
         },
         {
-          "label": "+£39",
+          "label": "+£3",
           "probability": 1,
-          "from": "+£42",
-          "abs_prob": 0.4
+          "from": "+£10",
+          "abs_prob": 0.6
         }
       ],
       "3": [
         {
-          "label": "+£34",
-          "probability": 0.8,
-          "from": "+£27",
-          "parent": "+£35",
-          "abs_prob": 0.48
+          "label": "+£9",
+          "probability": 0.6,
+          "from": "+£3",
+          "parent": "+£4",
+          "abs_prob": 0.24
         },
         {
-          "label": "+£12",
-          "probability": 0.2,
-          "from": "+£27",
-          "parent": "+£35",
-          "abs_prob": 0.12
+          "label": "+£2",
+          "probability": 0.4,
+          "from": "+£3",
+          "parent": "+£4",
+          "abs_prob": 0.16
         },
         {
-          "label": "+£40",
-          "probability": 0.1,
-          "from": "+£39",
-          "parent": "+£42",
-          "abs_prob": 0.04
+          "label": "+£9",
+          "probability": 0.5,
+          "from": "+£3",
+          "parent": "+£10",
+          "abs_prob": 0.3
         },
         {
-          "label": "+£38",
-          "probability": 0.9,
-          "from": "+£39",
-          "parent": "+£42",
-          "abs_prob": 0.36
+          "label": "+£7",
+          "probability": 0.5,
+          "from": "+£3",
+          "parent": "+£10",
+          "abs_prob": 0.3
         }
       ]
     }
