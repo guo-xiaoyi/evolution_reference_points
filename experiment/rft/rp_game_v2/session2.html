@@ -207,7 +207,18 @@
 
     <div> <img src= "{{ static 'global/mcl_refinement.png' }}" alt="random payoff tree" width="80%"></div>
 <p>When you have submitted a selection, your answer is recorded and you cannot go back and change it. You will only evaluate one random payoff tree in this session!</p>
+{% if is_eligible_for_treatment %}
+
+<p>The decisions that you make here might determine your payment. Please provide us with insights on how you are valuing the random payoff trees. You may later participate in an additional payment procedure in which your additional payoff is determined by both your evaluation and chance.</p>
+
+
+      
+{% else %}
+
 <p>The decisions that you make here do not determine your payment. You are only providing us with insights on how you are valuing the random payoff trees; you will neither participate in a random selected payoff tree nor receive or pay any amounts displayed in the tables where you indicate your choices. </p>
+
+{% endif %}
+
 
         </div>
 

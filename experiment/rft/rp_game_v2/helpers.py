@@ -354,8 +354,10 @@ def persist_payment_store(player, store):
 
 
 def _forced_payment_round(player):
-    """Return a forced payment round for demo assignment tests, if configured."""
-    force_eligible = player.participant.vars.get('demo_force_eligible_lottery')
+    """Return a forced payment round for assignment-control tests, if configured."""
+    force_eligible = player.participant.vars.get('force_eligible_lottery')
+    if force_eligible is None:
+        force_eligible = player.participant.vars.get('demo_force_eligible_lottery')
     if force_eligible is None:
         return None
 

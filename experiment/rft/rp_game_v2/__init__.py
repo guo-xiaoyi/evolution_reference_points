@@ -112,7 +112,7 @@ class Player(BasePlayer):
             ['treatment', 'Treatment group'],
             ['control', 'Control group'],
         ],
-        label='Which group should this demo participant be assigned to?',
+        label='Which group should this participant be assigned to?',
         widget=widgets.RadioSelect,
     )
     demo_eligible_lottery_assignment = models.StringField(
@@ -120,7 +120,7 @@ class Player(BasePlayer):
             ['eligible', 'Receive an eligible payoff tree'],
             ['ineligible', 'Receive a non-eligible payoff tree'],
         ],
-        label='Which payment-tree draw should this demo participant receive?',
+        label='Which payment-tree draw should this participant receive?',
         widget=widgets.RadioSelect,
     )
     num_failed_attempts = models.IntegerField(initial=0)
@@ -244,11 +244,15 @@ def _is_treatment_group(player):
     return bool(player.participant.vars.get('treatment_group', False))
 
 
-def _demo_assignment_selector_enabled(player):
+def _assignment_selector_enabled(player):
     return (
         player.round_number == 1
-        and bool(getattr(player.session, 'is_demo', False))
-        and bool(player.session.config.get('demo_assignment_selector', False))
+        and bool(
+            player.session.config.get(
+                'assignment_selector',
+                player.session.config.get('demo_assignment_selector', False),
+            )
+        )
     )
 
 
@@ -342,7 +346,7 @@ class DemoAssignment(Page):
 
     @staticmethod
     def is_displayed(player):
-        return _demo_assignment_selector_enabled(player)
+        return _assignment_selector_enabled(player)
 
     @staticmethod
     def vars_for_template(player):
@@ -363,7 +367,8 @@ class DemoAssignment(Page):
         force_eligible_lottery = player.demo_eligible_lottery_assignment == 'eligible'
 
         player.participant.vars['treatment_group'] = treatment_group
-        player.participant.vars['demo_force_eligible_lottery'] = force_eligible_lottery
+        player.participant.vars['force_eligible_lottery'] = force_eligible_lottery
+        player.participant.vars.pop('demo_force_eligible_lottery', None)
 
         for round_player in player.in_all_rounds():
             round_player.treatment_group = treatment_group
@@ -1266,6 +1271,13 @@ class Session2(Session2TimedPage):
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[0] and _continuation_has_time(player, 'session2')
+    
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_eligible_for_treatment': _is_treatment_eligible(player),
+        }
 
 class Session3(Session3TimedPage):
     template_name = 'rp_game_v2/session2.html'
@@ -1273,6 +1285,12 @@ class Session3(Session3TimedPage):
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
 
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_eligible_for_treatment': _is_treatment_eligible(player),
+        }
 class RevisionSession1(Session2TimedPage):
     template_name = 'rp_game_v2/Draw.html'
     @staticmethod

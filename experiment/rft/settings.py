@@ -10,8 +10,8 @@ SESSION_CONFIGS = [
         name='rp_game_v2',
         app_sequence=['rp_game_v2'],
         num_demo_participants=10,
-        # Set to True to show a demo-only assignment selector before Welcome.
-        demo_assignment_selector=True,
+        # Set to True to show the assignment selector before Welcome.
+        assignment_selector=True,
     )
 
 
