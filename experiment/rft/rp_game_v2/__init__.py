@@ -711,7 +711,7 @@ class Check1(Page):
     def error_message(player: Player, values):
         solutions = dict(quiz1= 'Yes', quiz2= 'No')
         error_messages = {
-            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this study if you can take part in all three sessions. Sessions two and three take place three and six days from now and will be much shorter than today’s session (only about 7-15 minutes each).',
+            'quiz1': 'You should have chosen “Yes” for this question. Please only participate in this study if you can take part in all three sessions. Sessions two and three take place in three and six days from now and will be much shorter than today’s session (only about 7-15 minutes each).',
             'quiz2': 'You should have chosen “No” for this question.  We are interested in your personal preferences (there are no right or wrong answers). Therefore, please do not use AI during the study.',
         }
         errors = {

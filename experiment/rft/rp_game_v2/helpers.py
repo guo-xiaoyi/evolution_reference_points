@@ -21,6 +21,7 @@ PRACTICE_LOTTERY_PATH = Path(__file__).with_name('practice_lottery.json')
 TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 MIN_WHOLE_CHOICE_OPTIONS = 3
 MIN_EXPANDED_CHOICE_OPTIONS = 5
+MAX_EXPANDED_CHOICE_OPTIONS = 10
 DISPLAY_DECIMALS = 2
 CENT_STEP = Decimal('0.01')
 
@@ -728,9 +729,13 @@ def choice_amounts(player, lottery, base_offset=0):
     lower = base_offset + lottery['min_payoff']
     upper = base_offset + lottery['max_payoff']
     whole_amounts = _build_choice_grid(lower, upper, count, digits=0)
-    if len(whole_amounts) >= MIN_WHOLE_CHOICE_OPTIONS:
+    if len(whole_amounts) > MIN_WHOLE_CHOICE_OPTIONS:
         return whole_amounts
-    cent_amounts = _build_choice_grid(lower, upper, count, digits=DISPLAY_DECIMALS)
+    expanded_count = min(
+        MAX_EXPANDED_CHOICE_OPTIONS,
+        max(MIN_EXPANDED_CHOICE_OPTIONS, count),
+    )
+    cent_amounts = _build_choice_grid(lower, upper, expanded_count, digits=DISPLAY_DECIMALS)
     if len(cent_amounts) >= MIN_EXPANDED_CHOICE_OPTIONS:
         return cent_amounts
     return _expand_amounts_by_cents(cent_amounts, MIN_EXPANDED_CHOICE_OPTIONS)
