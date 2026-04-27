@@ -780,7 +780,7 @@
 
     <div class="row">
 
-        <h1 class="university-title">Practice task</h1>
+        <h1 class="university-title">Practice Task</h1>
 
         <p> In this page, you will evaluate a practice random payoff tree, you results will not be recorded. You will be asked to make a choice between a fixed payment and the outcomes of the random payoff tree. Please consider the following question: suppose you are facing a choice between the fixed payment  and the random outcomes of the random payoff tree, which one would you choose? After you click on ‘Start evaluation’ a sidebar with the evaluation table will open. You can open and close the sidebar as often as you like.</p>
         <p> We will provide you step-by-step guide about this interface.</p>
@@ -925,7 +925,7 @@
 
 <div id="submit-confirm-overlay" class="confirm-overlay" aria-hidden="true">
   <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="submit-confirm-title">
-    <h5 id="submit-confirm-title">Submit practice task?</h5>
+    <h5 id="submit-confirm-title">Submit Practice Task?</h5>
     <p>
      After this, you will see the real decision tasks
       and your decisions will be recorded.
@@ -1847,44 +1847,44 @@ document.addEventListener('DOMContentLoaded', function () {
   const tourSteps = [
     {
       selector: '.university-title',
-      title: 'Welcome to the practice task',
+      title: 'Welcome to the Practice Task',
       text: 'Your answers in this practice task are not recorded. You will now experience a guided tour of the decision task to help you navigate the interface. You can exit the tour at any time by clicking outside the tour box. You can move the tour box by dragging it.',
       position: 'bottom'
     },
     {
       selector: '#lottery-visualization',
-      title: 'Random payoff tree',
+      title: 'Random Payoff Tree',
       text: 'This diagram shows possible outcomes and their probabilities over time.',
       position: 'left'
     },    
     {
       selector: '#lottery-visualization',
-      title: 'Time periods',
+      title: 'Time Periods',
       text: 'The four columns represent three time periods corresponding to the three sessions of the study plus one time period thereafter.',
       position: 'undertop'
     },
         {
       selector: '#lottery-visualization',
-      title: 'Lines and wheels',
+      title: 'Lines and Wheels',
       text: 'Lines connect possible outcomes between periods. Wheels show the probabilities of different outcomes in the next period.',
       position: 'middleright'
     },
     {
       selector: '#open-sidebar-btn',
-      title: 'Opening the evaluation table',
+      title: 'Opening the Evaluation Table',
       text:  'Click this button to open the sidebar with the evaluation table.',
       position: 'top'
     },
     {
       selector: '#choice-table',
-      title: 'Evaluation table',
+      title: 'Evaluation Table',
       text: 'Each row compares a fixed amount (left) to the random payoff tree outcomes (right).',
       position: 'right',
       openSidebar: true
     },
     {
       selector: '#choice-table tbody tr:nth-child(7)',
-      title: 'Please select this row.',
+      title: 'Please Select This Row.',
       text: ' ',
       position: 'right',
       openSidebar: true
@@ -1892,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       range: { selector: '#choice-table tbody tr', start: 0, end: 5 },
       focusIndex: 5,
-      title: 'What this choice means I',
+      title: 'What This Choice Means I',
       text: 'In this range, you prefer obtaining the outcomes of the random payoff tree over paying the fixed amounts (on the left).',
       position: 'right',
       openSidebar: true
@@ -1900,14 +1900,14 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       range: { selector: '#choice-table tbody tr', start: 6, end: 19 },
       focusIndex: 6,
-      title: 'What this choice means II',
+      title: 'What This Choice Means II',
       text: 'In this range, you prefer paying or receiving the fixed amounts (on the left) over obtaining the out-comes of the random payoff tree.',
       position: 'right',
       openSidebar: true
     },
     {
       selector: '#fine-choice-panel',
-      title: 'Fine detail (high stake only)',
+      title: 'Fine Detail (High Stake Only)',
       text: 'If a refinement panel appears, choose a more precise cutoff.',
       position: 'right',
       openSidebar: true,
@@ -1915,7 +1915,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       selector: '#lottery-visualization',
-      title: 'Close and open sidebar',
+      title: 'Close and Open Sidebar',
       text: 'You can always close the sidebar to review the random payoff tree before submitting your choice.',
       position: 'left',
       openSidebar: false
@@ -1923,7 +1923,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   {
       selector: '#choice-table',
-      title: 'Making changes',
+      title: 'Making Changes',
       text: 'You can change the selected row in the evaluation table if you want to.',
       position: 'top',
       openSidebar: true

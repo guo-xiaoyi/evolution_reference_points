@@ -1122,9 +1122,9 @@ class WheelSession2(Session2TimedPage):
         return build_wheel_context(
             player,
             period=1,
-            title='Determination of the first outcome',
+            title='Determination of the First Outcome',
             description='Now the first outcome of your random payoff tree will be determined.',
-            stage_label='Outcome determination (first outcome, Session 2)',
+            stage_label='Outcome Determination (First Outcome, Session 2)',
             status_text='Click the button to spin the wheel of fortune determining the first outcome.',
             button_label='Click here to spin the wheel',
             next_step='This outcome determines the branch you will evaluate today.',
@@ -1144,9 +1144,9 @@ class WheelSession3(Session3TimedPage):
         return build_wheel_context(
             player,
             period=2,
-            title='Determination of the second outcome',
+            title='Determination of the Second Outcome',
             description='Now the second outcome of your random payoff tree will be determined.',
-            stage_label='Outcome determination (second outcome, Session 3)',
+            stage_label='Outcome Determination (Second Outcome, Session 3)',
             status_text='Click the button to spin the wheel of fortune determining the second outcome.',
             button_label='Click here to spin the wheel',
             next_step='This outcome determines the branch you will evaluate today.',
