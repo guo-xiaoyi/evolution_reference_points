@@ -121,28 +121,29 @@
         <p>In addition to the standard payments described earlier, you may be eligible for <strong> and additional payment</strong> that depends on your choices and luck </p>
 
         <div class="highlight-box">
-          <p style="margin-bottom:0;">Important note: The determination of the additional payment is complex. It uses a sophisticated mechanism designed to ensure that you are paid in line with the preferences you express through your choices. If you do not fully understand how the additional payment is determined, this is not a problem — it is only important that you understand the task of evaluating the random payoff trees, and you evaluate the random payoff trees as if they are real. </p>
+          <p style="margin-bottom:0;">Important note: The determination of the additional payment is complex. It uses a sophisticated mechanism designed to ensure that you are paid in line with the preferences you express through your choices. If you do not fully understand how the additional payment is determined, this is not a problem — it is only important that you understand the task of evaluating the random payoff trees, and that you evaluate the random payoff trees as if they are real. </p>
         </div>
 
         <p>The additional payment process consists of three steps described below.</p>
         <h2>Step 1: Random Draw at the End of Session 1</h2>
-        <p>At the end of Session 1, one of the eight random payoff trees will be selected at random.</p>
+        <p>At the end of Session 1, one of eight random payoff trees will be selected at random.</p>
         <p> Of these eight payoff trees, two are eligible for an additional payment. You will be informed whether the selected payoff tree is one of these two. If the randomly selected tree is an eligible payoff tree, you will receive an additional payment at the end of Session 3. If you do not draw an eligible tree, you will still receive all standard payments as described before. </p>
         <p>The eligible random payoff trees always involve gains only — you will never incur a loss from the eligible trees.</p> 
         <p>For example, if you have drawn an eligible tree, you will see:</p>
         <img src= "{{ static 'global/eligible_note.png' }}" alt="MPLChosen" width="80%" class="center zoomable">
 
 
-        <h2>Step 2: Die Roll at the End of Session 3 (if eligible)</h2>
-        <p>If you draw an eligible tree in Step 1, then you will <strong>roll a die at the end of Session 3</strong>. The outcome of the die will determine <strong>which version of your payoff tree</strong> will be used for the additional payment:</p>
+        <h2>Step 2: Number Generator at the End of Session 3 (if eligible)</h2>
+        <p>If you draw an eligible tree in Step 1, then you will <strong>use a number generator at the end of Session 3</strong>. The generator returns 1, 2, or 3. These correspond respectively to die outcomes 1-2, 3-4, and 5-6, and determine <strong>which version of your payoff tree</strong> will be used for the additional payment:</p>
         <ol>
-          <li><strong>Die shows 1 or 2:</strong> TThe payoff tree from Session 1 will be used to determine the payment. This includes all three periods following Session 1. This corresponds to what you will have evaluate in Session 1. </li>
-          <li><strong>Die shows 3 or 4:</strong> The remaining part of the tree from Session 2 will be used. This includes the two periods following Session 2. This corresponds to what you will have evaluated in Session 2.</li>
-          <li><strong>Die shows 5 or 6:</strong> The remaining part of the tree from Session 3 will be used. This includes only the final period of the random payoff tree (three days after Session 3). This corresponds to what you will have evaluated in Session 3.</li>
+          <li><strong>Generator shows 1:</strong> This corresponds to die outcomes 1 or 2. The payoff tree from Session 1 will be used to determine the payment. This includes all three periods following Session 1. This corresponds to what you will have evaluated in Session 1. </li>
+          <li><strong>Generator shows 2:</strong> This corresponds to die outcomes 3 or 4. The remaining part of the tree from Session 2 will be used. This includes the two periods following Session 2. This corresponds to what you will have evaluated in Session 2.</li>
+          <li><strong>Generator shows 3:</strong> This corresponds to die outcomes 5 or 6. The remaining part of the tree from Session 3 will be used. This includes only the final period of the random payoff tree (three days after Session 3). This corresponds to what you will have evaluated in Session 3.</li>
         </ol>
 
         <p>For example, imagine that you receive the following eligible random payoff tree:</p>
         <img src= "{{ static 'global/example_eligible_tree.png' }}" alt="MPLChosen" width="80%" class="center zoomable">
+        <p><strong>For the example below, interpret the outcomes as follows:</strong> generator result 1 corresponds to die outcomes 1 or 2, generator result 2 corresponds to die outcomes 3 or 4, and generator result 3 corresponds to die outcomes 5 or 6.</p>
     
 
         <p>Imagine further that the outcomes in Session 2, 3, and thereafter are +£11, +£31, and +£21, and that you are now at the end of Session 3. After rolling the die, one of the following happens:</p>

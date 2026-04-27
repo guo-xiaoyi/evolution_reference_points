@@ -192,10 +192,14 @@
       <div class="content-wrapper">
                 <p>You have now completed all sessions with decision tasks. There are only a few questions remaining. Note that the answers will not have any influence on your eligibility for payment (your honesty in these questions will be important for our data analysis).</p>
 
-
+        {% if is_eligible_for_treatment %}
+        <p><strong>Question 1</strong></p>{{ formfield 'quiz6t' }}
+        {% else %}
         <p><strong>Question 1</strong></p>{{ formfield 'quiz6' }}
+        {% endif %}
         <p><strong>Question 2</strong></p>{{ formfield 'quiz7' }}
         <p><strong>Question 3</strong></p>{{ formfield 'quiz8' }}
+        
         <p style="text-align:right; margin-top: 1.5rem;">
               
               <button class="otree-btn-next btn btn-primary">Submit &raquo;</button>

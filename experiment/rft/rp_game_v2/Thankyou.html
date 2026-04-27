@@ -86,17 +86,17 @@
           <div class="col-md-6">
             <h1 class="university-title">Thank you!</h1>
             <h3>This is the end of the entire study. Thank you for your participation!</h3>
-            <p>You will receive your payments once the information has been processed. This will take about three days. Should you win the prize of £300 in addition to the regular payments, this will be processed and paid out a bit later than the regular payments. If you have any questions, please feel free to contact us via the Prolific chat system.</p>
+            <p>You will receive your payments for participation once the information has been processed. This will take about three days. Should you win the prize of &pound;300 in addition to the regular payments, this will be processed and paid out a bit later than the regular payments. If you have any questions, please feel free to contact us via the Prolific chat system.</p>
 
             {% if is_treatment_eligible %}
             <div style="background-color:#e8f4f8; border-left:4px solid #007095; padding:1rem 1.5rem; margin:1.2rem 0; border-radius:0 4px 4px 0;">
               <h5 style="color:#007095; margin-bottom:0.5rem;">Additional Payment Result</h5>
               {% if treatment_offer_accepted %}
-              <p style="margin-bottom:0.3rem;">Your monetary offer (£{{ treatment_offer }}) was at least as high as the first fixed amount you chose to accept (£{{ treatment_first_accept_value }}).</p>
-              <p style="margin-bottom:0;"><strong>Your additional payment is £{{ treatment_offer }}.</strong></p>
+              <p style="margin-bottom:0.3rem;">Your additional payment, as determined by your chances and choices, is &pound;{{ treatment_offer_text }}.</p>
+              <p style="margin-bottom:0;"><strong>Your additional payment is &pound;{{ treatment_offer_text }}.</strong></p>
               {% else %}
-              <p style="margin-bottom:0.3rem;">The monetary offer (£{{ treatment_offer }}) was below the first fixed amount you chose to accept (£{{ treatment_first_accept_value }}). Your additional payment is determined by the payoff tree.</p>
-              <p style="margin-bottom:0;"><strong>Your additional payment from the tree outcome is £{{ treatment_realized_outcome }}.</strong></p>
+              <p style="margin-bottom:0.3rem;">The monetary offer (&pound;{{ treatment_offer_text }}) was below the first fixed amount you chose to accept (&pound;{{ treatment_first_accept_value_text }}). As additional payment (determined by your choices and chance), you will receive {{ treatment_payment_summary }}.</p>
+              <p style="margin-bottom:0;"><strong>Your additional payment(s) will be paid according to this schedule.</strong></p>
               {% endif %}
             </div>
             {% endif %}

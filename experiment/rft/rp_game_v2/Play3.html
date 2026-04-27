@@ -676,6 +676,12 @@
 
     <div class="content-wrapper">
 
+      {% if is_treatment_eligible %}
+      <div class="alert alert-success" role="alert" style="margin-top: 1.5rem; margin-bottom: 0;">
+        <strong>This payoff tree is eligible for the additional payment.</strong>
+      </div>
+      {% endif %}
+
       <br>
 
 
@@ -725,13 +731,7 @@
             data-lower-amount="{{ row.prev_amount }}"
             data-refinement-series='{{ row.refinement_series|json }}'
           >
-            {{if row.amount < 0}}
-            <td class="cut-left">...pay £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
-            {{ elif row.amount == 0 }}
-            <td class="cut-left">...neither pay nor receive anything.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
-            {{else}}
-            <td class="cut-left">...receive £{{ row.abs_amount }}.<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
-            {{ endif }}
+            <td class="cut-left">{{ row.safe_option_text }}<input type="radio" name="cutoff" value="{{ row.index }}" class="cutoff-input"></td>
             <td class="cut-right">...obtain the outcomes of the random payoff tree.</td>
           </tr>
           {{ endfor }}
@@ -1545,13 +1545,13 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       amountFormatter = new Intl.NumberFormat(resolvedLocale, {
         useGrouping: true,
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 2,
         minimumFractionDigits: 0,
       });
     } catch (err) {
       amountFormatter = new Intl.NumberFormat('en-US', {
         useGrouping: true,
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 2,
         minimumFractionDigits: 0,
       });
     }

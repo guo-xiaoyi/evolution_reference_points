@@ -30,15 +30,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     user-select: none;
   }
-  .die-face.rolling { animation: dieRoll 1.6s ease-out forwards; }
-  @keyframes dieRoll {
-    0%   { transform: rotate(0deg)   scale(1);    }
-    20%  { transform: rotate(120deg) scale(1.08); }
-    40%  { transform: rotate(240deg) scale(0.95); }
-    60%  { transform: rotate(360deg) scale(1.04); }
-    80%  { transform: rotate(420deg) scale(0.98); }
-    100% { transform: rotate(450deg) scale(1);    }
-  }
   .roll-btn { margin-top: 1rem; font-size: 1rem; padding: 0.55rem 2rem; }
   .die-result-label { margin-top: 0.8rem; font-size: 1rem; color: #333; min-height: 1.4rem; }
 
@@ -127,34 +118,31 @@
 
         <!-- Step 1: Your payoff tree -->
         <h2><span class="step-num">1</span><span class="step-title">Your Payoff Tree</span></h2>
-        <p>Below is your selected payoff tree. The highlighted (golden) nodes and path show the outcomes that have been realised in Sessions 2 and 3.</p>
+        <p>Below is your selected payoff tree.</p>
         <div class="lottery-preview">
-          <p class="preview-title">{{ lottery_name }}</p>
+          
           <div id="lottery-visualization" aria-live="polite"></div>
         </div>
 
         <!-- Step 2: Die roll -->
-        <h2><span class="step-num">2</span><span class="step-title">Roll the Die</span></h2>
-        <p>Click the die to roll it. The result determines which version of your payoff tree will be used for the additional payment.</p>
+        <h2><span class="step-num">2</span><span class="step-title">Run the Number Generator</span></h2>
+        <p>Click the button to generate a number. The result determines which version of your payoff tree will be used for the additional payment.</p>
         <div class="die-section">
           <div class="die-face" id="die-face">?</div><br>
-          <button class="btn btn-primary roll-btn" id="roll-btn">Roll the Die</button>
+          <button class="btn btn-primary roll-btn" id="roll-btn">Generate Number</button>
           <div class="die-result-label" id="die-result-label"></div>
         </div>
 
         <!-- Step 3: Tree version selected (revealed after roll) -->
         <div class="step-card" id="version-card">
           <p style="margin:0;">
-            <strong>Die result: {{ die_roll }}</strong> &mdash; Selected version:
+            <strong>Generator result: {{ number_draw }}</strong> &mdash; Selected version:
             {% if tree_version == 'session1' %}
-            <span class="tree-badge">Full payoff tree (Session 1)</span>
-            <br><small style="color:#666; margin-top:0.4rem; display:block;">All three periods of your payoff tree are used. </small>
+            <span class="tree-badge">Full payoff tree (as evaluated in Session 1)</span>
             {% elif tree_version == 'session2' %}
-            <span class="tree-badge">Remaining tree from Session 2</span>
-            <br><small style="color:#666; margin-top:0.4rem; display:block;">Periods 2 and 3, given the Period 1 outcome already realised.</small>
+            <span class="tree-badge">Remaining tree (as evaluated in Session 2)</span>
             {% else %}
-            <span class="tree-badge">Remaining tree from Session 3</span>
-            <br><small style="color:#666; margin-top:0.4rem; display:block;">Period 3 only, given Periods 1 and 2 outcomes already realised.</small>
+            <span class="tree-badge">Remaining tree (as evaluated in Session 3)</span>
             {% endif %}
           </p>
         </div>
@@ -186,19 +174,19 @@
         <!-- Step 5: Offer vs cutoff rows (revealed after roll) -->
         <div class="step-card" id="offer-card">
           <h2 style="margin-top:0;"><span class="step-num">4</span><span class="step-title">Monetary Offer Comparison</span></h2>
-          <p>A random monetary offer was drawn and compared with the cutoff choices you made for this payoff tree in {% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %}.</p>
+          <p>A random monetary offer was drawn and compared with the choices you made for this payoff tree in {% if tree_version == 'session1' %}Session 1{% elif tree_version == 'session2' %}Session 2{% else %}Session 3{% endif %}.</p>
           <table class="pay-table">
             <thead><tr><th>Item</th><th>Value</th></tr></thead>
             <tbody>
               <tr>
                 <td><strong>Offer drawn</strong></td>
-                <td><strong>£{{ offer }}</strong></td>
+                <td><strong>£{{ offer_text }}</strong></td>
               </tr>
               <tr>
                 <td>Last fixed amount for which you chose the random payoff tree</td>
                 <td>
                   {% if last_stay_value != None %}
-                  £{{ last_stay_value }}
+                  £{{ last_stay_value_text }}
                   {% else %}
                   No lower fixed amount in the table
                   {% endif %}
@@ -208,7 +196,7 @@
                 <td>First fixed amount for which you chose the fixed payment</td>
                 <td>
                   {% if first_accept_value != None %}
-                  £{{ first_accept_value }}
+                  £{{ first_accept_value_text }}
                   {% else %}
                   Not available
                   {% endif %}
@@ -222,7 +210,7 @@
         <div class="result-banner {% if offer_accepted %}result-accepted{% else %}result-tree{% endif %}" id="result-banner">
           {% if offer_accepted %}
           <strong>The offer is at least as high as the first fixed amount for which you chose the fixed payment.</strong>
-          <span class="result-amount">You receive £{{ offer }} as your additional payment. This will be paid immediately after the experiment.</span>
+          <span class="result-amount">You receive £{{ offer_text }} as your additional payment. This will be paid immediately after the experiment.</span>
           {% else %}
           <strong>The offer is below the first fixed amount for which you chose the fixed payment.</strong>
           <span class="result-amount">Your additional payment(s) will be paid according to the schedule above.</span>
@@ -251,13 +239,15 @@
   <script>
   (function () {
     /* ── Data from server ── */
-    var FINAL_DIE = {{ die_roll }};
+    var FINAL_NUMBER = {{ number_draw }};
+    var FINAL_DIE = FINAL_NUMBER;
     var TREE_VERSION = {{ tree_version|json }};
+    var NUMBER_FACES = ['1', '2', '3'];
     var DIE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
     var versionLabels = {
-      'session1': 'Full payoff tree (Session 1)',
-      'session2': 'Remaining tree (Session 2)',
-      'session3': 'Remaining tree (Session 3)'
+      'session1': 'Full payoff tree (as evaluated in Session 1)',
+      'session2': 'Remaining tree (as evaluated in Session 2)',
+      'session3': 'Remaining tree (as evaluated in Session 3)'
     };
 
     /* ── Lottery visualization data ── */
@@ -304,16 +294,17 @@
       this.disabled = true;
       var face = document.getElementById('die-face');
       var label = document.getElementById('die-result-label');
-      face.classList.add('rolling');
       var count = 0, maxFlashes = 14;
       var iv = setInterval(function () {
-        face.textContent = DIE_FACES[Math.floor(Math.random() * 6)];
+        face.textContent = NUMBER_FACES[Math.floor(Math.random() * NUMBER_FACES.length)];
         if (++count >= maxFlashes) {
           clearInterval(iv);
-          face.textContent = DIE_FACES[FINAL_DIE - 1];
+          face.textContent = FINAL_NUMBER;
           face.style.borderColor = '#28a745';
           face.style.color = '#28a745';
+          label.textContent = 'Result: ' + FINAL_NUMBER;
           label.textContent = 'Result: ' + FINAL_DIE + ' — ' + (versionLabels[TREE_VERSION] || '');
+          label.textContent = 'Result: ' + FINAL_NUMBER;
           // Re-render tree with highlighting for the selected periods
           if (selectedLottery && mount) {
             renderLotteryPreview(selectedLottery, realizedNodesData, mount,

@@ -35,6 +35,7 @@ from .helpers import (
     ensure_payment_lottery_selected,
     ensure_payment_setup,
     ensure_realized_up_to,
+    format_currency_number,
     format_payoff_value,
     get_conditional_lottery,
     get_participant_lottery_order,
@@ -152,6 +153,10 @@ class Player(BasePlayer):
         label='During the decision tasks we asked you to evaluate random payoff trees. How difficult was it for you to understand your task? ',
         choices=['Not complicated at all', 'A bit complicated', 'Complicated', 'Very complicated', 'Too complicated or extremely complicated'],
     )
+    quiz6t = models.StringField(
+        label='During the decision tasks we asked you to evaluate random payoff trees. How difficult was it for you to understand your task? (Note that this question refers only to understanding how to evaluate the random payoff trees, not to understanding the additional payment determination.',
+        choices=['Not complicated at all', 'A bit complicated', 'Complicated', 'Very complicated', 'Too complicated or extremely complicated'],
+    )
     quiz7 = models.StringField(
         label='Which of the following best describes your attention during the study?',
         choices=['I paid attention throughout the entire study.', 
@@ -171,11 +176,11 @@ class Player(BasePlayer):
 
     # Store the index of the cutoff selected in the UI
     cutoff_index = models.IntegerField(blank=True)
-    cutoff_amount = models.IntegerField(blank=True)
+    cutoff_amount = models.FloatField(blank=True)
 
     # Store the choice selected for payment
     selected_choice = models.IntegerField(blank=True)
-    selected_amount = models.IntegerField(blank=True)
+    selected_amount = models.FloatField(blank=True)
 
     # Store which option was chosen for the selected choice
     selected_option = models.StringField(blank=True)
@@ -183,8 +188,8 @@ class Player(BasePlayer):
     # Additional refinement information for high-stake lists
     fine_cutoff_index = models.IntegerField(blank=True)
     fine_selected_choice = models.IntegerField(blank=True)
-    fine_selected_amount = models.IntegerField(blank=True)
-    fine_cutoff_amount = models.IntegerField(blank=True)
+    fine_selected_amount = models.FloatField(blank=True)
+    fine_cutoff_amount = models.FloatField(blank=True)
 
     # Store the schedule start for session 2 and 3
     session2_start = models.FloatField(blank=True)
@@ -267,6 +272,10 @@ def _is_treatment_eligible(player):
     return lottery.get('description') == 'treatment'
 
 
+def _lottery_is_treatment_eligible(player, lottery):
+    return _is_treatment_group(player) and (lottery or {}).get('description') == 'treatment'
+
+
 def _int_or_none(value):
     try:
         return int(round(float(value)))
@@ -326,6 +335,55 @@ def _offer_accepted(offer, first_accept_value):
         and first_accept_number is not None
         and offer_number >= first_accept_number
     )
+
+
+def _treatment_number_draw(die_roll):
+    die_roll_number = _int_or_none(die_roll)
+    if die_roll_number is None:
+        return None
+    if die_roll_number <= 2:
+        return 1
+    if die_roll_number <= 4:
+        return 2
+    return 3
+
+
+def _treatment_payment_schedule(realized_nodes, tree_version):
+    if tree_version == 'session1':
+        return [
+            {'period': "Period 2", 'label': (realized_nodes.get(1) or {}).get('label', ''), 'days': 3},
+            {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 6},
+            {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 9},
+        ]
+    if tree_version == 'session2':
+        return [
+            {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 3},
+            {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 6},
+        ]
+    if tree_version == 'session3':
+        return [
+            {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 3},
+        ]
+    return []
+
+
+def _format_treatment_payment_summary(payment_schedule):
+    entries = []
+    for item in payment_schedule or []:
+        label = item.get('label')
+        days = item.get('days')
+        if label in (None, '') or days in (None, ''):
+            continue
+        day_label = 'day' if days == 1 else 'days'
+        entries.append(f"{label} in {days} {day_label}")
+
+    if not entries:
+        return ''
+    if len(entries) == 1:
+        return entries[0]
+    if len(entries) == 2:
+        return f"{entries[0]} and {entries[1]}"
+    return f"{', '.join(entries[:-1])}, and {entries[-1]}"
 
 
 # Dynamically add the multiple choice list fields (supports up to long list length)
@@ -569,7 +627,9 @@ class Play(Page):
     def vars_for_template(player):
         lottery = _get_round_lottery(player)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
-        return build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
+        context = build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
+        context['is_treatment_eligible'] = _lottery_is_treatment_eligible(player, lottery)
+        return context
 
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -620,7 +680,9 @@ class Play_ez(Page):
     def vars_for_template(player):
         lottery = _get_round_lottery(player)
         choice_lottery = with_upcoming_payoff_range(lottery, start_period=1)
-        return build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
+        context = build_play_context(player, choice_lottery=choice_lottery, display_lottery=lottery, base_offset=0)
+        context['is_treatment_eligible'] = _lottery_is_treatment_eligible(player, lottery)
+        return context
 
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -892,6 +954,7 @@ class Play2(Session2TimedPage):
             realized_period2=None,
             selected_round=store.get('selected_round'),
             base_lottery_name=store.get('lottery_name'),
+            is_treatment_eligible=_is_treatment_eligible(player),
         )
         base_name = store.get('lottery_name') or context['lottery_name']
         context['lottery_name'] = f"{base_name} – continuation after period 1"
@@ -956,6 +1019,7 @@ class Play3(Session3TimedPage):
             selected_round=store.get('selected_round'),
             base_lottery_name=store.get('lottery_name'),
             realized_accumulated=accumulated,
+            is_treatment_eligible=_is_treatment_eligible(player),
         )
         base_name = store.get('lottery_name') or context['lottery_name']
         context['lottery_name'] = f"{base_name} – continuation after period 2"
@@ -1091,7 +1155,7 @@ class WheelSession3(Session3TimedPage):
 
 
 class TreatmentPayoff(Session3TimedPage):
-    """Die roll + monetary offer page for treatment-eligible participants (Session 3)."""
+    """Number-generator + monetary offer page for treatment-eligible participants (Session 3)."""
 
     @staticmethod
     def is_displayed(player):
@@ -1108,12 +1172,13 @@ class TreatmentPayoff(Session3TimedPage):
 
         if 'die_roll' not in t_store:
             die_roll = rng.randint(1, 6)
-            if die_roll <= 2:
+            number_draw = _treatment_number_draw(die_roll)
+            if number_draw == 1:
                 tree_version = 'session1'
                 lottery_for_range = get_selected_lottery(player, store=store)
                 start_period = 1
                 reported_value = store.get('selected_amount')
-            elif die_roll <= 4:
+            elif number_draw == 2:
                 tree_version = 'session2'
                 lottery_for_range = get_conditional_lottery(player, realized_up_to=1)
                 start_period = 2
@@ -1151,25 +1216,11 @@ class TreatmentPayoff(Session3TimedPage):
                 tree_realized_outcome = parse_payoff_label(node3.get('label'))
 
             realized_nodes = store.get('realized_nodes', {})
-            # Build per-period payment schedule (days from today = Session 3)
-            if tree_version == 'session1':
-                payment_schedule = [
-                    {'period': "Period 2", 'label': (realized_nodes.get(1) or {}).get('label', ''), 'days': 3},
-                    {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 6},
-                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 9},
-                ]
-            elif tree_version == 'session2':
-                payment_schedule = [
-                    {'period': "Period 3", 'label': (realized_nodes.get(2) or {}).get('label', ''), 'days': 3},
-                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 6},
-                ]
-            else:
-                payment_schedule = [
-                    {'period': "After Period 3", 'label': (realized_nodes.get(3) or {}).get('label', ''), 'days': 3},
-                ]
+            payment_schedule = _treatment_payment_schedule(realized_nodes, tree_version)
 
             t_store.update(
                 die_roll=die_roll,
+                number_draw=number_draw,
                 tree_version=tree_version,
                 offer=offer,
                 offer_min=int(min_outcome),
@@ -1181,6 +1232,9 @@ class TreatmentPayoff(Session3TimedPage):
                 tree_realized_outcome=tree_realized_outcome,
                 payment_schedule=payment_schedule,
             )
+
+        if 'number_draw' not in t_store:
+            t_store['number_draw'] = _treatment_number_draw(t_store.get('die_roll'))
 
         last_stay_value, first_accept_value = _treatment_cutoff_values(player, store, t_store.get('tree_version'))
         if first_accept_value is not None:
@@ -1205,6 +1259,9 @@ class TreatmentPayoff(Session3TimedPage):
         display_realized = {p: n for p, n in realized_nodes.items() if p in display_periods}
 
         ctx = dict(t_store)
+        ctx['offer_text'] = format_currency_number(t_store.get('offer'))
+        ctx['last_stay_value_text'] = format_currency_number(t_store.get('last_stay_value'))
+        ctx['first_accept_value_text'] = format_currency_number(t_store.get('first_accept_value'))
         ctx['selected_lottery'] = json.dumps(full_lottery)
         ctx['realized_nodes_json'] = json.dumps(display_realized)
         ctx['lottery_name'] = store.get('lottery_name', '')
@@ -1213,10 +1270,17 @@ class TreatmentPayoff(Session3TimedPage):
 
 class Post(Session3TimedPage):
     form_model = 'player'
-    form_fields = ['quiz6', 'quiz7', 'quiz8']
+    form_fields = ['quiz6', 'quiz7', 'quiz8', 'quiz6t']
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
+    
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_eligible_for_treatment': _is_treatment_eligible(player),
+        }
 
 class Thankyou(Session3TimedPage):
     @staticmethod
@@ -1225,17 +1289,30 @@ class Thankyou(Session3TimedPage):
 
     @staticmethod
     def vars_for_template(player):
+        is_treatment_eligible = _is_treatment_eligible(player)
         t_store = player.participant.vars.get('treatment_store', {})
+        payment_schedule = t_store.get('payment_schedule', [])
+        if is_treatment_eligible and not payment_schedule:
+            store = ensure_payment_setup(player)
+            payment_schedule = _treatment_payment_schedule(
+                store.get('realized_nodes', {}),
+                t_store.get('tree_version'),
+            )
         return {
-            'is_treatment_eligible': _is_treatment_eligible(player),
+            'is_treatment_eligible': is_treatment_eligible,
             'treatment_die_roll': t_store.get('die_roll'),
             'treatment_tree_version': t_store.get('tree_version'),
             'treatment_offer': t_store.get('offer'),
+            'treatment_offer_text': format_currency_number(t_store.get('offer')),
             'treatment_reported_value': t_store.get('reported_value'),
             'treatment_last_stay_value': t_store.get('last_stay_value'),
+            'treatment_last_stay_value_text': format_currency_number(t_store.get('last_stay_value')),
             'treatment_first_accept_value': t_store.get('first_accept_value'),
+            'treatment_first_accept_value_text': format_currency_number(t_store.get('first_accept_value')),
             'treatment_offer_accepted': t_store.get('offer_accepted'),
             'treatment_realized_outcome': t_store.get('tree_realized_outcome'),
+            'treatment_payment_schedule': payment_schedule,
+            'treatment_payment_summary': _format_treatment_payment_summary(payment_schedule),
         }
 
 
@@ -1427,6 +1504,7 @@ def custom_export(players):
         'quiz4',
         'quiz5',
         'quiz6',
+        'quiz6t',
         'quiz7',
         'quiz8',
         'participant_time_started_utc',
@@ -1516,6 +1594,7 @@ def custom_export(players):
             get_player_field(player, 'quiz4'),
             get_player_field(player, 'quiz5'),
             get_player_field(player, 'quiz6'),
+            get_player_field(player, 'quiz6t'),
             get_player_field(player, 'quiz7'),
             get_player_field(player, 'quiz8'),
             participant.time_started_utc,

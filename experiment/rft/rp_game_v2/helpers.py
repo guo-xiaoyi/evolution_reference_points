@@ -1,4 +1,5 @@
 import copy
+from decimal import Decimal, ROUND_HALF_UP
 import json
 import os
 import random
@@ -18,12 +19,86 @@ LOTTERIES_PATH = Path(__file__).with_name('lotteries.json')
 CALIBRATION_LOTTERIES_PATH = Path(__file__).with_name('lotteries_calibration.json')
 PRACTICE_LOTTERY_PATH = Path(__file__).with_name('practice_lottery.json')
 TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+MIN_WHOLE_CHOICE_OPTIONS = 3
+MIN_EXPANDED_CHOICE_OPTIONS = 5
+DISPLAY_DECIMALS = 2
+CENT_STEP = Decimal('0.01')
 
 
 def _constants():
     from . import Constants
 
     return Constants
+
+
+def _round_amount(value, digits=0):
+    """Round monetary values with half-up semantics."""
+    if value is None:
+        return None
+    quantum = Decimal('1').scaleb(-digits)
+    rounded = Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP)
+    if digits <= 0:
+        return int(rounded)
+    return float(rounded)
+
+
+def _dedupe_amounts(values):
+    unique = []
+    for value in values:
+        if unique and value == unique[-1]:
+            continue
+        unique.append(value)
+    return unique
+
+
+def _build_choice_grid(lower, upper, count, digits=0):
+    if count is None or count <= 0:
+        return []
+    values = np.linspace(float(lower), float(upper), int(count), endpoint=True)
+    return _dedupe_amounts([_round_amount(value, digits) for value in values])
+
+
+def _expand_amounts_by_cents(values, minimum_count):
+    """Pad a short list outward in £0.01 steps until it reaches minimum_count."""
+    if minimum_count is None or minimum_count <= 0:
+        return []
+    expanded = _dedupe_amounts([_round_amount(value, DISPLAY_DECIMALS) for value in (values or [])])
+    if not expanded:
+        expanded = [0.0]
+    left_value = Decimal(str(expanded[0]))
+    right_value = Decimal(str(expanded[-1]))
+    add_left = True
+    while len(expanded) < minimum_count:
+        if add_left:
+            left_value -= CENT_STEP
+            expanded.insert(0, _round_amount(left_value, DISPLAY_DECIMALS))
+        else:
+            right_value += CENT_STEP
+            expanded.append(_round_amount(right_value, DISPLAY_DECIMALS))
+        add_left = not add_left
+    return expanded
+
+
+def format_currency_number(value, digits=DISPLAY_DECIMALS):
+    """Render numeric amounts with up to `digits` decimals and no trailing zeros."""
+    if value is None:
+        return None
+    rounded = _round_amount(value, digits)
+    if digits <= 0:
+        return str(int(rounded))
+    text = f"{float(rounded):.{digits}f}".rstrip('0').rstrip('.')
+    return '0' if text in ('-0', '-0.0', '-0.00') else text
+
+
+def describe_safe_option(amount):
+    """Return the human-readable safe-option label used in choice rows."""
+    if amount is None:
+        return ''
+    if amount < 0:
+        return f"...pay \u00a3{format_currency_number(abs(amount))}."
+    if amount == 0:
+        return '...neither pay nor receive anything.'
+    return f"...receive \u00a3{format_currency_number(amount)}."
 
 
 
@@ -257,7 +332,7 @@ def format_payoff_value(value):
         return None
     sign = '+' if value >= 0 else '-'
     # Use a unicode escape to avoid mojibake in HTML templates.
-    return f"{sign}\u00a3{abs(int(round(value)))}"
+    return f"{sign}\u00a3{format_currency_number(abs(value))}"
 
 
 def _weighted_choice(nodes):
@@ -650,22 +725,15 @@ def choice_amounts(player, lottery, base_offset=0):
             count = Constants.short_choice_count_later
     else:
         count = Constants.long_choice_count
-    amounts = np.linspace(
-        base_offset + lottery['min_payoff'],
-        base_offset + lottery['max_payoff'],
-        count,
-        endpoint=True,
-    )
-    rounded = [int(round(a)) for a in amounts]
-    # Drop duplicate rows caused by rounding so the table shows unique values.
-    unique = []
-    last = object()
-    for value in rounded:
-        if value == last:
-            continue
-        unique.append(value)
-        last = value
-    return unique
+    lower = base_offset + lottery['min_payoff']
+    upper = base_offset + lottery['max_payoff']
+    whole_amounts = _build_choice_grid(lower, upper, count, digits=0)
+    if len(whole_amounts) >= MIN_WHOLE_CHOICE_OPTIONS:
+        return whole_amounts
+    cent_amounts = _build_choice_grid(lower, upper, count, digits=DISPLAY_DECIMALS)
+    if len(cent_amounts) >= MIN_EXPANDED_CHOICE_OPTIONS:
+        return cent_amounts
+    return _expand_amounts_by_cents(cent_amounts, MIN_EXPANDED_CHOICE_OPTIONS)
 
 
 def choice_field_names(player, lottery, base_offset=0):
@@ -694,6 +762,7 @@ def choice_rows(player, lottery, base_offset=0):
                 'index': idx,
                 'amount': amount,
                 'abs_amount': abs(amount),
+                'safe_option_text': describe_safe_option(amount),
                 'field_name': field_name,
                 'prev_amount': prev_amount,
                 'refinement_series': refinement_series,
@@ -703,7 +772,7 @@ def choice_rows(player, lottery, base_offset=0):
 
 
 def build_refined_amounts(lower, upper, count):
-    """Return evenly spaced integer amounts between lower and upper (exclusive)."""
+    """Return evenly spaced amounts between lower and upper (exclusive)."""
     if count is None or count <= 0:
         return []
     if lower is None or upper is None:
@@ -716,8 +785,13 @@ def build_refined_amounts(lower, upper, count):
     if start > end:
         start, end = end, start
         descending = True
+    use_decimal_precision = (
+        abs(start - round(start)) > 1e-9
+        or abs(end - round(end)) > 1e-9
+    )
+    digits = DISPLAY_DECIMALS if use_decimal_precision else 0
     grid = np.linspace(start, end, count + 2, endpoint=True)[1:-1]
-    values = [int(round(val)) for val in grid]
+    values = _dedupe_amounts([_round_amount(val, digits) for val in grid])
     return list(reversed(values)) if descending else values
 
 
@@ -960,7 +1034,7 @@ def build_realized_display(store):
             }
         )
     final_payoff = store.get('final_payoff')
-    final_payoff_text = str(final_payoff) if final_payoff is not None else None
+    final_payoff_text = format_currency_number(final_payoff) if final_payoff is not None else None
     return summary, realized_nodes, final_payoff_text
 
 
