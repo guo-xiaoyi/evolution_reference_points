@@ -684,8 +684,6 @@
         if (!wheelSvg) return;
         wheelSvg.innerHTML = '';
         var radius = 240;
-        var labelRadius = radius * 0.62;
-        var probRadius = radius * 0.8;
         slices.forEach(function (seg, idx) {
           var sweep = seg.endDeg - seg.startDeg;
           if (sweep < 0) {
@@ -708,18 +706,38 @@
           wheelSvg.appendChild(sliceEl);
 
           var midRad = (seg.midDeg) * Math.PI / 180;
-          var labelX = (labelRadius * Math.cos(midRad)).toFixed(2);
-          var labelY = (labelRadius * Math.sin(midRad)).toFixed(2);
-          var probX = (probRadius * Math.cos(midRad)).toFixed(2);
-          var probY = (probRadius * Math.sin(midRad)).toFixed(2);
+          var radialX = Math.cos(midRad);
+          var radialY = Math.sin(midRad);
+          var tangentX = -Math.sin(midRad);
+          var tangentY = Math.cos(midRad);
+          var hasProbLabel = !!formatProb(seg.normalized);
+          var textRadius = radius * (sweep < 90 ? 0.72 : 0.68);
+          var textOffset = hasProbLabel ? (sweep < 90 ? 16 : 22) : 0;
+          var labelFontSize = sweep < 90 ? 24 : 28;
+          var labelLength = (seg.label || '').length;
+          if (labelLength >= 5) {
+            labelFontSize -= 2;
+          }
+          if (labelLength >= 7) {
+            labelFontSize -= 2;
+          }
+          var probFontSize = sweep < 90 ? 18 : 20;
+          var baseX = textRadius * radialX;
+          var baseY = textRadius * radialY;
+          var labelX = (baseX - tangentX * textOffset).toFixed(2);
+          var labelY = (baseY - tangentY * textOffset).toFixed(2);
+          var probX = (baseX + tangentX * textOffset).toFixed(2);
+          var probY = (baseY + tangentY * textOffset).toFixed(2);
           var textColors = pickTextColors(seg.color);
+          var probLabel = formatProb(seg.normalized);
           var text = document.createElementNS(svgNS, 'text');
           text.setAttribute('x', labelX);
           text.setAttribute('y', labelY);
           text.setAttribute('fill', textColors.label);
-          text.setAttribute('font-size', '30');
+          text.setAttribute('font-size', String(labelFontSize));
           text.setAttribute('font-weight', '600');
           text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('dominant-baseline', 'middle');
           text.setAttribute('alignment-baseline', 'middle');
           text.style.paintOrder = 'stroke';
           text.style.stroke = textColors.stroke;
@@ -732,14 +750,14 @@
           probText.setAttribute('x', probX);
           probText.setAttribute('y', probY);
           probText.setAttribute('fill', textColors.prob);
-          probText.setAttribute('font-size', '22');
+          probText.setAttribute('font-size', String(probFontSize));
           probText.setAttribute('text-anchor', 'middle');
+          probText.setAttribute('dominant-baseline', 'middle');
           probText.setAttribute('alignment-baseline', 'middle');
           probText.style.paintOrder = 'stroke';
           probText.style.stroke = textColors.stroke;
           probText.style.strokeWidth = textColors.probStrokeWidth + 'px';
           probText.style.strokeLinejoin = 'round';
-          var probLabel = formatProb(seg.normalized);
           probText.textContent = probLabel || '';
           wheelSvg.appendChild(probText);
 

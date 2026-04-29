@@ -1270,7 +1270,12 @@ class TreatmentPayoff(Session3TimedPage):
 
 class Post(Session3TimedPage):
     form_model = 'player'
-    form_fields = ['quiz6', 'quiz7', 'quiz8', 'quiz6t']
+    @staticmethod
+    def get_form_fields(player):
+        if _is_treatment_eligible(player):
+            return ['quiz6t', 'quiz7', 'quiz8']
+        return ['quiz6', 'quiz7', 'quiz8']
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == Constants.continuation_rounds[1] and _continuation_has_time(player, 'session3')
