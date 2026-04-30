@@ -245,12 +245,18 @@ def _continuation_has_time(player, prefix, min_seconds=CONTINUATION_MIN_SECONDS)
     return seconds_left > min_seconds
 
 
+def _treatment_enabled(player):
+    return bool(player.session.config.get('treatment_enabled', True))
+
+
 def _is_treatment_group(player):
-    return bool(player.participant.vars.get('treatment_group', False))
+    return _treatment_enabled(player) and bool(player.participant.vars.get('treatment_group', False))
 
 
 def _assignment_selector_enabled(player):
     return (
+        _treatment_enabled(player)
+        and
         player.round_number == 1
         and bool(
             player.session.config.get(
@@ -421,8 +427,8 @@ class DemoAssignment(Page):
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        treatment_group = player.demo_treatment_assignment == 'treatment'
-        force_eligible_lottery = player.demo_eligible_lottery_assignment == 'eligible'
+        treatment_group = _treatment_enabled(player) and player.demo_treatment_assignment == 'treatment'
+        force_eligible_lottery = _treatment_enabled(player) and player.demo_eligible_lottery_assignment == 'eligible'
 
         player.participant.vars['treatment_group'] = treatment_group
         player.participant.vars['force_eligible_lottery'] = force_eligible_lottery
@@ -447,7 +453,7 @@ class Welcome(Page):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
         }
 
     @staticmethod
@@ -476,7 +482,7 @@ class Introduction1(Page):
     @staticmethod
     def vars_for_template(player):
         ctx = _session1_round_context()
-        ctx['is_treatment_group'] = player.participant.vars.get('treatment_group', False)
+        ctx['is_treatment_group'] = _is_treatment_group(player)
         return ctx
 
 
@@ -490,7 +496,7 @@ class Introduction2(Page):
     @staticmethod
     def vars_for_template(player):
         ctx = _session1_round_context()
-        ctx['is_treatment_group'] = player.participant.vars.get('treatment_group', False)
+        ctx['is_treatment_group'] = _is_treatment_group(player)
         return ctx
 
 
@@ -504,7 +510,7 @@ class Introduction3(Page):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
         }
 
 
@@ -513,7 +519,7 @@ class TreatmentInstructions(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.vars.get('treatment_group', False)
+        return player.round_number == 1 and _is_treatment_group(player)
 
 
 class LotterySet1(Page):
@@ -531,7 +537,7 @@ class LotterySet2(Page):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
         }
 
 
@@ -781,7 +787,7 @@ class Draw(Page):
         store = ensure_payment_lottery_selected(player)
         full_lottery = get_selected_lottery(player, store=store)
         realized_summary, realized_nodes, final_payoff_text = build_realized_display(store)
-        is_treatment = player.participant.vars.get('treatment_group', False)
+        is_treatment = _is_treatment_group(player)
         is_eligible = (
             is_treatment
             and Constants.lotteries.get(store.get('lottery_id', ''), {}).get('description') == 'treatment'
@@ -1283,7 +1289,7 @@ class Post(Session3TimedPage):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
             'is_eligible_for_treatment': _is_treatment_eligible(player),
         }
 
@@ -1357,7 +1363,7 @@ class Session2(Session2TimedPage):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
             'is_eligible_for_treatment': _is_treatment_eligible(player),
         }
 
@@ -1370,7 +1376,7 @@ class Session3(Session3TimedPage):
     @staticmethod
     def vars_for_template(player):
         return {
-            'is_treatment_group': player.participant.vars.get('treatment_group', False),
+            'is_treatment_group': _is_treatment_group(player),
             'is_eligible_for_treatment': _is_treatment_eligible(player),
         }
 class RevisionSession1(Session2TimedPage):
@@ -1447,9 +1453,14 @@ def creating_session(subsession: Subsession):
     """Assign separate Session 1 lottery orders for calibration and evaluation."""
     if subsession.round_number == 1:
         for player in subsession.get_players():
-            if 'treatment_group' not in player.participant.vars:
-                player.participant.vars['treatment_group'] = (rng.random() < 0.5)
-            player.treatment_group = player.participant.vars['treatment_group']
+            if _treatment_enabled(player):
+                if 'treatment_group' not in player.participant.vars:
+                    player.participant.vars['treatment_group'] = (rng.random() < 0.5)
+            else:
+                player.participant.vars['treatment_group'] = False
+                player.participant.vars['force_eligible_lottery'] = False
+                player.participant.vars.pop('demo_force_eligible_lottery', None)
+            player.treatment_group = _is_treatment_group(player)
 
     for player in subsession.get_players():
         if _is_calibration_round_number(subsession.round_number):

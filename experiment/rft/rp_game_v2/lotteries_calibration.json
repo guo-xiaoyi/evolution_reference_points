@@ -1,7 +1,7 @@
 {
 
   "cali_gain": {
-    "name": "Apple",
+    "name": "cali_gain",
     "outcome_number": 2,
     "stake": "lo",
     "max_payoff": 40,
@@ -33,7 +33,7 @@
     }
   },
   "cali_gain_st": {
-    "name": "Apple",
+    "name": "cali_gain_st",
     "outcome_number": 2,
     "stake": "lo",
     "max_payoff": 40,
@@ -66,7 +66,7 @@
   },
 
 "cali_gain_de": {
-  "name": "Orange",
+  "name": "cali_gain_de",
   "outcome_number": 4,
   "stake": "lo",
   "max_payoff": 40,
@@ -113,7 +113,7 @@
 },
 
   "cali_loss": {
-    "name": "Apple",
+    "name": "cali_loss",
     "outcome_number": 2,
     "stake": "lo",
     "max_payoff": -8,
@@ -145,7 +145,7 @@
     }
   },
   "cali_loss_st": {
-    "name": "Apple",
+    "name": "cali_loss_st",
     "outcome_number": 2,
     "stake": "lo",
     "max_payoff": -8,
@@ -178,7 +178,7 @@
   },
 
 "cali_loss_de": {
-  "name": "Orange",
+  "name": "cali_loss_de",
   "outcome_number": 4,
   "stake": "lo",
   "max_payoff": -8,
@@ -224,9 +224,9 @@
   }
 },
   "cali_mix": {
-    "name": "Apple",
+    "name": "cali_mix",
     "outcome_number": 2,
-    "stake": "lo",
+    "stake": "hi",
     "max_payoff": 700,
     "min_payoff": -100,
     "description": "n/a",
@@ -256,9 +256,9 @@
     }
   },
   "cali_mix_pres": {
-    "name": "Apple",
+    "name": "cali_mix_pres",
     "outcome_number": 3,
-    "stake": "lo",
+    "stake": "hi",
     "max_payoff": 700,
     "min_payoff": -100,
     "description": "n/a",

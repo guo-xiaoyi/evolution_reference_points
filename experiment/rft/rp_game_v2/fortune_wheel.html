@@ -447,6 +447,10 @@
         return pct.toFixed(decimals) + '%';
       }
 
+      function isDeterministicWheel(slices) {
+        return Array.isArray(slices) && slices.length === 1;
+      }
+
       function getColorParser() {
         if (colorParser) {
           return colorParser;
@@ -705,6 +709,55 @@
           sliceEl.dataset.index = idx;
           wheelSvg.appendChild(sliceEl);
 
+          if (isDeterministicWheel(slices) && isFullCircle) {
+            var deterministicColors = pickTextColors(seg.color);
+            var deterministicProb = formatProb(seg.normalized);
+            var deterministicLabel = document.createElementNS(svgNS, 'text');
+            var deterministicLabelSize = 34;
+            var deterministicLength = (seg.label || '').length;
+            if (deterministicLength >= 6) {
+              deterministicLabelSize -= 4;
+            }
+            if (deterministicLength >= 10) {
+              deterministicLabelSize -= 4;
+            }
+            deterministicLabel.setAttribute('x', '0');
+            deterministicLabel.setAttribute('y', '-140');
+            deterministicLabel.setAttribute('fill', deterministicColors.label);
+            deterministicLabel.setAttribute('font-size', String(deterministicLabelSize));
+            deterministicLabel.setAttribute('font-weight', '700');
+            deterministicLabel.setAttribute('text-anchor', 'middle');
+            deterministicLabel.setAttribute('dominant-baseline', 'middle');
+            deterministicLabel.setAttribute('alignment-baseline', 'middle');
+            deterministicLabel.style.paintOrder = 'stroke';
+            deterministicLabel.style.stroke = 'rgba(0,0,0,0.12)';
+            deterministicLabel.style.strokeWidth = '0.8px';
+            deterministicLabel.style.strokeLinejoin = 'round';
+            deterministicLabel.textContent = seg.label;
+            wheelSvg.appendChild(deterministicLabel);
+
+            if (deterministicProb) {
+              var deterministicProbText = document.createElementNS(svgNS, 'text');
+              deterministicProbText.setAttribute('x', '0');
+              deterministicProbText.setAttribute('y', '-112');
+              deterministicProbText.setAttribute('fill', deterministicColors.prob);
+              deterministicProbText.setAttribute('font-size', '22');
+              deterministicProbText.setAttribute('font-weight', '600');
+              deterministicProbText.setAttribute('text-anchor', 'middle');
+              deterministicProbText.setAttribute('dominant-baseline', 'middle');
+              deterministicProbText.setAttribute('alignment-baseline', 'middle');
+              deterministicProbText.style.paintOrder = 'stroke';
+              deterministicProbText.style.stroke = 'rgba(0,0,0,0.1)';
+              deterministicProbText.style.strokeWidth = '0.6px';
+              deterministicProbText.style.strokeLinejoin = 'round';
+              deterministicProbText.textContent = deterministicProb;
+              wheelSvg.appendChild(deterministicProbText);
+            }
+
+            seg.pathEl = sliceEl;
+            return;
+          }
+
           var midRad = (seg.midDeg) * Math.PI / 180;
           var radialX = Math.cos(midRad);
           var radialY = Math.sin(midRad);
@@ -921,6 +974,15 @@
               if (spinButton) {
                 spinButton.disabled = true;
               }
+              return;
+            }
+            if (isDeterministicWheel(segmentsPrepared)) {
+              wheelRotator.style.transition = 'none';
+              wheelRotator.style.transform = 'rotate(0deg)';
+              setStatus('Revealing outcome...');
+              window.setTimeout(function () {
+                completeSpin(outcome, 0);
+              }, 350);
               return;
             }
             var turns = 4 + Math.floor(Math.random() * 2); // 4 or 5 full spins

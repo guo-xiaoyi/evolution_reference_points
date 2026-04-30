@@ -10,8 +10,10 @@ SESSION_CONFIGS = [
         name='rp_game_v2',
         app_sequence=['rp_game_v2'],
         num_demo_participants=10,
+        # Master switch for the treatment flow.
+        treatment_enabled=False,
         # Set to True to show the assignment selector before Welcome.
-        assignment_selector=True,
+        assignment_selector=False,
     )
 
 
