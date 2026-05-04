@@ -7,11 +7,14 @@ import re
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 import requests
 import numpy as np
 
 PAYMENT_STORE_KEY = 'session1_payment'  # Key for participant.vars to store payment-related data
 AMOUNT_PATTERN = re.compile(r'[-+]?\d+(?:\.\d+)?')  # Regex to extract numeric amounts
+UK_TIMEZONE = ZoneInfo('Europe/London')
+CONTINUATION_WINDOW_SECONDS = 16 * 60 * 60
 
 rng = random.SystemRandom()  # independent RNG to avoid external seeding effects
 
@@ -825,7 +828,7 @@ def should_show_bridge(player, expected_round, prefix):
     return time.time() < start_ts
 
 
-def build_bridge_context(player, current_session, next_session, prefix, days_after=3, start_hour=6):
+def build_bridge_context(player, current_session, next_session, prefix, days_after=3, start_hour=6, future_round=None):
     """Prepare template data shared by both bridge pages."""
     start_ts, readable = get_session_start_info(player, prefix)
     if start_ts is None:
@@ -834,6 +837,7 @@ def build_bridge_context(player, current_session, next_session, prefix, days_aft
             player,
             prefix=prefix,
             start_dt=target_dt,
+            future_round=future_round,
         )
     return {
         'this_session': current_session,
@@ -844,7 +848,7 @@ def build_bridge_context(player, current_session, next_session, prefix, days_aft
     }
 
 
-def continuation_time_left(player, prefix, window_seconds=86400):
+def continuation_time_left(player, prefix, window_seconds=CONTINUATION_WINDOW_SECONDS):
     """Return seconds left in the continuation window (can be negative)."""
     start_ts, _ = get_session_start_info(player, prefix)
     if start_ts is None:
@@ -852,7 +856,37 @@ def continuation_time_left(player, prefix, window_seconds=86400):
     return (start_ts + window_seconds) - time.time()
 
 
-def continuation_window_expired(player, prefix, window_seconds=86400, min_seconds=0):
+def continuation_window_open(player, prefix, window_seconds=CONTINUATION_WINDOW_SECONDS, min_seconds=0):
+    """Return True only while the continuation session is open."""
+    start_ts, _ = get_session_start_info(player, prefix)
+    if start_ts is None:
+        return False
+    now = time.time()
+    return now >= start_ts and (start_ts + window_seconds - now) > min_seconds
+
+
+def continuation_window_started(player, prefix):
+    """Return True if the participant already started this continuation session."""
+    return bool(player.participant.vars.get(f'{prefix}_started_at'))
+
+
+def mark_continuation_window_started(player, prefix):
+    """Record that the participant started this continuation session in time."""
+    started_at = time.time()
+    player.participant.vars[f'{prefix}_started_at'] = started_at
+    return started_at
+
+
+def continuation_access_allowed(player, prefix, min_seconds=0):
+    """Return True after an in-window start, or while the start window is still open."""
+    return continuation_window_started(player, prefix) or continuation_window_open(
+        player,
+        prefix,
+        min_seconds=min_seconds,
+    )
+
+
+def continuation_window_expired(player, prefix, window_seconds=CONTINUATION_WINDOW_SECONDS, min_seconds=0):
     """Return True if the continuation session window has expired."""
     seconds_left = continuation_time_left(player, prefix, window_seconds=window_seconds)
     if seconds_left is None:
@@ -1122,6 +1156,9 @@ def format_session_date(dt):
     """Return a locale-aware readable date/time without platform-specific strftime flags."""
     if not isinstance(dt, datetime):
         return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=UK_TIMEZONE)
+    dt = dt.astimezone(UK_TIMEZONE)
     return f"{dt.strftime('%A')}, {dt.day} {dt.strftime('%B')} at {dt.strftime('%H:%M')}"
 
 
@@ -1134,7 +1171,7 @@ def schedule_session_start(player, prefix, wait_seconds=None, future_round=None,
     if existing_ts is not None:
         if existing_readable is None:
             try:
-                existing_readable = format_session_date(datetime.fromtimestamp(existing_ts))
+                existing_readable = format_session_date(datetime.fromtimestamp(existing_ts, tz=UK_TIMEZONE))
             except (TypeError, OSError, ValueError):
                 existing_readable = None
         setattr(player, f'{prefix}_start', existing_ts)
@@ -1154,6 +1191,9 @@ def schedule_session_start(player, prefix, wait_seconds=None, future_round=None,
         start_dt = datetime.now() + timedelta(seconds=wait_seconds)
 
     t = start_dt
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=UK_TIMEZONE)
+    t = t.astimezone(UK_TIMEZONE)
     start_ts = t.timestamp()
     readable = format_session_date(t)
     setattr(player, f'{prefix}_start', start_ts)
@@ -1168,8 +1208,11 @@ def schedule_session_start(player, prefix, wait_seconds=None, future_round=None,
 
 
 def compute_bridge_start_datetime(days_after=3, hour=6, minute=0, base_dt=None):
-    """Return the scheduled bridge end datetime anchored to the provided base time."""
-    base_dt = base_dt or datetime.now()
+    """Return the next-session start time in UK time."""
+    base_dt = base_dt or datetime.now(UK_TIMEZONE)
+    if base_dt.tzinfo is None:
+        base_dt = base_dt.replace(tzinfo=UK_TIMEZONE)
+    base_dt = base_dt.astimezone(UK_TIMEZONE)
     target = base_dt + timedelta(days=days_after)
     return target.replace(hour=hour, minute=minute, second=0, microsecond=0)
 

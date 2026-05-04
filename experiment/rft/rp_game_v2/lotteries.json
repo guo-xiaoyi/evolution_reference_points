@@ -156,8 +156,8 @@
     "name": "Lottery 3",
     "outcome_number": 4,
     "stake": "lo",
-    "max_payoff": 121,
-    "min_payoff": 74,
+    "max_payoff": 22,
+    "min_payoff": 9,
     "description": "treatment",
     "periods": {
       "0": [
